@@ -44,7 +44,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | 🟡 पन्ने बने · **TR-9b: 9 बैंकों की जाँच 1 (Claude) पूरी**, बैंक की अपनी `.bank.in` साइट से (HDFC, BoB, Union, ICICI के ठगी वाले toll-free; SBI, PNB, Canara, Axis, Kotak के होम पेज वाले 'report fraud' link), मूल अंश `docs/sources/banks/` · 👤 **मालिक की जाँच 2 बाकी**, तब तक कुछ नहीं दिखता · Bank of India की साइट bot-जाँच के कारण बाकी · 207 unit + 29 browser जाँचें पास |
 | TR-10 | ज्ञानकोश + 5 पन्ने | 🟡 स्थानीय जाँच पास: `/gyan` + 5 पन्ने (digital arrest, नकली customer care, UPI PIN/QR, task/निवेश, APK फ़ाइल), तय ढाँचा, RBI हवालों की quote-जाँच, /pucho और /turant से links · 230 unit + 36 browser जाँचें · 👤 विशेषज्ञ (वकील/बैंक अधिकारी) की जाँच बाकी, पन्नों पर साफ़ लिखा है |
 | TR-11 | /legal (वकील की जाँच बाकी) | 🟡 मसौदा बना: निजता, शर्तें, शिकायत अधिकारी (env से, ख़ाली हो तो "अभी नियुक्त नहीं") · निजता के दावे e2e से साबित (कोई cookie नहीं, कोई बाहरी request नहीं; नकारात्मक जाँच भी की) · 241 unit + 41 browser जाँचें · ⚖️ वकील की जाँच और 👤 शिकायत अधिकारी का नाम/email बाकी |
-| TR-12 | Render deploy + launch checklist | ⏳ |
+| TR-12 | Render deploy + launch checklist | 🟡 code वाला हिस्सा तैयार: sitemap, robots, manifest, icon, हर deploy पर नया offline cache, `render.yaml`, uptime workflow, `npm run launch-check` (आज 8 में से 8 बाकी), `docs/DEPLOYMENT.md` · 258 unit + 42 browser जाँचें · 👤 Render खाता और settings बाकी |
 | TR-13 | WhatsApp पहला जवाब + जवाब-किताब | ⏳ |
 | TR-14 से TR-26 | चरण B और C (`PROMPT.md` Part 4) | ⏳ |
 
@@ -99,7 +99,14 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - DPDP Act या IT Rules का मूल text इस environment से नहीं खुलता, इसलिए अधिकार आम भाषा में लिखे हैं, धाराओं के नंबर के बिना, और साथ में "[वकील की जाँच बाकी]"।
 - 👤 launch से पहले मालिक को तय करना है: संस्था का नाम, शिकायत अधिकारी का नाम और email (Render में env: `NEXT_PUBLIC_ORG_NAME`, `NEXT_PUBLIC_GRIEVANCE_NAME`, `NEXT_PUBLIC_GRIEVANCE_EMAIL`)।
 
+## TR-12, code वाला हिस्सा (2026-11-21)
+- branch `tr-12-launch-taiyari` (`tr-11-legal` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a4a-launch-taiyari.md`।
+- sitemap सारे 39 public रास्ते data से बनाता है, इसलिए नया पन्ना छूटता नहीं।
+- offline cache का version अब हर deploy पर नया होता है (git commit से), और पुराना cache अपने आप हटता है (plan A1 की बची कमी ठीक)।
+- `npm run launch-check` बताता है कि launch से पहले क्या बाकी है (CI में नहीं चलता)। कोई setting का मान कभी नहीं छापता।
+- 👤 मालिक: Render पर साइट चढ़ाने के कदम `docs/DEPLOYMENT.md` में हैं।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और सातों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`, `tr-10-gyan`, `tr-11-legal`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 👤 बैंकों की जाँच 2 (हर बैंक लगभग 2 मिनट) · 🤖 TR-12 का code वाला हिस्सा (deploy settings, sitemap, launch-जाँच) और TR-13 की जवाब-किताब; जिनमें मालिक के खाते चाहिए (Render, Meta) वे बाद में।
+2. 🤖 **Claude:** repo जोड़कर `main` और आठों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`, `tr-10-gyan`, `tr-11-legal`, `tr-12-launch-taiyari`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 🤖 TR-13 की जवाब-किताब (मालिक के लिए WhatsApp के तैयार जवाब); Meta खाता वाला हिस्सा बाद में।
