@@ -99,5 +99,16 @@ await check("menu: /bharosa पर 'भरोसा' tab चालू", () =>
   }),
 );
 
+await check("फ़ोन: footer की आख़िरी लाइन नीचे के menu के पीछे न छिपे", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/bharosa`);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const line = await page.getByText("यहाँ दी गई जानकारी कानूनी सलाह नहीं है।").boundingBox();
+    const nav = await page.locator(MENU).boundingBox();
+    assert(line && nav, "line या menu नहीं मिला");
+    assert(line.y + line.height <= nav.y, `line नीचे ${Math.round(line.y + line.height)} > menu ऊपर ${Math.round(nav.y)}`);
+  }),
+);
+
 await browser.close();
 process.exit(failed ? 1 : 0);
