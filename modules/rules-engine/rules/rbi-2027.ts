@@ -118,6 +118,7 @@ export const smallValueCompensation: Rule = {
       return result(this, {
         status: "unclear",
         amount,
+        amountLabelHi: "संभावित मुआवज़ा",
         reasonsHi: [
           "RBI की परिभाषा में धोखे से लिए गए OTP/PIN और दबाव या धमकी में दी गई मंज़ूरी शामिल है; बिना दबाव के ख़ुद भेजे पैसे पर नियम साफ़ नहीं (4(15A))।",
           ...common,
@@ -125,7 +126,7 @@ export const smallValueCompensation: Rule = {
         deadlines,
       });
     }
-    return result(this, { status: "likely", amount, reasonsHi: common, deadlines });
+    return result(this, { status: "likely", amount, amountLabelHi: "संभावित मुआवज़ा", reasonsHi: common, deadlines });
   },
 };
 

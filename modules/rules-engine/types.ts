@@ -41,6 +41,7 @@ export type RightResult = {
   titleHi: string;
   status: Status;
   amount?: number;
+  amountLabelHi?: string; // रकम का मतलब: "संभावित मुआवज़ा" या "आपकी ज़्यादा से ज़्यादा ज़िम्मेदारी"
   reasonsHi: string[];
   deadlines: Deadline[];
   source: Source;

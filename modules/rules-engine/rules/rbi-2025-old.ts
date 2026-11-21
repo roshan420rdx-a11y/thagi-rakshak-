@@ -28,7 +28,7 @@ export const liability2025: Rule = {
       "Third party breach where the deficiency lies neither with the bank nor with the customer but lies elsewhere in the system, and the customer notifies the bank within three working days of receiving the communication from the bank regarding the unauthorised transaction.",
   },
   evaluate(input: FraudInput, today: string) {
-    const make = (partial: Pick<RightResult, "status" | "reasonsHi" | "deadlines"> & { amount?: number }): RightResult => ({
+    const make = (partial: Pick<RightResult, "status" | "reasonsHi" | "deadlines"> & { amount?: number; amountLabelHi?: string }): RightResult => ({
       ruleId: this.id,
       ruleVersion: this.version,
       titleHi: this.titleHi,
@@ -80,7 +80,7 @@ export const liability2025: Rule = {
         return make({ status: "unclear", reasonsHi: ["4 से 7 कार्य-दिवस में बताने पर ज़िम्मेदारी सीमित है: खाते के प्रकार के हिसाब से ₹5,000, ₹10,000 या ₹25,000 तक (Table 1)।", COUNTING_NOTE], deadlines });
       }
       const cap = Math.min(TABLE_1[input.accountKind], input.grossLoss);
-      return make({ status: "likely", amount: cap, reasonsHi: [`4 से 7 कार्य-दिवस में बताया, इसलिए आपकी ज़िम्मेदारी ज़्यादा से ज़्यादा ₹${cap.toLocaleString("en-IN")} (प्रति लेन-देन, Table 1); बाकी बैंक का।`, COUNTING_NOTE], deadlines });
+      return make({ status: "likely", amount: cap, amountLabelHi: "आपकी ज़्यादा से ज़्यादा ज़िम्मेदारी", reasonsHi: [`4 से 7 कार्य-दिवस में बताया, इसलिए आपकी ज़िम्मेदारी ज़्यादा से ज़्यादा ₹${cap.toLocaleString("en-IN")} (प्रति लेन-देन, Table 1); बाकी बैंक का।`, COUNTING_NOTE], deadlines });
     }
     return make({ status: "unclear", reasonsHi: ["7 कार्य-दिवस के बाद बताया, इसलिए ज़िम्मेदारी बैंक की नीति के हिसाब से तय होगी (para 69)।", COUNTING_NOTE], deadlines });
   },
