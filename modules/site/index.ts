@@ -5,3 +5,4 @@ export type { NavIcon, NavItem } from "./nav";
 export { NEVER_LIST, SCAM_SIGNS } from "./signs";
 export { FAKE_CHANNELS } from "./fakes";
 export type { FakeChannel } from "./fakes";
+export { LEGAL_VERSION } from "./legal";
