@@ -18,6 +18,13 @@ test("/bharosa: 'वह ठग है' और नकली पेजों क�
   expect(html).toContain("जल्द शुरू होगा");
 });
 
+test("/bharosa: आपकी जानकारी कहाँ जाती है ('पहले पूछो' का message कहीं नहीं), निजता पन्ने का link", () => {
+  const html = renderToStaticMarkup(<BharosaPage />);
+  expect(html).toContain("आपकी जानकारी कहाँ जाती है");
+  expect(html).toContain("आपके फ़ोन में ही जाँचा जाता है");
+  expect(html).toContain('href="/legal/privacy"');
+});
+
 test("/pucho: 7 निशान और /turant का दरवाज़ा", () => {
   const html = renderToStaticMarkup(<PuchoPage />);
   expect((html.match(/<li/g) ?? []).length).toBe(7);

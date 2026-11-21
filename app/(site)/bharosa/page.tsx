@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { FAKE_CHANNELS, NEVER_LIST, getSiteConfig } from "@/modules/site";
 
@@ -54,6 +55,20 @@ export default function BharosaPage() {
           </div>
         </dl>
         <p>इनके अलावा हमारे नाम से कोई भी नंबर, पेज या ऐप नकली है।</p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-[19px] font-bold">आपकी जानकारी कहाँ जाती है</h2>
+        <ul className="list-disc space-y-1 pl-6">
+          <li>साइट पर हम आपका नाम, फ़ोन नंबर या खाता नंबर नहीं माँगते।</li>
+          <li>
+            “पहले पूछो” में चिपकाया message आपके फ़ोन में ही जाँचा जाता है। वह हमारे पास नहीं आता, और कहीं सेव नहीं होता।
+          </li>
+          <li>साइट पर कोई cookie, विज्ञापन या tracker नहीं।</li>
+        </ul>
+        <Link href="/legal/privacy" className="flex min-h-12 items-center font-semibold text-brand">
+          पूरी बात: निजता पन्ना →
+        </Link>
       </section>
 
       <section className="space-y-2">
