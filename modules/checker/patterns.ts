@@ -65,7 +65,7 @@ const YOU = "आप|तुम|तेरा|तेरे|तेरी|\\byou|\\by
 const AUTHORITY =
   "पुलिस|police|\\bcbi\\b|सीबीआई|\\bncb\\b|narcotics|नारकोटिक्स|customs|कस्टम|\\btrai\\b|ट्राई|enforcement\\s*directorate|प्रवर्तन\\s*निदेशालय|crime\\s*branch|क्राइम\\s*ब्रांच|cyber\\s*cell|साइबर\\s*सेल|income\\s*tax\\s*officer|supreme\\s*court|सुप्रीम\\s*कोर्ट|\\bjudge\\b|fedex|फेडेक्स";
 const THREAT =
-  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध";
+  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|पकड़\\s*लिया|पकड़ा\\s*गया|छुड़ाने|disconnect";
 
 const APK = "\\.apk\\b|\\bapk\\b|एपीके";
 const REMOTE =
@@ -101,7 +101,7 @@ const LOAN_SEND = "भेज|\\bsend|\\bbhej|बता|\\btell|\\bcall|कॉल
 const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
 const BLOCK =
-  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold";
+  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट";
 const ACTION = "update|अपडेट|click|क्लिक|\\blink|लिंक|verify|वेरीफ़ाई|वेरिफ़ाई|सत्यापित|\\bcall\\b|कॉल|download|डाउनलोड";
 
 const JOB =
@@ -121,6 +121,11 @@ const GAINS = "मुनाफ़ा|मुनाफ़े|profit|earning|कम
 
 const NEW_NUMBER = "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number";
 
+const LOAN_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|insurance|बीमा|\\bgst\\b|stamp\\s*duty";
+const LOAN_ADVANCE =
+  "\\bto\\s+get\\b|to\\s+receive|disburs|\\brelease|before|advance|पहले|पाने\\s*के\\s*लिए|मिलने\\s*से\\s*पहले|approval\\s*के\\s*लिए|\\bpehle";
+const LOAN_OFFER = "pre[\\s-]*approved|approved|sanction|मंज़ूर|स्वीकृत|instant|तुरंत\\s*loan|\\blakh|लाख|₹|\\brs\\b";
+
 const WRONG =
   "ग़लती\\s*से|\\bgalti\\s*se|\\bghalti\\s*se|by\\s*mistake|mistakenly|wrongly|accidentally|wrong\\s*(?:number|account|transfer)|भूल\\s*से|ग़लत\\s*(?:नंबर|खाते)";
 const SENT = "भेज|\\bsent\\b|transfer|ट्रांसफ़र|पैसे|money|₹|\\brs\\b|credited|\\bbhej";
@@ -132,7 +137,7 @@ const REFUND_HOOK = "refund|रिफंड|cash\\s*back|कैशबैक|comp
 const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|गूगल`;
 
 const URGENT =
-  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
+  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
 const LINK =
   "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
@@ -174,6 +179,9 @@ const R = {
   withdraw: rx(WITHDRAW),
   withdrawFee: rx(WITHDRAW_FEE),
   gains: rx(GAINS),
+  loanFee: rx(LOAN_FEE),
+  loanAdvance: rx(LOAN_ADVANCE),
+  loanOffer: rx(LOAN_OFFER),
   wrong: rx(WRONG),
   sent: rx(SENT),
   back: rx(BACK),
@@ -287,6 +295,14 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) => R.withdraw.test(t.text) && R.withdrawFee.test(t.text) && R.gains.test(t.text),
   },
   {
+    id: "loan_advance_fee",
+    level: "danger",
+    labelHi: "loan देने से पहले fee माँगना",
+    explainHi: "loan के नाम पर पहले 'processing fee', 'insurance' या 'GST' माँगकर ग़ायब हो जाना ठगी का आम तरीका है। loan सिर्फ़ अपने बैंक या उसके अपने ऐप से लें।",
+    turant: "upi",
+    test: (t) => R.loan.test(t.text) && R.loanFee.test(t.text) && R.loanAdvance.test(t.text) && R.loanOffer.test(t.text),
+  },
+  {
     id: "kyc_block",
     level: "warn",
     labelHi: "KYC या खाता बंद होने का डर",
@@ -359,3 +375,12 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) => R.link.test(t.text),
   },
 ];
+
+// कई शक वाले निशान एक साथ: आम message में इतने निशान एक साथ नहीं होते
+export const MANY_SIGNALS_MIN = 3;
+export const MANY_SIGNALS = {
+  id: "many_signals",
+  level: "danger",
+  labelHi: "कई शक वाले निशान एक साथ",
+  explainHi: "एक ही message में इतने निशान आम तौर पर ठगी में ही होते हैं। इसे ठगी मानकर चलें: link न खोलें, call न करें, पैसे न भेजें।",
+} as const satisfies Omit<CheckerRule, "test">;

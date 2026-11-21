@@ -16,6 +16,7 @@ const CASES: [string, string[], string[]][] = [
   ["blackmail", ["तुम्हारा video सबको भेज दूँगा, पैसे भेजो", "your video will be viral, pay now"], ["video call पर बात करते हैं"]],
   ["loan_threat", ["loan नहीं भरा तो तेरी photo तेरे सारे contacts को भेज देंगे", "repay the loan or we will send your photos to all your contacts"], ["home loan की EMI इस महीने 5 तारीख़ को कटेगी"]],
   ["withdraw_fee", ["आपका मुनाफ़ा ₹1,20,000 हो गया है। निकालने के लिए 10% tax पहले जमा कीजिए।", "To withdraw your profit of Rs 80,000 pay 15% unlock fee"], ["ATM से पैसे निकालने पर 5 बार के बाद शुल्क लगता है"]],
+  ["loan_advance_fee", ["Pre-approved loan of Rs 5 lakh! Pay Rs 2,999 processing fee to get disbursement today", "आपका ₹2 लाख का loan मंज़ूर है, पाने के लिए ₹1,500 फ़ीस पहले जमा करें"], ["Your loan EMI of Rs 5,000 is due on 5th. Pay via the bank app to avoid late fee."]],
   ["new_number", ["Hi Mummy, ye mera new number hai, purana kharab ho gaya", "पापा, मेरा नंबर बदल गया है"], ["गाड़ी की नंबर प्लेट बदलवानी है"]],
   ["kyc_block", ["Your account will be blocked today, update KYC by clicking the link", "आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें"], ["KYC के लिए शाखा में आधार लाएँ"]],
   ["task_job", ["Part-time job: video like कीजिए, हर like पर ₹50", "Work from home and earn 3000 daily by giving 5 star review"], ["कल office में meeting है"]],
@@ -52,4 +53,22 @@ test("बहुत लंबा text भी जल्दी (20,000 अक्ष
   const start = performance.now();
   checkMessage(t);
   expect(performance.now() - start).toBeLessThan(50);
+});
+
+test("3 या ज़्यादा शक वाले निशान एक साथ → danger, 'कई निशान एक साथ' कारण सबसे ऊपर", () => {
+  const r = checkMessage("Dear user your PAN card is blocked. Update immediately: bit.ly/xyz12");
+  expect(r.level).toBe("danger");
+  expect(r.hits[0].id).toBe("many_signals");
+  expect(r.hits.filter((h) => h.level === "warn").length).toBeGreaterThanOrEqual(3);
+});
+
+test("2 शक वाले निशान → अब भी warn", () => {
+  const r = checkMessage("URGENT: update KYC, account will be blocked");
+  expect(r.hits.filter((h) => h.level === "warn").length).toBe(2);
+  expect(r.level).toBe("warn");
+  expect(r.hits.map((h) => h.id)).not.toContain("many_signals");
+});
+
+test("Hinglish समय-सीमा भी जल्दबाज़ी: '2 ghante me'", () => {
+  expect(checkMessage("aapka SIM 2 ghante me band ho jayega").hits.map((h) => h.id)).toContain("urgency");
 });

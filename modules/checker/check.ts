@@ -1,6 +1,6 @@
 import { extractDomains } from "./links";
 import { normalizeText } from "./normalize";
-import { CHECKER_RULES, stripNegations, type RuleLevel } from "./patterns";
+import { CHECKER_RULES, MANY_SIGNALS, MANY_SIGNALS_MIN, stripNegations, type RuleLevel } from "./patterns";
 
 // "पहले पूछो" की जाँच: शुद्ध function, फ़ोन (browser) में ही चलता है। कोई network, AI या storage नहीं।
 // नतीजा कभी "सुरक्षित" नहीं कहता: सबसे अच्छा नतीजा "आम निशान नहीं मिले" है।
@@ -20,6 +20,7 @@ export function checkMessage(input: string): CheckResult {
   const checked = { text, stripped: stripNegations(text), domains };
   const hits: Hit[] = CHECKER_RULES.filter((r) => r.test(checked)).map(toHit);
   hits.sort((a, b) => rank(a.level) - rank(b.level));
+  if (!hits.some((h) => h.level === "danger") && hits.length >= MANY_SIGNALS_MIN) hits.unshift({ ...MANY_SIGNALS });
   const level: Level = hits.some((h) => h.level === "danger") ? "danger" : hits.length ? "warn" : "no_signals";
   return { level, hits, domains };
 }

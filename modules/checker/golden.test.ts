@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import { checkMessage, CHECKER_RULES } from "@/modules/checker";
+import { MANY_SIGNALS } from "@/modules/checker/patterns";
 import { GYAN_PAGES } from "@/modules/gyan";
 import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 
@@ -28,6 +29,25 @@ const SCAMS: string[] = [
   "Your Netflix subscription expired. Update payment details within 24 hours: http://netflix-renew.co",
   "आपका wallet balance ₹48,000 हो गया है। पैसा निकालने के लिए पहले ₹4,800 withdrawal fee जमा करें।",
   "पापा, मेरा फ़ोन नंबर बदल गया है, यह मेरा नया नंबर है। अभी ₹10,000 भेज दो, बहुत ज़रूरी है",
+  // दूसरा दौर: आम भारतीय ठगी के और रूप
+  "Aapki bijli aaj raat 9:30 baje kaat di jayegi, turant 98XXXXXX12 par call kare",
+  "Sir aapke account mein 5000 credit hua hai, galti se chala gaya, wapas bhej do",
+  "Dear user your PAN card is blocked. Update immediately to avoid account suspension: bit.ly/xyz12",
+  "Mumbai Police Cyber Cell: aapke Aadhaar se 6 bank account khole gaye hain, aapke khilaf arrest warrant hai",
+  "Hello, aapka SIM card 2 ghante me band ho jayega. Re-KYC ke liye 9 dabaye",
+  "Congrats! You've been selected for Amazon work from home job. Earn Rs 3000/day. Contact on Telegram",
+  "OTP bata do bhai, galti se tumhare number par aa gaya",
+  "आपका Paytm KYC expire हो गया है, अभी इस नंबर पर call करें 70XXXXXX45",
+  "Hi Mom, my phone broke, this is my new number. Can you send ₹15000 urgently?",
+  "Your credit card reward points worth Rs 7,850 expire today. Redeem now: sbicard-rewards.co",
+  "Your FASTag has been blacklisted. Complete KYC now to continue using it",
+  "आपका आधार कार्ड ग़लत इस्तेमाल हुआ है, CBI officer से बात करने के लिए 1 दबाएँ",
+  "Your mobile number will be disconnected within 2 hours by TRAI. Press 9 for more information",
+  "Join our stock market WhatsApp group, guaranteed 5% daily returns",
+  "Pre-approved loan of Rs 5 lakh! Pay Rs 2,999 processing fee to get disbursement today",
+  "I am army officer, want to buy your OLX sofa. I will send QR code, scan it to receive payment",
+  "आपके बेटे को पुलिस ने पकड़ लिया है, छुड़ाने के लिए तुरंत ₹50,000 भेजो",
+  "India Post: your parcel is on hold due to incomplete address. Update within 24 hours: indiapost-track.top",
 ];
 
 const BENIGN: string[] = [
@@ -50,6 +70,10 @@ const BENIGN: string[] = [
   "News: पुलिस ने चोर को गिरफ़्तार किया",
   "please double check the address",
   "Your PIN code 110001 delivery address updated",
+  "Your FASTag recharge of Rs 500 is successful.",
+  "Your loan EMI of Rs 5,000 is due on 5th. Pay via the bank app to avoid late fee.",
+  "पुलिस भर्ती का admit card कल से मिलेगा",
+  "Beta, exam ke baad seedha ghar aa jana",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
@@ -81,7 +105,7 @@ test("ज्ञानकोश के उदाहरण: danger, सिवा�
 });
 
 test("नियमों के label और समझाने वाली बात में कोई मना किया शब्द नहीं", () => {
-  const copy = CHECKER_RULES.map((r) => `${r.labelHi} ${r.explainHi}`).join("\n");
+  const copy = [...CHECKER_RULES, MANY_SIGNALS].map((r) => `${r.labelHi} ${r.explainHi}`).join("\n");
   expect(findForbidden(copy, FORBIDDEN_PHRASES)).toEqual([]);
 });
 

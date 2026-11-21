@@ -146,7 +146,8 @@ await check("सुनें: नतीजा और कारण बोले, 
     await checkText(page, "Your account will be blocked today, update KYC: http://sbi-yono-kyc.xyz/login");
     await page.getByRole("region", { name: "जाँच का नतीजा" }).getByRole("button", { name: "सुनें" }).click();
     const spoken = (await page.evaluate(() => window.__spoken)).join(" ");
-    assert(spoken.includes("शक है") && spoken.includes("KYC या खाता बंद होने का डर"), `spoken: ${spoken.slice(0, 80)}`);
+    // KYC + .bank.in नहीं + link = 3 शक वाले निशान → "पक्के निशान"
+    assert(spoken.includes("ठगी के पक्के निशान") && spoken.includes("कई शक वाले निशान एक साथ") && spoken.includes("KYC या खाता बंद होने का डर"), `spoken: ${spoken.slice(0, 80)}`);
     assert(!spoken.includes("sbi-yono"), "message का पता आवाज़ में गया");
   } finally {
     await context.close();
