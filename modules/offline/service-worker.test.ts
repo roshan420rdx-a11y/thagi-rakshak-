@@ -1,11 +1,12 @@
 import { expect, test } from "vitest";
 import { OFFLINE_URLS, buildServiceWorker, extractNextAssets, swVersion } from "@/modules/offline";
 
-test("OFFLINE_URLS: /turant, 10 पन्ने और /gyan/bank", () => {
+test("OFFLINE_URLS: /turant, 10 पन्ने, /gyan/bank और /pucho (जाँच फ़ोन में होती है, internet के बिना भी)", () => {
   expect(OFFLINE_URLS).toContain("/turant");
   expect(OFFLINE_URLS).toContain("/turant/digital-arrest");
   expect(OFFLINE_URLS).toContain("/gyan/bank");
-  expect(OFFLINE_URLS).toHaveLength(12);
+  expect(OFFLINE_URLS).toContain("/pucho");
+  expect(OFFLINE_URLS).toHaveLength(13);
 });
 
 test("worker में version और हर URL", () => {

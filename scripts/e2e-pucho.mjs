@@ -153,6 +153,19 @@ await check("सुनें: नतीजा और कारण बोले, 
   }
 });
 
+await check("offline: internet बंद होने पर भी 'पहले पूछो' खुले और जाँच करे", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.goto(`${BASE}/pucho`);
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.reload();
+    await checkText(page, SCAM);
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
+  }),
+);
+
 await check("JS बंद: box नहीं, 7 आम निशान अब भी", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);

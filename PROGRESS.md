@@ -53,6 +53,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-23a2 | "पहले पूछो": link का असली पता | 🟡 नतीजे में message के पते (सिर्फ़ फ़ोन पर, share में नहीं) · नया warn `bank_lookalike`: बैंक के नाम वाला पता जो `.bank.in` पर नहीं (RBI/2025-26/28) · 421 unit + 55 browser जाँचें |
 | TR-10c | ज्ञानकोश पर "सुनें" | 🟡 हर ज्ञानकोश पन्ने पर 🔊 सुनें: सार, 5 निशान और 3 नियम हिंदी आवाज़ में (FAQ नहीं, ताकि छोटा रहे) · e2e में बोला गया text पकड़कर जाँच · 422 unit + 56 browser जाँचें |
 | TR-23a3 | "पहले पूछो" के नतीजे पर "सुनें" | 🟡 सिर्फ़ नतीजा और कारण बोले जाते हैं, message के पते नहीं (कुछ browser आवाज़ के लिए text बाहर भेजते हैं) · निजता पन्ने में "सुनें" वाला हिस्सा · 423 unit + 57 browser जाँचें |
+| TR-23a4 | "पहले पूछो" offline | 🟡 `/pucho` अब फ़ोन में सेव होता है: internet बंद होने पर भी message जाँचा जा सकता है (पहले e2e RED, फिर GREEN) · निजता पन्ना अपडेट · 423 unit + 58 browser जाँचें |
 | TR-23b से TR-26 | link-जाँच (Web Risk), screenshot, AI, समीक्षा | ⏳ |
 
 ## ⛔ रुकावटें और सीमाएँ
@@ -131,6 +132,6 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और सारी branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`, `tr-4b-turant-safai`, `tr-23a2-link-pata`, `tr-10c-gyan-suno`, `tr-23a3-nateeja-suno`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+2. 🤖 **Claude:** repo जोड़कर `main` और सारी branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`, `tr-4b-turant-safai`, `tr-23a2-link-pata`, `tr-10c-gyan-suno`, `tr-23a3-nateeja-suno`, `tr-23a4-pucho-offline`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
 3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 👤 WhatsApp Business ऐप में जवाब-किताब की setting (`docs/JAWAB_KITAB.md` भाग 2) · ⚖️ वकील से legal पन्ने और ज्ञानकोश जँचवाना
-4. 🤖 चरण A का code पूरा है, और चरण C का पहला हिस्सा (TR-23a) भी। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले काम करेगा (ज्ञानकोश के 4 और पन्ने और /turant की सफ़ाई हो गई; link का असली पता भी दिखने लगा; ज्ञानकोश और "पहले पूछो" के नतीजे पर "सुनें" भी; जवाब-किताब में भी "पहले पूछो"; आगे: /bharosa पर "पहले पूछो" की निजता वाली बात)।
+4. 🤖 चरण A का code पूरा है, और चरण C का पहला हिस्सा (TR-23a) भी। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले काम करेगा (ज्ञानकोश के 4 और पन्ने और /turant की सफ़ाई हो गई; link का असली पता भी दिखने लगा; ज्ञानकोश और "पहले पूछो" के नतीजे पर "सुनें" भी; जवाब-किताब में भी "पहले पूछो", और वह offline भी चलता है; आगे: /bharosa पर "पहले पूछो" की निजता वाली बात, और checker के सुनहरे test-set में और असली तरह के message)।

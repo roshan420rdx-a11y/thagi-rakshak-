@@ -1,7 +1,8 @@
 import { TURANT_CONTENT_VERSION, TURANT_SLUGS } from "@/modules/scams";
 
 // offline में खुलने वाले पन्ने: /turant, उसके सारे प्रकार (data से बनते हैं) और अपने बैंक को बताने का पन्ना
-export const OFFLINE_URLS: readonly string[] = ["/turant", ...TURANT_SLUGS.map((s) => `/turant/${s}`), "/gyan/bank"];
+// "/pucho" भी: उसकी जाँच पूरी तरह फ़ोन में होती है, इसलिए internet के बिना भी message जाँचा जा सके
+export const OFFLINE_URLS: readonly string[] = ["/turant", ...TURANT_SLUGS.map((s) => `/turant/${s}`), "/gyan/bank", "/pucho"];
 
 // cache का version: content version + git commit। हर deploy पर नया version, और activate पर पुराने caches
 // (पुरानी build की JS/CSS समेत) अपने आप हटते हैं।
