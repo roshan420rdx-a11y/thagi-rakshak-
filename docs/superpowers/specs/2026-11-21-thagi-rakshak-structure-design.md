@@ -420,7 +420,7 @@
 10. **अक्सर पूछे सवाल** (FAQ)
 11. **SourceLine:** लेखक · जाँचने वाला (नाम और योग्यता) · आख़िरी बार जाँचा · सरकारी स्रोत
 
-- content `content/gyan/<locale>/<scam-type>.mdx` में रहेगा। frontmatter में `author, reviewer, reviewed_at, sources[], scam_type` होंगे।
+- content `content/gyan/<locale>/<slug>.ts` में typed TypeScript objects के रूप में (plan A3b में MDX की जगह यह चुना: ढाँचा test से पक्का, कोई नई dependency नहीं)। हर पन्ने में `author, reviewer, lastCheckedOn` और RBI हवालों के quote।
 - `reviewed_at` 90 दिन से पुराना हो, तो admin में "दोबारा जाँचें" दिखेगा।
 
 ---
