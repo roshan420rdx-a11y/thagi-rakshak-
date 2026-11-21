@@ -1,5 +1,6 @@
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconSearch } from "@/components/ui/icons";
+import Link from "next/link";
 import { getSiteConfig, whatsappLink } from "@/modules/site";
 
 // प्रतिज्ञा footer में हर पन्ने पर है (और छोटे होम पर पहली screen में ही दिखती है), इसलिए यहाँ दोबारा नहीं
@@ -22,6 +23,9 @@ export default function HomePage() {
         tone="safe"
         icon={<IconSearch className="h-8 w-8" />}
       />
+      <Link href="/haq" className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline">
+        अपना हक़ जानें: RBI के नियमों से हिसाब →
+      </Link>
       {whatsappNumber ? (
         <a
           href={whatsappLink(whatsappNumber, "नमस्ते, मुझे ठगी से जुड़ी मदद चाहिए")}
