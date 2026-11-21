@@ -1,0 +1,29 @@
+# Render Blueprint: ठगी रक्षक की असली साइट।
+# कैसे इस्तेमाल करें: docs/DEPLOYMENT.md (मालिक के लिए बटन-दर-बटन)।
+# `sync: false` वाली values Render ख़ुद पूछता है; उन्हें सिर्फ़ Render में भरें, chat या GitHub में कभी नहीं।
+# NEXT_PUBLIC_ वाली values build के समय साइट में जम जाती हैं, इसलिए बदलने पर "Manual Deploy" करना होता है।
+services:
+  - type: web
+    name: thagi-rakshak
+    runtime: node
+    region: singapore # भारत का region नहीं है; यह सबसे पास है
+    plan: free # launch से पहले paid (Starter) पर सोचें, ताकि साइट सोए नहीं (docs/DEPLOYMENT.md)
+    branch: main
+    autoDeploy: true
+    # Render पर NODE_ENV=production होता है, जिससे dev dependencies (Tailwind वगैरह) छूट जाती हैं; build के लिए वे ज़रूरी हैं
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        sync: false
+      - key: NEXT_PUBLIC_ORG_NAME
+        sync: false
+      - key: NEXT_PUBLIC_GRIEVANCE_NAME
+        sync: false
+      - key: NEXT_PUBLIC_GRIEVANCE_EMAIL
+        sync: false

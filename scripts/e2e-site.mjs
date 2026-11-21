@@ -167,5 +167,17 @@ await check("offline: /turant/upi से 'अपने बैंक का स�
   }
 });
 
+await check("sitemap, robots, manifest, icon", async () => {
+  const sm = await fetch(`${BASE}/sitemap.xml`);
+  const smText = await sm.text();
+  assert(sm.status === 200 && smText.includes("/gyan/digital-arrest") && smText.includes("/legal/privacy"), "sitemap अधूरा");
+  const rb = await (await fetch(`${BASE}/robots.txt`)).text();
+  assert(/Sitemap: .*\/sitemap\.xml/.test(rb), "robots में sitemap नहीं");
+  const mf = await (await fetch(`${BASE}/manifest.webmanifest`)).json();
+  assert(mf.name === "ठगी रक्षक" && mf.lang === "hi", "manifest ग़लत");
+  const ic = await fetch(`${BASE}/icon.svg`);
+  assert(ic.status === 200, `icon status ${ic.status}`);
+});
+
 await browser.close();
 process.exit(failed ? 1 : 0);

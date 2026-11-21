@@ -1,0 +1,24 @@
+name: Uptime
+
+# हर 30 मिनट पर असली साइट का /api/health देखना। Repository variable SITE_URL (Settings → Secrets and variables →
+# Actions → Variables) set होने तक यह कुछ नहीं करता। fail हो तो GitHub मालिक को email भेजता है।
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  health:
+    if: ${{ vars.SITE_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: /api/health (3 कोशिशें; Free plan पर साइट सोई हो तो जागने में समय लगता है)
+        run: |
+          for i in 1 2 3; do
+            if curl -fsS --max-time 90 "${{ vars.SITE_URL }}/api/health"; then echo; exit 0; fi
+            sleep 30
+          done
+          echo "साइट जवाब नहीं दे रही"
+          exit 1
