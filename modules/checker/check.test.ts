@@ -72,3 +72,15 @@ test("2 शक वाले निशान → अब भी warn", () => {
 test("Hinglish समय-सीमा भी जल्दबाज़ी: '2 ghante me'", () => {
   expect(checkMessage("aapka SIM 2 ghante me band ho jayega").hits.map((h) => h.id)).toContain("urgency");
 });
+
+test.each([
+  ["एक लंबा शब्द", "a".repeat(20_000)],
+  ["बिंदु वाले टुकड़े", "a.".repeat(10_000)],
+  ["बार-बार OTP", "otp ".repeat(5_000)],
+  ["बार-बार link", "http://x.com ".repeat(1_600)],
+  ["अंक ही अंक", "9".repeat(20_000)],
+])("अजीब लंबा text भी जल्दी (%s, 200ms से कम)", (_n, t) => {
+  const start = performance.now();
+  checkMessage(t);
+  expect(performance.now() - start).toBeLessThan(200);
+});

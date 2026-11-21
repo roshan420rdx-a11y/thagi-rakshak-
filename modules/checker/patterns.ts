@@ -107,9 +107,9 @@ const ACTION = "update|अपडेट|click|क्लिक|\\blink|लिं�
 const JOB =
   "part[\\s-]*time|पार्ट\\s*टाइम|work\\s*from\\s*home|\\bwfh\\b|घर\\s*बैठे|ghar\\s*baithe|\\bjob\\b|जॉब|नौकरी|naukri|\\btasks?\\b|टास्क|\\bearn|कमाई|कमाएं|कमाओ|\\bkamai|\\bkamao";
 const JOB_SIGN =
-  "\\blikes?\\b|लाइक|review|रिव्यू|rating|रेटिंग|subscribe|सब्सक्राइब|\\d\\s*star|five\\s*star|\\bfollow|फ़ॉलो|\\bdaily\\b|per\\s*day|प्रतिदिन|हर\\s*दिन|रोज़|\\broz\\b|commission|कमीशन|prepaid|प्रीपेड|telegram|टेलीग्राम|हर\\s*\\S+\\s*पर\\s*₹|₹\\s*\\d+\\s*(?:per|हर|प्रति)";
+  "\\blikes?\\b|लाइक|review|रिव्यू|rating|रेटिंग|subscribe|सब्सक्राइब|\\d\\s*star|five\\s*star|\\bfollow|फ़ॉलो|\\bdaily\\b|per\\s*day|प्रतिदिन|हर\\s*दिन|रोज़|\\broz\\b|commission|कमीशन|prepaid|प्रीपेड|telegram|टेलीग्राम|हर\\s*\\S+\\s*पर\\s*₹|₹\\s*(?<!\\d)\\d+\\s*(?:per|हर|प्रति)";
 
-const MULTIPLY = "double|डबल|दुगन|दोगुन|दुगुन|\\bdoguna|\\bdugna|\\d+\\s*x\\b|\\d+\\s*गुना";
+const MULTIPLY = "double|डबल|दुगन|दोगुन|दुगुन|\\bdoguna|\\bdugna|(?<!\\d)\\d+\\s*x\\b|(?<!\\d)\\d+\\s*गुना";
 const MONEY_GAIN = "पैसे|पैसा|money|amount|रक़म|निवेश|invest|return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ";
 const INVEST_DIRECT =
   "guarantee|गारंटी|assured\\s*return|fixed\\s*return|\\b\\d{2,4}\\s*%\\s*(?:return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ|daily|monthly|रोज़)|stock\\s*tips|स्टॉक\\s*टिप्स|trading\\s*(?:group|tips)|ट्रेडिंग\\s*ग्रुप|vip\\s*group|वीआईपी\\s*ग्रुप|crypto|क्रिप्टो|bitcoin|बिटकॉइन|ipo\\s*allot|institutional\\s*account|forex|फ़ॉरेक्स|daily\\s*profit|रोज़\\s*का\\s*मुनाफ़ा";
@@ -137,7 +137,7 @@ const REFUND_HOOK = "refund|रिफंड|cash\\s*back|कैशबैक|comp
 const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|गूगल`;
 
 const URGENT =
-  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
+  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
 const LINK =
   "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
