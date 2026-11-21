@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ठगी रक्षक Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#1D3A6B; --brand-bg:#EEF2F8;
+  --danger:#B42318; --danger-bg:#FEF3F2;
+  --warn:#B54708;   --warn-bg:#FFFAEB;
+  --safe:#067647;   --safe-bg:#ECFDF3;
+  --ink:#101828; --muted:#475467; --line:#E4E7EC;
+  --paper:#FFFFFF; --surface:#F7F6F3;
+  --r:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#E9E7E1;font-family:'Noto Sans Devanagari',system-ui,sans-serif;color:var(--ink)}
+.board{display:grid;grid-template-columns:repeat(3,360px);gap:28px;padding:28px;justify-content:center}
+.cap{font-size:13px;font-weight:600;color:#344054;margin:0 0 8px 4px}
+.phone{width:360px;height:740px;background:var(--surface);border-radius:28px;overflow:hidden;border:8px solid #1b1b1b;display:flex;flex-direction:column}
+.top{background:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px;color:var(--brand)}
+.lang{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--muted)}
+.body{padding:16px;flex:1;overflow:hidden;display:flex;flex-direction:column;gap:12px}
+.big{border-radius:var(--r);padding:18px 16px;color:#fff;display:flex;gap:12px;align-items:center;min-height:88px}
+.big.red{background:var(--danger)} .big.green{background:var(--safe)}
+.big b{font-size:19px;display:block;line-height:1.35} .big span{font-size:14px;opacity:.92}
+.pledge{background:var(--brand-bg);border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.5;color:var(--brand);display:flex;gap:8px}
+.stat{display:flex;gap:8px}
+.stat div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;color:var(--muted)}
+.stat b{display:block;font-size:17px;color:var(--ink)}
+.wa{margin-top:auto;background:#25D366;color:#073b1f;font-weight:700;border-radius:12px;padding:13px;text-align:center;font-size:15px}
+.nav{display:flex;border-top:1px solid var(--line);background:var(--paper)}
+.nav div{flex:1;text-align:center;font-size:11.5px;padding:8px 0 10px;color:var(--muted)}
+.nav div.on{color:var(--brand);font-weight:700}
+.nav svg{display:block;margin:0 auto 2px}
+h2{font-size:19px;margin:0;line-height:1.35}
+.sub{font-size:13.5px;color:var(--muted);margin:-6px 0 0}
+.step{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:10px}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--danger);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px}
+.step b{font-size:15px;display:block;line-height:1.4}
+.step p{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.btn{display:inline-block;margin-top:6px;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600}
+.btn.red{background:var(--danger);color:#fff} .btn.ghost{border:1px solid var(--line);color:var(--ink);background:#fff}
+.timer{font-size:11.5px;color:var(--danger);font-weight:600;background:var(--danger-bg);border-radius:6px;padding:1px 6px;margin-left:4px}
+.warnbox{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.45}
+.verdict{border-radius:var(--r);padding:16px;background:var(--danger-bg);border:2px solid var(--danger)}
+.verdict .tag{display:inline-flex;gap:6px;align-items:center;background:var(--danger);color:#fff;border-radius:999px;padding:4px 12px;font-weight:700;font-size:15px}
+.verdict h3{margin:10px 0 4px;font-size:17px}
+.verdict li{font-size:13.5px;line-height:1.55;margin-bottom:4px}
+.verdict ul{padding-left:18px;margin:6px 0 0}
+.msg{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:10px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.row{display:flex;gap:8px}.row .btn{flex:1;text-align:center}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kv{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:4px}
+.kv b{color:var(--ink)}
+.tl{position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.tl .it{position:relative;margin-bottom:10px;font-size:13.5px;line-height:1.4}
+.tl .it:before{content:"";position:absolute;left:-19px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--safe)}
+.tl .it.now:before{background:var(--warn);box-shadow:0 0 0 4px var(--warn-bg)}
+.tl .it.next:before{background:#fff;border:2px solid var(--line)}
+.tl small{display:block;color:var(--muted);font-size:12px}
+.chip{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px}
+.chip.warn{background:var(--warn-bg);color:var(--warn)} .chip.safe{background:var(--safe-bg);color:var(--safe)}
+.money{background:var(--safe-bg);border-radius:var(--r);padding:14px;text-align:center}
+.money b{font-size:30px;color:var(--safe);display:block}
+.money span{font-size:13px;color:var(--safe)}
+.q{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13.5px}
+.q .opts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.q .opts span{border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:13px}
+.q .opts span.on{border-color:var(--brand);background:var(--brand-bg);color:var(--brand);font-weight:600}
+.src{font-size:11.5px;color:var(--muted)}
+.never li{font-size:14px;line-height:1.5;margin-bottom:6px}
+.never{padding-left:0;list-style:none;margin:0}
+.never li{display:flex;gap:8px}
+.never li:before{content:"✕";color:var(--danger);font-weight:700}
+.listen{font-size:12px;color:var(--brand);font-weight:600;display:inline-flex;gap:4px;align-items:center}
+</style>
+</head>
+<body>
+<div class="board">
+
+<!-- 1 HOME -->
+<div><p class="cap">① होम: दो बड़े दरवाज़े</p>
+<div class="phone">
+  <div class="top"><div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D3A6B" stroke-width="2.2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>ठगी रक्षक</div><div class="lang">हिंदी ▾</div></div>
+  <div class="body">
+    <div class="big red"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><div><b>मेरे साथ ठगी हो गई</b><span>अभी मदद पाएँ · मुफ़्त · बिना login</span></div></div>
+    <div class="big green"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div><b>यह call / message ठगी है?</b><span>screenshot भेजें · 10 सेकंड में जवाब</span></div></div>
+    <div class="pledge"><span>✋</span><span><b>हम कभी OTP, PIN, password नहीं माँगते</b>, न screen-share करवाते हैं, न पहले call करते हैं।</span></div>
+    <div class="stat"><div><b>₹ 0.00 Cr</b>पीड़ितों को वापस</div><div><b>0</b>ठगी रोकी गई</div></div>
+    <div class="card" style="font-size:13px"><span class="chip warn">इस हफ़्ते</span> <b>"आज रात बिजली कटेगी"</b> वाले SMS बढ़े हैं। बिजली विभाग कभी SMS से नंबर पर call करने को नहीं कहता। <span class="listen">🔊 सुनें</span></div>
+    <div class="wa">💬 WhatsApp पर बात करें</div>
+  </div>
+  <div class="nav"><div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v10H3z"/></svg>होम</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>पूछो</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>मेरा केस</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>भरोसा</div></div>
+</div></div>
+
+<!-- 2 TURANT -->
+<div><p class="cap">② /turant: पहले 60 मिनट (UPI वाली ठगी)</p>
+<div class="phone">
+  <div class="top"><div class="logo" style="color:var(--danger)">← घबराइए नहीं</div><div class="lang">🔊 सुनें</div></div>
+  <div class="body">
+    <h2>ये 4 काम अभी करें</h2>
+    <p class="sub">जितनी जल्दी, पैसा रुकने का उतना ज़्यादा मौका</p>
+    <div class="step"><div class="n">1</div><div><b>1930 पर call करें <span class="timer">पहले 30 मिनट सबसे कीमती</span></b><p>लाइन न लगे तो रुकें नहीं, नीचे वाला रास्ता अपनाएँ।</p><span class="btn red">📞 1930 मिलाएँ</span> <span class="btn ghost">cybercrime.gov.in गाइड</span></div></div>
+    <div class="step"><div class="n">2</div><div><b>बैंक को आज ही बताएँ</b><p>बैंक के ऐप में "Report fraud" खोलें, या बैंक की वेबसाइट पर दिया नंबर लगाएँ।</p><div class="warnbox">⚠️ नंबर Google पर न खोजें। नकली "customer care" नंबर ठगी का बड़ा जाल हैं।</div></div></div>
+    <div class="step"><div class="n">3</div><div><b>बैंक को लिखित शिकायत (मुफ़्त)</b><p>तैयार email: बस नाम और transaction भरें।</p><span class="btn ghost">✉️ email बनाएँ · 2 मिनट</span></div></div>
+    <div class="step"><div class="n">4</div><div><b>ये सँभालकर रखें</b><p>लेन-देन नंबर (UTR) · ठग का नंबर / UPI ID · SMS और chat के screenshot</p></div></div>
+    <span class="btn red" style="text-align:center;padding:12px;font-size:15px">✅ हो गया → आगे का रास्ता (मेरा केस)</span>
+  </div>
+</div></div>
+
+<!-- 3 PUCHO RESULT -->
+<div><p class="cap">③ /pucho: जाँच का नतीजा</p>
+<div class="phone">
+  <div class="top"><div class="logo">← पहले पूछो</div><div class="lang">हिंदी ▾</div></div>
+  <div class="body">
+    <div class="msg">आपने भेजा: "प्रिय ग्राहक, आज रात 9:30 बजे आपकी बिजली काट दी जाएगी क्योंकि पिछला बिल update नहीं है। तुरंत अधिकारी से संपर्क करें 98XXXXXX21"</div>
+    <div class="verdict">
+      <span class="tag">● ठगी है</span>
+      <h3>यह "बिजली कटेगी" वाली ठगी है</h3>
+      <ul>
+        <li>बिजली विभाग किसी निजी मोबाइल नंबर पर call करने को नहीं कहता।</li>
+        <li>"आज रात" जैसी जल्दबाज़ी ठगों का तरीका है।</li>
+        <li>call करने पर आमतौर पर एक ऐप डलवाया जाता है, जिससे खाता खाली होता है।</li>
+      </ul>
+    </div>
+    <div class="card" style="font-size:13.5px"><b>अब क्या करें:</b> इस नंबर पर call न करें। बिल अपने बिजली विभाग के आधिकारिक ऐप में देखें।</div>
+    <div class="row"><span class="btn ghost">🚩 Chakshu पर report</span><span class="btn ghost">👨‍👩‍👧 परिवार को भेजें</span></div>
+    <p class="src">यह जवाब नियमों और AI से बना है। हम कभी "100% सुरक्षित" नहीं कहते। · आज की जाँचें: 3/10</p>
+    <span class="btn red" style="text-align:center;padding:11px;font-size:14px">पैसे जा चुके हैं? → तुरंत मदद</span>
+  </div>
+</div></div>
+
+<!-- 4 CASE -->
+<div><p class="cap">④ /case/[id]: मेरा केस (tracker)</p>
+<div class="phone">
+  <div class="top"><div class="logo">मेरा केस</div><div class="lang">#TR-2027-0142</div></div>
+  <div class="body">
+    <div class="card"><b style="font-size:15px">Digital arrest वाली ठगी</b><div class="kv"><span>कुल नुकसान</span><b>₹48,000</b></div><div class="kv"><span>अब तक वापस</span><b style="color:var(--safe)">₹12,000</b></div><div class="kv"><span>NCRP नंबर</span><b>•••• 4471</b></div></div>
+    <div class="card" style="border-color:var(--warn);background:var(--warn-bg)"><span class="chip warn">⏰ 4 दिन बाकी</span><b style="display:block;margin-top:6px;font-size:15px">बैंक का जवाब नहीं आया</b><span style="font-size:13px;color:var(--muted)">अगर 26 जनवरी तक जवाब न आए, तो RBI Ombudsman की शिकायत तैयार है।</span><div class="row" style="margin-top:8px"><span class="btn ghost">जवाब आया</span><span class="btn ghost">नहीं आया</span></div></div>
+    <div class="tl">
+      <div class="it">1930 / NCRP पर शिकायत<small>12 जनवरी · 25 मिनट में ✓</small></div>
+      <div class="it">बैंक को लिखित शिकायत<small>12 जनवरी ✓</small></div>
+      <div class="it">₹12,000 freeze → MRM से वापस<small>19 जनवरी ✓</small></div>
+      <div class="it now">RBI मुआवज़े का दावा भेजा<small>बैंक के जवाब का इंतज़ार</small></div>
+      <div class="it next">ज़रूरत पड़ी तो: RBI Ombudsman<small>तैयार</small></div>
+    </div>
+    <div class="row"><span class="btn ghost">📄 मेरी अर्ज़ियाँ (5)</span><span class="btn ghost">📎 सबूत</span></div>
+  </div>
+  <div class="nav"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v10H3z"/></svg>होम</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>पूछो</div><div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>मेरा केस</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>भरोसा</div></div>
+</div></div>
+
+<!-- 5 HAQ -->
+<div><p class="cap">⑤ /haq/rbi-2027: हक़ calculator</p>
+<div class="phone">
+  <div class="top"><div class="logo">← आपका हक़</div><div class="lang">हिंदी ▾</div></div>
+  <div class="body">
+    <h2>RBI मुआवज़ा: क्या आपको मिलेगा?</h2>
+    <div class="q">ठगी कब हुई?<div class="opts"><span>2026 में</span><span class="on">2027 में</span></div></div>
+    <div class="q">कुल कितना गया?<div class="opts"><span class="on">₹50,000 तक</span><span>उससे ज़्यादा</span></div></div>
+    <div class="q">आपका बैंक<div class="opts"><span class="on">State Bank of India</span></div></div>
+    <div class="q">यह मुआवज़ा पहले कभी लिया?<div class="opts"><span>हाँ</span><span class="on">नहीं</span></div></div>
+    <div class="money"><span>संभावित मुआवज़ा</span><b>₹25,000 तक</b><span>नुकसान का 85% · <span class="chip safe">संभावित</span></span></div>
+    <p class="src">नियम: RBI निर्देश, 24 जून 2026 · ठगी 1 जनवरी से 31 दिसंबर 2027 के बीच · आख़िरी बार जाँचा: [तारीख़] · <u>मूल text देखें</u></p>
+    <span class="btn red" style="text-align:center;padding:11px;font-size:14px">दावे की अर्ज़ी बनाएँ →</span>
+  </div>
+</div></div>
+
+<!-- 6 BHAROSA -->
+<div><p class="cap">⑥ /bharosa: हम पर भरोसा क्यों</p>
+<div class="phone">
+  <div class="top"><div class="logo">भरोसा</div><div class="lang">हिंदी ▾</div></div>
+  <div class="body">
+    <h2>हम ये काम कभी नहीं करेंगे</h2>
+    <ul class="never">
+      <li>OTP, PIN, password, CVV माँगना</li>
+      <li>AnyDesk / screen-share / कोई APK डलवाना</li>
+      <li>आपसे किसी को पैसे भिजवाना</li>
+      <li>"पक्का पैसा वापस" का वादा</li>
+      <li>पहले ख़ुद आपको call करना</li>
+      <li>आपका data बेचना</li>
+    </ul>
+    <div class="card"><b style="font-size:14.5px">हमारे असली रास्ते, सिर्फ़ ये</b><div class="kv"><span>वेबसाइट</span><b>[domain]</b></div><div class="kv"><span>WhatsApp (✓ verified)</span><b>[नंबर]</b></div></div>
+    <div class="card" style="font-size:13px"><b>हम पैसे कैसे कमाते हैं?</b><br>ज़रूरी मदद मुफ़्त है। अर्ज़ियों की किट ₹149 (पैसे न हों तो मुफ़्त)। बैंकों और कंपनियों को सेवाएँ।</div>
+    <div class="card" style="font-size:13px;border-color:var(--danger)"><b style="color:var(--danger)">⚠️ हमारे नाम से नकली पेज</b><br>2 नकली Facebook पेज और 1 नकली नंबर मिले हैं → सूची देखें</div>
+  </div>
+  <div class="nav"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v10H3z"/></svg>होम</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>पूछो</div><div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>मेरा केस</div><div class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>भरोसा</div></div>
+</div></div>
+
+</div>
+</body>
+</html>
