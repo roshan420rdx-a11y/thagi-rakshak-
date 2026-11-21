@@ -6,7 +6,7 @@ import allow from "./copy-lint-allow.json";
 
 // पूरे repo की user-facing फ़ाइलों में मना किए शब्द न हों ("100% सुरक्षित", "गारंटी", सरकारी नाम…)
 const ROOT = path.resolve(__dirname, "../..");
-const DIRS = ["app", "components", "modules"];
+const DIRS = ["app", "components", "modules", "content"];
 const EXT = /\.(ts|tsx|json|mdx)$/;
 const SKIP = new Set(["modules/i18n/forbidden.ts", "modules/i18n/copy-lint-allow.json"]);
 
