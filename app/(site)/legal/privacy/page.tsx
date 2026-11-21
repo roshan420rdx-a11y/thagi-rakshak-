@@ -39,6 +39,14 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title='"सुनें" बटन'>
+        <p>
+          “सुनें” बटन आपके फ़ोन या browser की अपनी आवाज़ वाली सुविधा से पढ़कर सुनाता है। कुछ browser इसके लिए text अपनी कंपनी के
+          server पर भेज सकते हैं। इसलिए “पहले पूछो” में सिर्फ़ जाँच का नतीजा और कारण सुनाए जाते हैं, आपका message या उसमें आए
+          पते नहीं।
+        </p>
+      </LegalSection>
+
       <LegalSection title="तकनीकी जानकारी">
         <p>
           वेबसाइट चलाने और उसे सुरक्षित रखने के लिए hosting server अपने आप कुछ तकनीकी बातें देखता है, जैसे IP पता, browser का

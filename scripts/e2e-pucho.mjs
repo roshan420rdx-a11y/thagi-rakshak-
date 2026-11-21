@@ -130,6 +130,29 @@ await check("link वाला message: असली पता और .bank.in �
   }),
 );
 
+await check("सुनें: नतीजा और कारण बोले, message का पता नहीं", async () => {
+  const context = await browser.newContext({ viewport: PHONE });
+  await context.addInitScript(() => {
+    window.__spoken = [];
+    if (!("SpeechSynthesisUtterance" in window)) window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: { speak: (u) => window.__spoken.push(u.text), cancel: () => {} },
+    });
+  });
+  const page = await context.newPage();
+  try {
+    await openBox(page);
+    await checkText(page, "Your account will be blocked today, update KYC: http://sbi-yono-kyc.xyz/login");
+    await page.getByRole("region", { name: "जाँच का नतीजा" }).getByRole("button", { name: "सुनें" }).click();
+    const spoken = (await page.evaluate(() => window.__spoken)).join(" ");
+    assert(spoken.includes("शक है") && spoken.includes("KYC या खाता बंद होने का डर"), `spoken: ${spoken.slice(0, 80)}`);
+    assert(!spoken.includes("sbi-yono"), "message का पता आवाज़ में गया");
+  } finally {
+    await context.close();
+  }
+});
+
 await check("JS बंद: box नहीं, 7 आम निशान अब भी", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);

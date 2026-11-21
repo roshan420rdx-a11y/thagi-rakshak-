@@ -2,6 +2,7 @@ import { isBankLookalike, type CheckResult } from "@/modules/checker";
 import { CHECK_LIMIT_HI, LEVEL_COPY, verdictShareText, whatsappShareLink } from "@/modules/checker/share";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconInfo } from "@/components/ui/icons";
+import { ListenButton } from "@/components/ui/listen-button";
 
 // जाँच का नतीजा। मतलब सिर्फ़ रंग से नहीं: हर स्तर का icon और शब्द।
 const LOOK = {
@@ -17,7 +18,9 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
 
   return (
     <section aria-label="जाँच का नतीजा" className="space-y-3">
-      <div className={`rounded-[12px] border-2 p-3 ${LOOK[result.level]}`}>
+      {/* सुनें: सिर्फ़ नतीजा और कारण (हमारे शब्द)। पते नहीं, क्योंकि कुछ browser आवाज़ के लिए text बाहर भेजते हैं */}
+      <ListenButton targetId={["pucho-verdict", "pucho-reasons"]} />
+      <div id="pucho-verdict" className={`rounded-[12px] border-2 p-3 ${LOOK[result.level]}`}>
         <h2 className="flex items-center gap-2 text-[20px] font-bold leading-snug">
           <Icon className="h-6 w-6 shrink-0" />
           {copy.emoji ? <span aria-hidden="true">{copy.emoji}</span> : null}
@@ -27,7 +30,7 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
       </div>
 
       {result.hits.length ? (
-        <ul className="space-y-2" aria-label="क्यों">
+        <ul id="pucho-reasons" className="space-y-2" aria-label="क्यों">
           {result.hits.map((h) => (
             <li key={h.id} className="rounded-xl border border-line bg-paper p-3">
               <h3 className="text-[17px] font-bold leading-snug">{h.labelHi}</h3>

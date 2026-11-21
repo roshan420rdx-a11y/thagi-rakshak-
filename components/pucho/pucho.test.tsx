@@ -69,3 +69,11 @@ test("बिना link वाले message पर पतों वाला �
   const html = renderToStaticMarkup(<VerdictCard result={checkMessage("URGENT: last chance to claim")} pageUrl={PAGE} />);
   expect(html).not.toContain("message में मिले पते");
 });
+
+test("सुनें के लिए नतीजा और कारण की id, पर पतों वाले हिस्से की नहीं (message का हिस्सा आवाज़ में बाहर न जाए)", () => {
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("update KYC, account blocked: http://sbi-yono-kyc.xyz")} pageUrl={PAGE} />);
+  expect(html).toContain('id="pucho-verdict"');
+  expect(html).toContain('id="pucho-reasons"');
+  const verdict = html.slice(html.indexOf('id="pucho-verdict"'), html.indexOf("message में मिले पते"));
+  expect(verdict).not.toContain("sbi-yono-kyc");
+});
