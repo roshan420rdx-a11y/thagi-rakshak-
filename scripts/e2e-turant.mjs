@@ -90,6 +90,27 @@ await check("offline: दोबारा खुले और पट्टी द
   }),
 );
 
+await check("offline: /turant से प्रकार पर tap करने पर उसका पन्ना खुले", () =>
+  withPage({}, async (page, context) => {
+    await page.goto(`${BASE}/turant`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.getByRole("link", { name: "Card से पैसे कटे" }).click();
+    await page.getByRole("heading", { name: /Card तुरंत block करें/ }).waitFor();
+    assert(page.url().endsWith("/turant/card"), `URL: ${page.url()}`);
+  }),
+);
+
+await check("मुख्य /turant: 'पता नहीं?' h2 के नीचे कदम h3", () =>
+  withPage({}, async (page) => {
+    await page.goto(`${BASE}/turant`);
+    assert((await page.locator("#turant-steps h2").count()) === 0, "कदमों में h2 मिला");
+    assert((await page.locator("#turant-steps h3").count()) >= 4, "कदम h3 नहीं");
+  }),
+);
+
 await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
   const res = await fetch(`${BASE}/sw.js`);
   const js = await res.text();
