@@ -93,5 +93,20 @@ await check("/turant/digital-arrest और /pucho से ज्ञानको�
   }),
 );
 
+await check("फ़ोन पर नियमों के नंबर ('1.') एक ही लाइन में, टूटें नहीं", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/gyan/digital-arrest`);
+    // नंबर वाले text की लाइनें गिनें (ऊँचाई नहीं, क्योंकि flex उसे पंक्ति जितना खींच देता है)
+    for (const li of await page.locator("[data-rule]").all()) {
+      const lines = await li.locator("span").first().evaluate((sp) => {
+        const r = document.createRange();
+        r.selectNodeContents(sp);
+        return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+      });
+      assert(lines === 1, `नंबर ${lines} लाइनों में टूटा`);
+    }
+  }),
+);
+
 await browser.close();
 process.exit(failed ? 1 : 0);

@@ -27,7 +27,7 @@ export default function BharosaPage() {
         <ul className="space-y-2">
           {NEVER_LIST.map((line) => (
             <li key={line} className="flex gap-2">
-              <span aria-hidden="true" className="font-bold text-danger">
+              <span aria-hidden="true" className="shrink-0 font-bold text-danger">
                 ✕
               </span>
               <span>{line}</span>

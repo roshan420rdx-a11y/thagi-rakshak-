@@ -35,7 +35,7 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
         <ul className="space-y-2">
           {p.signsHi.map((s) => (
             <li key={s} data-sign className="flex gap-2 rounded-xl border border-line bg-paper p-3">
-              <span aria-hidden="true" className="font-bold text-danger">
+              <span aria-hidden="true" className="shrink-0 font-bold text-danger">
                 !
               </span>
               <span>{s}</span>
@@ -58,8 +58,8 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
         <h2 className={H2}>बचने के 3 नियम</h2>
         <ol className="space-y-2">
           {p.rulesHi.map((r, i) => (
-            <li key={r} className="flex gap-2 rounded-xl bg-safe-bg p-3 text-safe">
-              <span className="font-bold">{i + 1}.</span>
+            <li key={r} data-rule className="flex gap-2 rounded-xl bg-safe-bg p-3 text-safe">
+              <span className="shrink-0 font-bold">{i + 1}.</span>
               <span className="font-semibold">{r}</span>
             </li>
           ))}
