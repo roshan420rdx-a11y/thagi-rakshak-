@@ -1,0 +1,12 @@
+[
+  { "term": "UTR", "hi": "लेन-देन नंबर (UTR)" },
+  { "term": "NCRP acknowledgement number", "hi": "शिकायत नंबर (NCRP)" },
+  { "term": "Freeze", "hi": "पैसा रोका गया (freeze)" },
+  { "term": "Beneficiary", "hi": "पैसा पाने वाला" },
+  { "term": "Nodal Officer", "hi": "बैंक के शिकायत अधिकारी (Nodal Officer)" },
+  { "term": "Ombudsman", "hi": "RBI लोकपाल (Ombudsman)" },
+  { "term": "Indemnity bond", "hi": "क्षतिपूर्ति का काग़ज़ (Indemnity bond)" },
+  { "term": "Eligible", "hi": "हक़ बनता है" },
+  { "term": "Compensation", "hi": "मुआवज़ा" },
+  { "term": "Fraudulent transaction", "hi": "ठगी वाला लेन-देन" }
+]
