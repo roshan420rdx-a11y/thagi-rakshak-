@@ -81,7 +81,7 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: /turant की browser जाँच (JS बंद, offline, 404, 320px, dark mode)
+      - name: browser जाँच (/turant + होम, menu, /pucho, /bharosa)
         run: |
           npm start > next.log 2>&1 &
           ok=0
@@ -91,4 +91,5 @@ jobs:
           done
           if [ "$ok" -ne 1 ]; then echo "app चालू नहीं हुआ"; cat next.log; exit 1; fi
           node scripts/e2e-turant.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
+          node scripts/e2e-site.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           pkill -f next-server || true
