@@ -84,3 +84,7 @@ test.each([
   checkMessage(t);
   expect(performance.now() - start).toBeLessThan(200);
 });
+
+test("'बताओ नहीं तो…' वाली धमकी में OTP माँगना अब भी पकड़ा जाए", () => {
+  expect(checkMessage("OTP बताओ नहीं तो खाता बंद हो जाएगा").hits.map((h) => h.id)).toContain("otp_request");
+});

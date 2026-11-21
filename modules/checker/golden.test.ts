@@ -74,6 +74,8 @@ const BENIGN: string[] = [
   "Your loan EMI of Rs 5,000 is due on 5th. Pay via the bank app to avoid late fee.",
   "पुलिस भर्ती का admit card कल से मिलेगा",
   "Beta, exam ke baad seedha ghar aa jana",
+  "Please accept the delivery today. Address PIN-code 110001",
+  "पार्सल लेते समय OTP बताएँ नहीं, बस पिन-कोड 110001 मिलाकर accept करें",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {

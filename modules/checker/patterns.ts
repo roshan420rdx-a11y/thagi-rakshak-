@@ -43,6 +43,8 @@ const NEGATIONS: RegExp[] = [
   ),
   rx("(?<![\\u0900-\\u097f])(?:न|ना|मत|नहीं|कभी\\s*न)\\s+(?:बता|बोल|भेज|शेयर|साझा|दें|दे|डाल|लिख)\\S*"),
   rx("(?:शेयर|साझा|share)\\s*(?:न|मत|नहीं|na|mat|nahi|nhi)\\s+(?:कर|kar)\\S*"),
+  // "बताएँ नहीं" (उल्टा क्रम); पर "बताओ नहीं तो…" धमकी है, उसे नकार न मानें
+  rx("(?:बता|बोल|भेज|शेयर|साझा|दें|दे)\\S*\\s+(?:नहीं|मत)(?![\\u0900-\\u097f])(?!\\s*(?:तो|to\\b))"),
   rx("\\b(?:na|mat|nahi|nhi)\\s+(?:bata|bol|bhej|share|de|daal|dal)\\w*"),
 ].map((r) => new RegExp(r.source, "gi"));
 
@@ -55,7 +57,7 @@ const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|बत�
 const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
 const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
-const PIN = "(?<![a-z])pin(?!\\s*code|[a-z])|पिन(?!\\s*कोड)|\\bmpin\\b";
+const PIN = "(?<![a-z])pin(?![\\s-]*code|[a-z])|पिन(?![\\s-]*कोड)|\\bmpin\\b";
 const REQUEST = "request|रिक्वेस्ट|collect|approve|accept|स्वीकार|एक्सेप्ट|अप्रूव";
 
 const ARREST_DIRECT =
