@@ -6,7 +6,7 @@
 
 संकेत: ✅ पूरा और जाँचा हुआ · 🟡 लिखा गया, जाँच बाकी · ⏳ बाकी · ⛔ रुका हुआ · 👤 मालिक के हाथ का
 
-_आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-5 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
+_आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-8 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
 
 ## नया session या नया chat शुरू करने का तरीका
 
@@ -38,9 +38,9 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-5 क�
 | TR-3 | भाषा ढाँचा, शब्दकोश, copy-lint | 🟡 स्थानीय जाँच पास (copy-lint ने नकली शब्द पकड़कर दिखाया) · GitHub CI बाकी |
 | TR-4 | ठगी के प्रकार + /turant | 🟡 स्थानीय जाँच पास: 70 unit tests + 8 browser जाँचें (बिना JS, offline, 404, 320px, dark mode, headers) · GitHub CI बाकी |
 | TR-5 | होम, navigation, /pucho (7 आम निशान), /bharosa | 🟡 स्थानीय जाँच पास: 89 unit tests + 9 site browser जाँचें (+ /turant की 8) · GitHub CI बाकी |
-| TR-6 | नियम-तालिका v0 (RBI + MRM मूल text) | ⏳ |
-| TR-7 | rules-engine + fixtures | ⏳ |
-| TR-8 | /haq पन्ने | ⏳ |
+| TR-6 | नियम-तालिका v0 (RBI मूल text) | 🟡 RBI के मूल text से (`docs/sources/rbi/`), हर नियम पर quote-जाँच test · 👤 मालिक की दूसरी जाँच बाकी · MRM SOP (गृह मंत्रालय) का मूल text अभी नहीं मिला |
+| TR-7 | rules-engine + fixtures | 🟡 स्थानीय जाँच पास (शुद्ध engine, 2027 के 3 नियम + 2027 से पहले का 1 + fail लेन-देन; RBI के अपने Illustration से मिलान) |
+| TR-8 | /haq पन्ने | 🟡 स्थानीय जाँच पास: 176 unit tests + 23 browser जाँचें (बिना JS form submit समेत) · GitHub CI बाकी |
 | TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | ⏳ |
 | TR-10 | ज्ञानकोश + 5 पन्ने | ⏳ |
 | TR-11 | /legal (वकील की जाँच बाकी) | ⏳ |
@@ -67,7 +67,14 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-5 क�
 - final review में मिली कमी ठीक की: फ़ोन पर footer की आख़िरी लाइन (कानूनी सलाह वाली) नीचे के menu के पीछे छिप रही थी (पहले failing e2e, फिर fix)।
 - **रुकावट:** RBI की वेबसाइट (rbi.org.in) environment में allow कर दी गई है, पर (a) web पढ़ने वाला सहायक उस तक नहीं पहुँचता, और (b) shell से download करने पर auto-mode की सुरक्षा जाँच ने रोक दिया। TR-6 के नियम मूल text के बिना "जाँच बाकी" के निशान के साथ बनेंगे, या मालिक की अनुमति के बाद पक्के होंगे।
 
+## TR-6 से TR-8 (विस्तार), 2026-11-21
+- branch `tr-a2b-niyam-haq` (`tr-a2a-home-bharosa` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a2b-niyam-haq.md`।
+- **RBI के मूल text पढ़े गए** (मालिक की अनुमति से): 24 जून 2026 के नए निर्देश (सातों तरह के बैंकों में एक जैसे, co-operative banks समेत), 2025 के पुराने निर्देश (para 67-73), 2019 का TAT circular। अंश `docs/sources/rbi/` में।
+- **design से 3 बड़े सुधार (मूल text के कारण):** (1) ₹25,000 का मुआवज़ा सिर्फ़ "ग्राहक की लापरवाही" वाले मामलों में है (76N); बैंक या बीच की कंपनी की गलती पर पूरा पैसा वापस (76L/76M)। (2) 1930/NCRP **और** बैंक, दोनों को 5 दिन में बताना ज़रूरी है। (3) co-operative banks भी शामिल हैं (पहले "साफ़ नहीं" लिखा था)।
+- एक ही calculator `/haq/thagi`: ठगी की तारीख़ से पुराने या नए नियम अपने आप चुनता है। साथ में `/haq/failed-txn` (₹100 रोज़) और `/haq/frozen-money` (गाइड, मूल SOP से जाँच बाकी)।
+- 👤 **मालिक की दूसरी जाँच:** `docs/sources/rbi/README.md` में दिए RBI links खोलकर मिलाएँ। मिल जाए तो नियमों पर `verifiedBy: "owner"` जुड़ेगा और "दूसरी जाँच बाकी" वाली लाइन हट जाएगी।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main`, `tr-a1-neev-turant` और `tr-a2a-home-bharosa` push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 🤖 plan A2b (TR-6 से TR-8: नियम-तालिका, rules-engine, /haq) लिखना और बनाना। RBI का मूल text मिलने तक हर नियम "संभावित, मूल text से जाँच बाकी" दिखाएगा।
+2. 🤖 **Claude:** repo जोड़कर `main` और तीनों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 🤖 plan A3 (TR-9 से TR-11: बैंकों के आधिकारिक रास्ते, ज्ञानकोश, legal पन्ने) लिखना और बनाना।

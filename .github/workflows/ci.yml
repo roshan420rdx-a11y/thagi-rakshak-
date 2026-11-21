@@ -81,7 +81,7 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: browser जाँच (/turant + होम, menu, /pucho, /bharosa)
+      - name: browser जाँच (/turant, होम, menu, /pucho, /bharosa, /haq)
         run: |
           npm start > next.log 2>&1 &
           ok=0
@@ -92,4 +92,5 @@ jobs:
           if [ "$ok" -ne 1 ]; then echo "app चालू नहीं हुआ"; cat next.log; exit 1; fi
           node scripts/e2e-turant.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-site.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
+          node scripts/e2e-haq.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           pkill -f next-server || true
