@@ -1,5 +1,6 @@
 import type { GyanSlug } from "@/modules/gyan";
 import type { TurantSlug } from "@/modules/scams";
+import { isBankLookalike } from "./links";
 import { normalizePattern } from "./normalize";
 
 // "पहले पूछो" के तय नियम (spec भाग 2, खंड 6.3, 7)। ये सिर्फ़ पहचान के लिए हैं, user को दिखने वाली बात नहीं,
@@ -11,6 +12,7 @@ export type RuleLevel = "danger" | "warn";
 export type CheckedText = {
   text: string; // normalize किया हुआ पूरा message
   stripped: string; // "किसी को न बताएँ / do not share" जैसे नकार हटाकर (OTP/PIN वाले नियमों के लिए)
+  domains: string[]; // message में आए पते
 };
 
 export type CheckerRule = {
@@ -341,6 +343,13 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "जल्दबाज़ी करवाना",
     explainHi: "ठग सोचने का समय नहीं देते। रुकें, किसी अपने से पूछें, फिर कुछ करें।",
     test: (t) => R.urgent.test(t.text),
+  },
+  {
+    id: "bank_lookalike",
+    level: "warn",
+    labelHi: "बैंक के नाम वाला पता, पर .bank.in नहीं",
+    explainHi: "RBI के निर्देश से भारत के बैंकों की वेबसाइट .bank.in पर है, और यह पता सिर्फ़ बैंक ले सकते हैं। बैंक के नाम वाला कोई और पता नकली हो सकता है। link न खोलें।",
+    test: (t) => t.domains.some(isBankLookalike),
   },
   {
     id: "link",
