@@ -12,7 +12,7 @@ const TOOLS = [
   { href: "/haq/thagi", label: "आपका हक़: पूरा पैसा वापस या मुआवज़ा?" },
   { href: "/haq/frozen-money", label: "ठग के खाते में पैसा रुका: वापस कैसे माँगें" },
   { href: "/gyan/bank", label: "अपने बैंक को ठगी कैसे बताएँ" },
-  { href: "/pucho", label: "ठगी के 7 आम निशान" },
+  { href: "/pucho", label: "message जाँचें और ठगी के 7 आम निशान" },
 ] as const;
 
 export default function GyanIndexPage() {

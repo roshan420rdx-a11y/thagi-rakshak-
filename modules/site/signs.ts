@@ -1,4 +1,4 @@
-// ठगी के 7 आम निशान (/pucho, checker आने तक) और /bharosa की "हम कभी नहीं करेंगे" सूची। text plan A2a से जस का तस।
+// ठगी के 7 आम निशान (/pucho, checker के नीचे; बिना JS के भी) और /bharosa की "हम कभी नहीं करेंगे" सूची। text plan A2a से जस का तस।
 
 export const SCAM_SIGNS: readonly { titleHi: string; bodyHi: string }[] = [
   { titleHi: 'जल्दबाज़ी: "आज ही", "अभी नहीं तो खाता बंद"', bodyHi: "ठग सोचने का समय नहीं देते। रुकें और किसी अपने से बात करें।" },
