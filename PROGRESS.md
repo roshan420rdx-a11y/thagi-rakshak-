@@ -43,7 +43,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-8 | /haq पन्ने | 🟡 स्थानीय जाँच पास: 176 unit tests + 23 browser जाँचें (बिना JS form submit समेत) · GitHub CI बाकी |
 | TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | 🟡 पन्ने बने · **TR-9b: 9 बैंकों की जाँच 1 (Claude) पूरी**, बैंक की अपनी `.bank.in` साइट से (HDFC, BoB, Union, ICICI के ठगी वाले toll-free; SBI, PNB, Canara, Axis, Kotak के होम पेज वाले 'report fraud' link), मूल अंश `docs/sources/banks/` · 👤 **मालिक की जाँच 2 बाकी**, तब तक कुछ नहीं दिखता · Bank of India की साइट bot-जाँच के कारण बाकी · 207 unit + 29 browser जाँचें पास |
 | TR-10 | ज्ञानकोश + 5 पन्ने | 🟡 स्थानीय जाँच पास: `/gyan` + 5 पन्ने (digital arrest, नकली customer care, UPI PIN/QR, task/निवेश, APK फ़ाइल), तय ढाँचा, RBI हवालों की quote-जाँच, /pucho और /turant से links · 230 unit + 36 browser जाँचें · 👤 विशेषज्ञ (वकील/बैंक अधिकारी) की जाँच बाकी, पन्नों पर साफ़ लिखा है |
-| TR-11 | /legal (वकील की जाँच बाकी) | ⏳ |
+| TR-11 | /legal (वकील की जाँच बाकी) | 🟡 मसौदा बना: निजता, शर्तें, शिकायत अधिकारी (env से, ख़ाली हो तो "अभी नियुक्त नहीं") · निजता के दावे e2e से साबित (कोई cookie नहीं, कोई बाहरी request नहीं; नकारात्मक जाँच भी की) · 241 unit + 41 browser जाँचें · ⚖️ वकील की जाँच और 👤 शिकायत अधिकारी का नाम/email बाकी |
 | TR-12 | Render deploy + launch checklist | ⏳ |
 | TR-13 | WhatsApp पहला जवाब + जवाब-किताब | ⏳ |
 | TR-14 से TR-26 | चरण B और C (`PROMPT.md` Part 4) | ⏳ |
@@ -93,7 +93,13 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - screenshot से पकड़ी कमी: फ़ोन पर नियमों के नंबर ("1.") दो लाइनों में टूट रहे थे; e2e अब लाइनें गिनता है (पहले RED, फिर GREEN)।
 - बाद के लिए: sitemap.xml और robots.txt (TR-12 में)।
 
+## TR-11 (विस्तार), 2026-11-21
+- branch `tr-11-legal` (`tr-10-gyan` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a3c-legal.md`।
+- निजता पन्ना सिर्फ़ वही बताता है जो साइट आज करती है। उसके दावे `scripts/e2e-legal.mjs` से हर बार जाँचे जाते हैं; साइट में कुछ नया (analytics, cookie, WhatsApp) जुड़े तो पहले यह पन्ना बदलना होगा, वरना CI fail होगी।
+- DPDP Act या IT Rules का मूल text इस environment से नहीं खुलता, इसलिए अधिकार आम भाषा में लिखे हैं, धाराओं के नंबर के बिना, और साथ में "[वकील की जाँच बाकी]"।
+- 👤 launch से पहले मालिक को तय करना है: संस्था का नाम, शिकायत अधिकारी का नाम और email (Render में env: `NEXT_PUBLIC_ORG_NAME`, `NEXT_PUBLIC_GRIEVANCE_NAME`, `NEXT_PUBLIC_GRIEVANCE_EMAIL`)।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और छहों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`, `tr-10-gyan`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 👤 बैंकों की जाँच 2 (हर बैंक लगभग 2 मिनट) · 🤖 फिर TR-11 (legal पन्ने: privacy, terms, शिकायत अधिकारी)।
+2. 🤖 **Claude:** repo जोड़कर `main` और सातों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`, `tr-10-gyan`, `tr-11-legal`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 👤 बैंकों की जाँच 2 (हर बैंक लगभग 2 मिनट) · 🤖 TR-12 का code वाला हिस्सा (deploy settings, sitemap, launch-जाँच) और TR-13 की जवाब-किताब; जिनमें मालिक के खाते चाहिए (Render, Meta) वे बाद में।
