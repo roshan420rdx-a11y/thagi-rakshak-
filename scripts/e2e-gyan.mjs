@@ -120,10 +120,17 @@ await check("सुनें: सार, निशान और नियम ह
   // आवाज़ वाला हिस्सा नकली: जो बोला जाता, उसे पकड़ लें
   await context.addInitScript(() => {
     window.__spoken = [];
-    if (!("SpeechSynthesisUtterance" in window)) window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    // नकली utterance: असली वाला नकली voice object नहीं लेता
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
-      value: { speak: (u) => window.__spoken.push({ text: u.text, lang: u.lang }), cancel: () => {} },
+      value: {
+        speak: (u) => window.__spoken.push({ text: u.text, lang: u.lang, voice: u.voice?.name }),
+        cancel: () => {},
+        getVoices: () => [{ lang: "en-IN", name: "English", localService: true }, { lang: "hi-IN", name: "Hindi", localService: true }],
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      },
     });
   });
   const page = await context.newPage();
@@ -131,9 +138,44 @@ await check("सुनें: सार, निशान और नियम ह
     await page.goto(`${BASE}/gyan/digital-arrest`);
     await page.getByRole("button", { name: "सुनें" }).click();
     const spoken = await page.evaluate(() => window.__spoken);
-    assert(spoken.length === 1 && spoken[0].lang === "hi-IN", `spoken: ${JSON.stringify(spoken).slice(0, 80)}`);
+    assert(spoken.length === 1 && spoken[0].lang === "hi-IN" && spoken[0].voice === "Hindi", `spoken: ${JSON.stringify(spoken).slice(0, 80)}`);
     for (const part of ["30 सेकंड में", "पहचान के 5 निशान", "बचने के 3 नियम"]) assert(spoken[0].text.includes(part), `${part} नहीं बोला`);
     assert(!spoken[0].text.includes("अक्सर पूछे सवाल"), "FAQ भी बोला");
+  } finally {
+    await context.close();
+  }
+});
+
+await check("सुनें: Hindi आवाज़ न हो तो बटन नहीं; आवाज़ देर से आए तो बटन आ जाए", async () => {
+  const context = await browser.newContext();
+  await context.addInitScript(() => {
+    const listeners = [];
+    window.__voices = [{ lang: "en-US", name: "English", localService: true }];
+    window.__fireVoices = () => listeners.forEach((f) => f());
+    // नकली utterance: असली वाला नकली voice object नहीं लेता
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: {
+        speak: () => {},
+        cancel: () => {},
+        getVoices: () => window.__voices,
+        addEventListener: (_e, f) => listeners.push(f),
+        removeEventListener: () => {},
+      },
+    });
+  });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/gyan/digital-arrest`);
+    await page.getByRole("heading", { level: 1 }).waitFor();
+    await page.waitForTimeout(300);
+    assert((await page.getByRole("button", { name: "सुनें" }).count()) === 0, "Hindi आवाज़ के बिना बटन दिखा");
+    await page.evaluate(() => {
+      window.__voices.push({ lang: "hi-IN", name: "Hindi", localService: true });
+      window.__fireVoices();
+    });
+    await page.getByRole("button", { name: "सुनें" }).waitFor();
   } finally {
     await context.close();
   }

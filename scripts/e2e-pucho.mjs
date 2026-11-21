@@ -134,10 +134,17 @@ await check("सुनें: नतीजा और कारण बोले, 
   const context = await browser.newContext({ viewport: PHONE });
   await context.addInitScript(() => {
     window.__spoken = [];
-    if (!("SpeechSynthesisUtterance" in window)) window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    // नकली utterance: असली वाला नकली voice object नहीं लेता
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
-      value: { speak: (u) => window.__spoken.push(u.text), cancel: () => {} },
+      value: {
+        speak: (u) => window.__spoken.push(u.text),
+        cancel: () => {},
+        getVoices: () => [{ lang: "hi-IN", name: "Hindi", localService: true }],
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      },
     });
   });
   const page = await context.newPage();
