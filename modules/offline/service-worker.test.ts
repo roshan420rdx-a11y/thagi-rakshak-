@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { OFFLINE_URLS, buildServiceWorker, extractNextAssets } from "@/modules/offline";
+import { OFFLINE_URLS, buildServiceWorker, extractNextAssets, swVersion } from "@/modules/offline";
 
 test("OFFLINE_URLS: /turant, 10 पन्ने और /gyan/bank", () => {
   expect(OFFLINE_URLS).toContain("/turant");
@@ -37,4 +37,10 @@ test("worker install में हर पन्ने की static files भी
   const js = buildServiceWorker({ version: "v", urls: ["/turant"] });
   expect(js).toContain("function extractNextAssets(html)");
   expect(() => new Function(js)).not.toThrow();
+});
+
+test("swVersion: content version + commit के 7 अक्षर", () => {
+  expect(swVersion({ RENDER_GIT_COMMIT: "abcdef123456" })).toBe("turant-2026-11-21.2-abcdef1");
+  expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-21.2-9999999");
+  expect(swVersion({})).toBe("turant-2026-11-21.2-local");
 });

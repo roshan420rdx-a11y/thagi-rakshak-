@@ -1,7 +1,14 @@
-import { TURANT_SLUGS } from "@/modules/scams";
+import { TURANT_CONTENT_VERSION, TURANT_SLUGS } from "@/modules/scams";
 
 // offline में खुलने वाले पन्ने: /turant, उसके सारे प्रकार (data से बनते हैं) और अपने बैंक को बताने का पन्ना
 export const OFFLINE_URLS: readonly string[] = ["/turant", ...TURANT_SLUGS.map((s) => `/turant/${s}`), "/gyan/bank"];
+
+// cache का version: content version + git commit। हर deploy पर नया version, और activate पर पुराने caches
+// (पुरानी build की JS/CSS समेत) अपने आप हटते हैं।
+export function swVersion(env: Record<string, string | undefined> = process.env): string {
+  const commit = (env.RENDER_GIT_COMMIT || env.GITHUB_SHA || "local").slice(0, 7);
+  return `turant-${TURANT_CONTENT_VERSION}-${commit}`;
+}
 
 // HTML में लिखी Next.js की static files (CSS/JS) के पते निकालना: <script src>/<link href> से, और RSC flight data
 // ("static/chunks/…js") से। offline पन्ना तभी पूरा चलता है जब उसकी JS भी cache में हो, वरना React पन्ना तोड़ देता है।
