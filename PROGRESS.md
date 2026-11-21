@@ -41,7 +41,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-6 | नियम-तालिका v0 (RBI मूल text) | 🟡 RBI के मूल text से (`docs/sources/rbi/`), हर नियम पर quote-जाँच test · 👤 मालिक की दूसरी जाँच बाकी · MRM SOP (गृह मंत्रालय) का मूल text अभी नहीं मिला |
 | TR-7 | rules-engine + fixtures | 🟡 स्थानीय जाँच पास (शुद्ध engine, 2027 के 3 नियम + 2027 से पहले का 1 + fail लेन-देन; RBI के अपने Illustration से मिलान) |
 | TR-8 | /haq पन्ने | 🟡 स्थानीय जाँच पास: 176 unit tests + 23 browser जाँचें (बिना JS form submit समेत) · GitHub CI बाकी |
-| TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | 🟡 ढाँचा और पन्ने बने: 10 बैंक, RBI के quote वाले 6 सुरक्षा-सुझाव (`.bank.in`, card के पीछे का नंबर, ऐप में report link…), /turant से link, offline · **नंबर अभी किसी बैंक का live नहीं** (TR-9b: दो-जाँच बाकी, `docs/verify/BANKS.md`) · 198 unit + 28 browser जाँचें पास |
+| TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | 🟡 पन्ने बने · **TR-9b: 9 बैंकों की जाँच 1 (Claude) पूरी**, बैंक की अपनी `.bank.in` साइट से (HDFC, BoB, Union, ICICI के ठगी वाले toll-free; SBI, PNB, Canara, Axis, Kotak के होम पेज वाले 'report fraud' link), मूल अंश `docs/sources/banks/` · 👤 **मालिक की जाँच 2 बाकी**, तब तक कुछ नहीं दिखता · Bank of India की साइट bot-जाँच के कारण बाकी · 207 unit + 29 browser जाँचें पास |
 | TR-10 | ज्ञानकोश + 5 पन्ने | ⏳ |
 | TR-11 | /legal (वकील की जाँच बाकी) | ⏳ |
 | TR-12 | Render deploy + launch checklist | ⏳ |
@@ -81,7 +81,12 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - /turant के "बैंक को बताएँ" और "card block करें" वाले कदमों पर अब "अपने बैंक का सही रास्ता देखें" link है, और वह offline भी खुलता है।
 - **TR-9b (बाकी):** बैंकों की `.bank.in` साइटों से असली नंबर लाना (जाँच 1), फिर मालिक की जाँच 2। इसके लिए environment में उन साइटों की अनुमति, और download करने की मालिक की अनुमति चाहिए।
 
+## TR-9b और offline का सुधार (2026-11-21)
+- branch `tr-9b-bank-numbers`। 10 बैंकों के `.bank.in` hosts मालिक की अनुमति से environment में जोड़े। 9 की साइट खुली, title बैंक के नाम से मिले। Bank of India की साइट Cloudflare की bot-जाँच के कारण नहीं खुली।
+- **offline की एक असली कमी पकड़ी और ठीक की:** offline में `/turant` से "अपने बैंक का सही रास्ता देखें" दबाने पर पन्ना ख़ाली दिखता था। वजह: पन्ने की JS file cache में नहीं थी, और उसके बिना React पन्ना तोड़ देता था। अब service worker install के समय हर offline पन्ने की JS/CSS भी cache करता है। production build function का नाम बदल देता है, इसलिए e2e अब `/sw.js` भी जाँचता है।
+- 👤 **मालिक की जाँच 2:** `docs/verify/BANKS.md` की तालिका में हर बैंक का link है। फ़ोन पर खोलें, नंबर या link मिलाएँ, और chat में लिखें "HDFC ठीक है"।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और चारों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 🤖 TR-9b (बैंकों के नंबर, मालिक की अनुमति के बाद) · फिर TR-10 (ज्ञानकोश) और TR-11 (legal पन्ने)।
+2. 🤖 **Claude:** repo जोड़कर `main` और पाँचों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 👤 बैंकों की जाँच 2 (हर बैंक लगभग 2 मिनट) · 🤖 फिर TR-10 (ज्ञानकोश) और TR-11 (legal पन्ने)।
