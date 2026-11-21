@@ -1,4 +1,4 @@
-import type { CheckResult } from "@/modules/checker";
+import { isBankLookalike, type CheckResult } from "@/modules/checker";
 import { CHECK_LIMIT_HI, LEVEL_COPY, verdictShareText, whatsappShareLink } from "@/modules/checker/share";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconInfo } from "@/components/ui/icons";
@@ -40,6 +40,26 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
             </li>
           ))}
         </ul>
+      ) : null}
+
+      {result.domains.length ? (
+        <div className="rounded-xl border border-line bg-paper p-3">
+          <h3 className="text-[17px] font-bold leading-snug">message में मिले पते</h3>
+          <ul className="mt-1 space-y-1">
+            {result.domains.map((d) => (
+              <li key={d} className="text-[16px]">
+                <span className="font-mono break-all">{d}</span>
+                {isBankLookalike(d) ? (
+                  <span className="block font-semibold text-warn">बैंक का नाम है, पर पता .bank.in पर नहीं</span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-[15px]">
+            भारत के बैंकों की असली वेबसाइट का पता .bank.in पर ख़त्म होता है। फिर भी link न खोलें, पता ख़ुद टाइप करें। ये पते सिर्फ़
+            आपके फ़ोन पर दिख रहे हैं।
+          </p>
+        </div>
       ) : null}
 
       {turant ? (

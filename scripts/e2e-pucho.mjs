@@ -108,6 +108,28 @@ await check("message बदलते ही पुराना नतीजा �
   }),
 );
 
+await check("link वाला message: असली पता और .bank.in चेतावनी दिखे, share में पता नहीं", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await openBox(page);
+    await checkText(page, "Your account will be blocked today, update KYC: http://sbi-yono-kyc.xyz/login");
+    await page.getByRole("heading", { name: "message में मिले पते" }).waitFor();
+    await page.getByText("sbi-yono-kyc.xyz", { exact: false }).first().waitFor();
+    await page.getByText("बैंक के नाम वाला पता, पर .bank.in नहीं").waitFor();
+    // ".bank.in" बीच से न टूटे (पहले "पर ." और "bank.in" अलग लाइनों में थे)
+    const lines = await page.getByText("बैंक का नाम है, पर पता .bank.in पर नहीं").evaluate((el) => {
+      const text = el.firstChild;
+      const i = text.textContent.indexOf(".bank.in");
+      const r = document.createRange();
+      r.setStart(text, i);
+      r.setEnd(text, i + ".bank.in".length);
+      return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+    });
+    assert(lines === 1, `.bank.in ${lines} लाइनों में टूटा`);
+    const href = await page.getByRole("link", { name: /परिवार को भेजें/ }).getAttribute("href");
+    assert(!decodeURIComponent(href).includes("sbi-yono"), "share में पता गया");
+  }),
+);
+
 await check("JS बंद: box नहीं, 7 आम निशान अब भी", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);

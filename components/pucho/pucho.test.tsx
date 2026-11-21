@@ -55,3 +55,17 @@ test("share link में user के message का कोई हिस्स�
 test("CheckerBox: mount से पहले कुछ नहीं (बिना JS के box नहीं दिखेगा)", () => {
   expect(renderToStaticMarkup(<CheckerBox pageUrl={PAGE} />)).toBe("");
 });
+
+test("link वाले message: नतीजे में असली पता दिखे, पर share में नहीं", () => {
+  const result = checkMessage("Your account will be blocked, update KYC: http://sbi-yono-kyc.xyz/login");
+  const html = renderToStaticMarkup(<VerdictCard result={result} pageUrl={PAGE} />);
+  expect(html).toContain("message में मिले पते");
+  expect(html).toContain("sbi-yono-kyc.xyz");
+  expect(html).toContain(".bank.in");
+  expect(verdictShareText(result, PAGE)).not.toContain("sbi-yono-kyc");
+});
+
+test("बिना link वाले message पर पतों वाला हिस्सा नहीं", () => {
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("URGENT: last chance to claim")} pageUrl={PAGE} />);
+  expect(html).not.toContain("message में मिले पते");
+});
