@@ -6,7 +6,7 @@
 
 संकेत: ✅ पूरा और जाँचा हुआ · 🟡 लिखा गया, जाँच बाकी · ⏳ बाकी · ⛔ रुका हुआ · 👤 मालिक के हाथ का
 
-_आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-8 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
+_आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
 
 ## नया session या नया chat शुरू करने का तरीका
 
@@ -41,7 +41,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-8 क�
 | TR-6 | नियम-तालिका v0 (RBI मूल text) | 🟡 RBI के मूल text से (`docs/sources/rbi/`), हर नियम पर quote-जाँच test · 👤 मालिक की दूसरी जाँच बाकी · MRM SOP (गृह मंत्रालय) का मूल text अभी नहीं मिला |
 | TR-7 | rules-engine + fixtures | 🟡 स्थानीय जाँच पास (शुद्ध engine, 2027 के 3 नियम + 2027 से पहले का 1 + fail लेन-देन; RBI के अपने Illustration से मिलान) |
 | TR-8 | /haq पन्ने | 🟡 स्थानीय जाँच पास: 176 unit tests + 23 browser जाँचें (बिना JS form submit समेत) · GitHub CI बाकी |
-| TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | ⏳ |
+| TR-9 | बैंकों के आधिकारिक रास्ते (दो-जाँच) | 🟡 ढाँचा और पन्ने बने: 10 बैंक, RBI के quote वाले 6 सुरक्षा-सुझाव (`.bank.in`, card के पीछे का नंबर, ऐप में report link…), /turant से link, offline · **नंबर अभी किसी बैंक का live नहीं** (TR-9b: दो-जाँच बाकी, `docs/verify/BANKS.md`) · 198 unit + 28 browser जाँचें पास |
 | TR-10 | ज्ञानकोश + 5 पन्ने | ⏳ |
 | TR-11 | /legal (वकील की जाँच बाकी) | ⏳ |
 | TR-12 | Render deploy + launch checklist | ⏳ |
@@ -74,7 +74,14 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-8 क�
 - एक ही calculator `/haq/thagi`: ठगी की तारीख़ से पुराने या नए नियम अपने आप चुनता है। साथ में `/haq/failed-txn` (₹100 रोज़) और `/haq/frozen-money` (गाइड, मूल SOP से जाँच बाकी)।
 - 👤 **मालिक की दूसरी जाँच:** `docs/sources/rbi/README.md` में दिए RBI links खोलकर मिलाएँ। मिल जाए तो नियमों पर `verifiedBy: "owner"` जुड़ेगा और "दूसरी जाँच बाकी" वाली लाइन हट जाएगी।
 
+## TR-9 (विस्तार), 2026-11-21
+- branch `tr-9-bank-raste` (`tr-a2b-niyam-haq` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a3a-bank-raste.md`।
+- RBI का `.bank.in` वाला circular (22 अप्रैल 2025) मूल text से पक्का किया, और `docs/sources/rbi/` में सँभाला।
+- **कोई नंबर तभी दिखेगा, जब दो जाँच हो चुकी हों** (`isLive` = claude + owner)। एक test हर बैंक-पन्ने के HTML में `tel:` और `.bank.in` links खोजता है, ताकि बिना दो-जाँच के कुछ न छपे।
+- /turant के "बैंक को बताएँ" और "card block करें" वाले कदमों पर अब "अपने बैंक का सही रास्ता देखें" link है, और वह offline भी खुलता है।
+- **TR-9b (बाकी):** बैंकों की `.bank.in` साइटों से असली नंबर लाना (जाँच 1), फिर मालिक की जाँच 2। इसके लिए environment में उन साइटों की अनुमति, और download करने की मालिक की अनुमति चाहिए।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और तीनों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 🤖 plan A3 (TR-9 से TR-11: बैंकों के आधिकारिक रास्ते, ज्ञानकोश, legal पन्ने) लिखना और बनाना।
+2. 🤖 **Claude:** repo जोड़कर `main` और चारों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 🤖 TR-9b (बैंकों के नंबर, मालिक की अनुमति के बाद) · फिर TR-10 (ज्ञानकोश) और TR-11 (legal पन्ने)।
