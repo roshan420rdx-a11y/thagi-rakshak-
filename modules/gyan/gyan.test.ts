@@ -8,8 +8,18 @@ import { isTurantSlug } from "@/modules/scams";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
 const ALLOWED_LINKS = ["/haq/thagi", "/gyan/bank", "/haq/frozen-money", "/turant"];
 
-test("5 पन्ने, तय क्रम", () =>
-  expect(GYAN_PAGES.map((p) => p.slug)).toEqual(["digital-arrest", "customer-care-fake", "upi-pin-qr", "task-investment", "apk-file"]));
+test("9 पन्ने, तय क्रम", () =>
+  expect(GYAN_PAGES.map((p) => p.slug)).toEqual([
+    "digital-arrest",
+    "customer-care-fake",
+    "upi-pin-qr",
+    "task-investment",
+    "apk-file",
+    "bijli-bill",
+    "lottery-inaam",
+    "sextortion",
+    "loan-app",
+  ]));
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे के गिनती वाले नियम", (_s, p) => {
   expect(p.summaryHi).toHaveLength(3);
@@ -35,10 +45,20 @@ test("हो गया है? का सही /turant पन्ना", () => 
   expect(getGyanPage("digital-arrest")?.turantSlug).toBe("digital-arrest");
   expect(getGyanPage("upi-pin-qr")?.turantSlug).toBe("upi");
   expect(getGyanPage("task-investment")?.turantSlug).toBe("investment-task");
+  expect(getGyanPage("bijli-bill")?.turantSlug).toBe("customer-care-fake");
+  expect(getGyanPage("lottery-inaam")?.turantSlug).toBe("upi");
+  expect(getGyanPage("sextortion")?.turantSlug).toBe("sextortion");
+  expect(getGyanPage("loan-app")?.turantSlug).toBe("loan-app");
 });
 
-test("gyanForTurant: customer-care-fake → customer care और APK", () =>
-  expect(gyanForTurant("customer-care-fake").map((p) => p.slug)).toEqual(["customer-care-fake", "apk-file"]));
+test("gyanForTurant: customer-care-fake → customer care, APK और बिजली बिल", () =>
+  expect(gyanForTurant("customer-care-fake").map((p) => p.slug)).toEqual(["customer-care-fake", "apk-file", "bijli-bill"]));
+
+test("sextortion पन्ने में Tele-MANAS और 'आपकी गलती नहीं'", () => {
+  const text = JSON.stringify(getGyanPage("sextortion"));
+  expect(text).toContain("14416");
+  expect(text).toContain("आपकी गलती नहीं");
+});
 
 test("getGyanPage ग़लत slug पर undefined", () => expect(getGyanPage("xyz")).toBeUndefined());
 

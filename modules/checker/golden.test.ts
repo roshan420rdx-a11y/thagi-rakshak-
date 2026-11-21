@@ -85,6 +85,16 @@ test("नियमों के label और समझाने वाली ब
   expect(findForbidden(copy, FORBIDDEN_PHRASES)).toEqual([]);
 });
 
+test("निशान से सही ज्ञानकोश पन्ना, और हर gyan link असली पन्ना", () => {
+  const gyanOf = (id: string) => CHECKER_RULES.find((r) => r.id === id)?.gyan;
+  expect(gyanOf("electricity_cut")).toBe("bijli-bill");
+  expect(gyanOf("lottery_fee")).toBe("lottery-inaam");
+  expect(gyanOf("blackmail")).toBe("sextortion");
+  expect(gyanOf("loan_threat")).toBe("loan-app");
+  const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
+  for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
+});
+
 test("हर नियम कम से कम एक सुनहरे message में काम आए", () => {
   const used = new Set(SCAMS.flatMap((m) => checkMessage(m).hits.map((h) => h.id)));
   expect(CHECKER_RULES.map((r) => r.id).filter((id) => !used.has(id))).toEqual([]);

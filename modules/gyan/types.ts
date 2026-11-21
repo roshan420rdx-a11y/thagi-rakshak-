@@ -1,7 +1,16 @@
 import type { TurantSlug } from "@/modules/scams";
 
 // ज्ञानकोश के पन्ने का ढाँचा (spec भाग 2, खंड 10)। गिनती वाले नियम (3 लाइन का सार, 5 निशान, 3 नियम…) tests पक्का करते हैं।
-export type GyanSlug = "digital-arrest" | "customer-care-fake" | "upi-pin-qr" | "task-investment" | "apk-file";
+export type GyanSlug =
+  | "digital-arrest"
+  | "customer-care-fake"
+  | "upi-pin-qr"
+  | "task-investment"
+  | "apk-file"
+  | "bijli-bill"
+  | "lottery-inaam"
+  | "sextortion"
+  | "loan-app";
 
 export type RbiRef = { file: string; paragraph: string; quote: string };
 

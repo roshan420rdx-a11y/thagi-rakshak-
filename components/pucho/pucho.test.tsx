@@ -18,7 +18,7 @@ test("danger: पक्के निशान, कारण, ज्ञानक�
 });
 
 test("danger बिना turant वाले निशान पर /turant/pata-nahi", () => {
-  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("Congratulations! You won Rs 25 lakh in KBC lottery. Pay Rs 15,000 processing fee")} pageUrl={PAGE} />);
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("शादी का कार्ड भेज रहे हैं: Wedding_Invitation.apk")} pageUrl={PAGE} />);
   expect(html).toContain('href="/turant/pata-nahi"');
 });
 
