@@ -72,6 +72,7 @@ await check("निजता का सबूत: कोई cookie नहीं,
       "/haq/failed-txn",
       "/gyan/digital-arrest",
       "/gyan/bank/hdfc",
+      "/pucho",
       "/legal/privacy",
     ];
     for (const path of paths) {
@@ -82,6 +83,14 @@ await check("निजता का सबूत: कोई cookie नहीं,
     assert(cookieHeaders.length === 0, `set-cookie: ${cookieHeaders.slice(0, 3).join(", ")}`);
     assert((await context.cookies()).length === 0, "browser में cookie मिली");
     assert((await page.evaluate(() => document.cookie)) === "", "document.cookie ख़ाली नहीं");
+  }),
+);
+
+await check('निजता पन्ने में "पहले पूछो" वाला हिस्सा', () =>
+  withPage({}, async (page) => {
+    await page.goto(`${BASE}/legal/privacy`);
+    await page.getByRole("heading", { name: '"पहले पूछो" में चिपकाया message' }).waitFor();
+    await page.getByText("आपके फ़ोन के browser में ही जाँचा जाता है", { exact: false }).waitFor();
   }),
 );
 
