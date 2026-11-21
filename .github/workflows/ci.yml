@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# एक ही branch पर नया push आए तो पुरानी चल रही CI रोक दो (Actions-मिनट बचते हैं)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      # पहरेदार: production dependencies में कोई *critical* कमज़ोरी आए तो build रुके
+      - name: Dependency gate (critical)
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Production build
+        run: npm run build
+
+      - name: TypeScript type check
+        run: npm run typecheck
+
+      - name: Smoke test (app चालू करके /api/health जाँचना)
+        run: |
+          npm start > next.log 2>&1 &
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:3000/api/health; then
+              echo
+              ok=1
+              break
+            fi
+            sleep 2
+          done
+          pkill -f next-server || true
+          if [ "$ok" -ne 1 ]; then
+            echo "health check failed"
+            cat next.log
+            exit 1
+          fi
