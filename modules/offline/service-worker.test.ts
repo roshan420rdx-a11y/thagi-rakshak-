@@ -1,10 +1,11 @@
 import { expect, test } from "vitest";
 import { OFFLINE_URLS, buildServiceWorker } from "@/modules/offline";
 
-test("OFFLINE_URLS: /turant और 10 पन्ने", () => {
+test("OFFLINE_URLS: /turant, 10 पन्ने और /gyan/bank", () => {
   expect(OFFLINE_URLS).toContain("/turant");
   expect(OFFLINE_URLS).toContain("/turant/digital-arrest");
-  expect(OFFLINE_URLS).toHaveLength(11);
+  expect(OFFLINE_URLS).toContain("/gyan/bank");
+  expect(OFFLINE_URLS).toHaveLength(12);
 });
 
 test("worker में version और हर URL", () => {

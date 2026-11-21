@@ -2,7 +2,7 @@
 // text spec और plan A1 (Task 5) की तालिकाओं से जस का तस है। copy बदले तो TURANT_CONTENT_VERSION बढ़ाएँ
 // (service worker इसी से पुराना cache हटाता है)।
 
-export const TURANT_CONTENT_VERSION = "2026-11-21.1";
+export const TURANT_CONTENT_VERSION = "2026-11-21.2";
 
 export const TURANT_SLUGS = [
   "upi",
@@ -56,6 +56,7 @@ export type TurantPage = {
 export const TELE_MANAS: TurantAction = { kind: "tel", number: "14416", labelHi: "Tele-MANAS: 14416 (मुफ़्त)" };
 
 const CALL_1930: TurantAction = { kind: "tel", number: "1930", labelHi: "1930 मिलाएँ" };
+const MY_BANK_LINK: TurantAction = { kind: "link", href: "/gyan/bank", labelHi: "अपने बैंक का सही रास्ता देखें", external: false };
 const GOOGLE_WARNING = 'नंबर Google पर न खोजें। नकली "customer care" नंबर ठगी का बड़ा जाल हैं।';
 
 const STEPS: Record<StepId, TurantStep> = {
@@ -74,14 +75,14 @@ const STEPS: Record<StepId, TurantStep> = {
     titleHi: "बैंक को आज ही बताएँ",
     bodyHi: 'बैंक के ऐप में "Report fraud" या "Block" वाला विकल्प खोलें, या बैंक की अपनी वेबसाइट पर दिया नंबर लगाएँ।',
     warningHi: GOOGLE_WARNING,
-    actions: [],
+    actions: [MY_BANK_LINK],
   },
   block_card: {
     id: "block_card",
     titleHi: "Card तुरंत block करें",
     bodyHi: "बैंक के ऐप में card को block करें, फिर बैंक को बताएँ।",
     warningHi: GOOGLE_WARNING,
-    actions: [],
+    actions: [MY_BANK_LINK],
   },
   written_complaint: {
     id: "written_complaint",

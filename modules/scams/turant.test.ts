@@ -66,7 +66,7 @@ test("बैंक वाले कदम पर Google की चेताव�
 });
 
 test("हर बाहरी link https://cybercrime.gov.in", () => {
-  const links = TURANT_SLUGS.flatMap((s) => getTurantPage(s).steps.flatMap((st) => st.actions)).filter((a) => a.kind === "link");
+  const links = TURANT_SLUGS.flatMap((s) => getTurantPage(s).steps.flatMap((st) => st.actions)).filter((a) => a.kind === "link" && a.external);
   expect(links.length).toBeGreaterThan(0);
   for (const l of links) expect(l.href).toBe("https://cybercrime.gov.in");
 });
@@ -83,3 +83,11 @@ test("isTurantSlug", () => {
 });
 
 test("content version का रूप", () => expect(TURANT_CONTENT_VERSION).toMatch(/^\d{4}-\d{2}-\d{2}\.\d+$/));
+
+test("बैंक वाले कदमों पर अपने बैंक के पन्ने का (अंदर का) link", () => {
+  for (const [slug, i] of [["upi", 1], ["card", 0]] as const) {
+    expect(getTurantPage(slug).steps[i].actions).toContainEqual({ kind: "link", href: "/gyan/bank", labelHi: "अपने बैंक का सही रास्ता देखें", external: false });
+  }
+});
+
+test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-21.2"));

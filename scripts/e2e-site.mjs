@@ -118,5 +118,54 @@ await check("होम: प्रतिज्ञा एक ही बार (द
   }),
 );
 
+await check("/gyan/bank: 10 बैंक और .bank.in वाला सुझाव", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/gyan/bank`);
+    assert((await page.locator('main a[href^="/gyan/bank/"]').count()) === 10, "10 बैंक links नहीं");
+    await page.getByText('".bank.in" पर ख़त्म होता है', { exact: false }).waitFor();
+  }),
+);
+
+await check("/gyan/bank/sbi: अभी जाँच में, कोई tel: नहीं", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/gyan/bank/sbi`);
+    await page.getByText("अभी जाँच में हैं", { exact: false }).waitFor();
+    assert((await page.locator('a[href^="tel:"]').count()) === 0, "बिना दो-जाँच tel: link मिला");
+  }),
+);
+
+await check("/gyan/bank/xyz → 404", () =>
+  withPage({}, async (page) => {
+    const res = await page.goto(`${BASE}/gyan/bank/xyz`);
+    assert(res?.status() === 404, `status ${res?.status()}`);
+  }),
+);
+
+await check("320px: बैंक पन्नों पर बगल में scroll नहीं", () =>
+  withPage({ viewport: { width: 320, height: 640 } }, async (page) => {
+    for (const path of ["/gyan/bank", "/gyan/bank/union", "/gyan/bank/kotak"]) {
+      await page.goto(`${BASE}${path}`);
+      const w = await page.evaluate(() => document.documentElement.scrollWidth);
+      assert(w <= 320, `${path}: scrollWidth ${w}`);
+    }
+  }),
+);
+
+await check("offline: /turant/upi से 'अपने बैंक का सही रास्ता देखें' → /gyan/bank खुले", async () => {
+  const context = await browser.newContext({ viewport: PHONE });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/turant/upi`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.getByRole("link", { name: "अपने बैंक का सही रास्ता देखें" }).click();
+    await page.getByText("अपने बैंक को ठगी कैसे बताएँ").first().waitFor();
+  } finally {
+    await context.close();
+  }
+});
+
 await browser.close();
 process.exit(failed ? 1 : 0);
