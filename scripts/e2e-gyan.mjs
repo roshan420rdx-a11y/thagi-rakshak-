@@ -8,6 +8,10 @@ const PAGES = [
   ["upi-pin-qr", "upi"],
   ["task-investment", "investment-task"],
   ["apk-file", "customer-care-fake"],
+  ["bijli-bill", "customer-care-fake"],
+  ["lottery-inaam", "upi"],
+  ["sextortion", "sextortion"],
+  ["loan-app", "loan-app"],
 ];
 const browser = await chromium.launch();
 let failed = false;
@@ -37,7 +41,7 @@ async function withPage(options, fn) {
   }
 }
 
-await check("/gyan: पाँचों पन्नों के links", () =>
+await check("/gyan: सारे 9 पन्नों के links", () =>
   withPage({}, async (page) => {
     await page.goto(`${BASE}/gyan`);
     for (const [slug] of PAGES) assert((await page.locator(`main a[href="/gyan/${slug}"]`).count()) === 1, `${slug} link नहीं`);
@@ -65,7 +69,7 @@ await check("JS बंद: FAQ का सवाल दबाने पर जव
   }),
 );
 
-await check("320px: ज्ञानकोश के 6 पन्नों पर बगल में scroll नहीं", () =>
+await check("320px: ज्ञानकोश के 10 पन्नों पर बगल में scroll नहीं", () =>
   withPage({ viewport: { width: 320, height: 640 } }, async (page) => {
     for (const path of ["/gyan", ...PAGES.map(([s]) => `/gyan/${s}`)]) {
       await page.goto(`${BASE}${path}`);
@@ -90,6 +94,24 @@ await check("/turant/digital-arrest और /pucho से ज्ञानको�
     assert((await page.locator('a[href="/gyan/digital-arrest"]').count()) > 0, "/turant से link नहीं");
     await page.goto(`${BASE}/pucho`);
     assert((await page.locator('main a[href="/gyan"]').count()) > 0, "/pucho से link नहीं");
+  }),
+);
+
+await check("/turant/sextortion और /turant/loan-app से नए पन्नों के links", () =>
+  withPage({}, async (page) => {
+    await page.goto(`${BASE}/turant/sextortion`);
+    assert((await page.locator('a[href="/gyan/sextortion"]').count()) > 0, "sextortion link नहीं");
+    await page.goto(`${BASE}/turant/loan-app`);
+    assert((await page.locator('a[href="/gyan/loan-app"]').count()) > 0, "loan-app link नहीं");
+  }),
+);
+
+await check("/pucho: बिजली वाले message के नतीजे से /gyan/bijli-bill", () =>
+  withPage({}, async (page) => {
+    await page.goto(`${BASE}/pucho`);
+    await page.getByLabel("संदिग्ध message यहाँ चिपकाएँ").fill("आज रात 9:30 बजे आपकी बिजली काट दी जाएगी, तुरंत 98XXXXXX21 पर संपर्क करें");
+    await page.getByRole("button", { name: "जाँचें" }).click();
+    await page.locator('section[aria-label="जाँच का नतीजा"] a[href="/gyan/bijli-bill"]').waitFor();
   }),
 );
 

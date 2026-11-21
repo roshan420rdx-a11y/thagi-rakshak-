@@ -46,6 +46,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-11 | /legal (वकील की जाँच बाकी) | 🟡 मसौदा बना: निजता, शर्तें, शिकायत अधिकारी (env से, ख़ाली हो तो "अभी नियुक्त नहीं") · निजता के दावे e2e से साबित (कोई cookie नहीं, कोई बाहरी request नहीं; नकारात्मक जाँच भी की) · 241 unit + 41 browser जाँचें · ⚖️ वकील की जाँच और 👤 शिकायत अधिकारी का नाम/email बाकी |
 | TR-12 | Render deploy + launch checklist | 🟡 code वाला हिस्सा तैयार: sitemap, robots, manifest, icon, हर deploy पर नया offline cache, `render.yaml`, uptime workflow, `npm run launch-check` (आज 8 में से 8 बाकी), `docs/DEPLOYMENT.md` · 258 unit + 42 browser जाँचें · 👤 Render खाता और settings बाकी |
 | TR-13 | WhatsApp पहला जवाब + जवाब-किताब | 🟡 `docs/JAWAB_KITAB.md` तैयार: 5 पक्के नियम, WhatsApp Business ऐप की setting (Greeting, Away, Quick replies), 15 तैयार जवाब, ख़तरे वाले हालात (112, Tele-MANAS), निजता, रोज़ का तरीका · मना किए शब्दों की जाँच इस किताब पर भी · 👤 मालिक के फ़ोन पर setting बाकी |
+| TR-10b | ज्ञानकोश के 4 और पन्ने | 🟡 स्थानीय जाँच पास: बिजली बिल, लॉटरी/इनाम, video call से ब्लैकमेल, loan ऐप की धमकी · "पहले पूछो" के नतीजे और /turant से links · 401 unit + 52 browser जाँचें · 👤 विशेषज्ञ की जाँच बाकी |
 | TR-14 से TR-22 | चरण B (`PROMPT.md` Part 4) | ⏳ 👤 मालिक का Supabase खाता चाहिए |
 | TR-23a | "पहले पूछो": नियमों वाली जाँच (फ़ोन के अंदर) | 🟡 स्थानीय जाँच पास: `/pucho` पर box, 19 निशान (11 danger, 8 warn), सुनहरा test-set (26 ठगी, 19 आम message), OTP वाले असली बैंक SMS पर कोई निशान नहीं, "परिवार को भेजें" में सिर्फ़ नतीजा · जाँच के समय कोई network request नहीं (e2e से साबित, नकारात्मक जाँच भी) · 379 unit + 50 browser जाँचें · GitHub CI बाकी |
 | TR-23b से TR-26 | link-जाँच (Web Risk), screenshot, AI, समीक्षा | ⏳ |
@@ -117,8 +118,15 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - निजता पन्ने में नया हिस्सा, और उसका दावा `scripts/e2e-pucho.mjs` से हर बार जाँचा जाता है।
 - सीमा (पन्ने पर लिखी): यह जाँच सिर्फ़ आम निशान देखती है, हर ठगी नहीं पकड़ सकती। अभी सिर्फ़ लिखा हुआ message; screenshot और link-जाँच बाद में।
 
+## TR-10b (विस्तार), 2026-11-21
+- branch `tr-10b-gyan-aur` (`tr-23a-pucho-niyam` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a3d-gyan-aur.md`।
+- "पहले पूछो" के 4 danger निशानों के लिए पन्ने: `bijli-bill`, `lottery-inaam`, `sextortion`, `loan-app`। हर पन्ने के उदाहरण सुनहरे test-set में अपने आप जुड़ते हैं, और checker उन पर 🔴 देता है।
+- sextortion पन्ने पर Tele-MANAS 14416 और "यह आपकी गलती नहीं है" (test से पक्का)।
+- कोई RBI quote या आँकड़ा नहीं जोड़ा (मूल text के बिना कुछ नहीं)। हर पन्ने पर विशेषज्ञ-जाँच "अभी बाकी"।
+- जाँच के दौरान मिली बात: पिछला `next-server` चलता रह गया था और नए build के साथ ग़लत नतीजे दे रहा था; अब हर e2e से पहले पुराना server बंद किया जाता है (CI में यह दिक़्क़त नहीं, वहाँ हर बार नई मशीन)।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और सारी branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+2. 🤖 **Claude:** repo जोड़कर `main` और सारी branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
 3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 👤 WhatsApp Business ऐप में जवाब-किताब की setting (`docs/JAWAB_KITAB.md` भाग 2) · ⚖️ वकील से legal पन्ने और ज्ञानकोश जँचवाना
-4. 🤖 चरण A का code पूरा है, और चरण C का पहला हिस्सा (TR-23a) भी। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले काम करेगा (अगला: "पहले पूछो" के नतीजों से ज्ञानकोश के और पन्ने, जैसे बिजली बिल, लॉटरी, sextortion, loan ऐप)।
+4. 🤖 चरण A का code पूरा है, और चरण C का पहला हिस्सा (TR-23a) भी। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले काम करेगा (ज्ञानकोश के 4 और पन्ने बन गए; आगे: `/turant` के मुख्य पन्ने पर कदमों के शीर्षक h3, और "पहले पूछो" का होम पेज से सीधा रास्ता)।
