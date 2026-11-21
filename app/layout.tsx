@@ -2,9 +2,11 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SwRegister } from "@/components/offline/sw-register";
 import { SiteFooter } from "@/components/ui/site-footer";
+import { getSiteConfig } from "@/modules/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteConfig().siteUrl),
   title: "ठगी रक्षक",
   description: "डिजिटल ठगी के बाद क्या करें: पहले 60 मिनट से पैसा वापस पाने तक हर कदम पर मदद। मुफ़्त।",
 };
