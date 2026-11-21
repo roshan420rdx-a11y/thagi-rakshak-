@@ -1,0 +1,56 @@
+स्रोत: https://www.rbi.org.in/scripts/BS_ViewMasDirections.aspx?id=13140 (Reserve Bank of India (Commercial Banks - Responsible Business Conduct) Directions, 2025)
+पढ़ा गया: 2026-11-21. ये paragraphs 1 जनवरी 2027 से पहले के लेन-देन पर लागू हैं (2026 के संशोधन ने इन्हें 2027 से बदला)।
+मूल text (अंश, बिना बदलाव):
+
+D.3.1 Zero liability of a customer
+67. A customer’s entitlement to zero liability shall arise where the unauthorised transaction occurs in the following events:
+ (1) Contributory fraud / negligence / deficiency on the part of the bank (irrespective of whether the transaction is reported by the customer or not).
+ (2) Third party breach where the deficiency lies neither with the bank nor with the customer but lies elsewhere in the system, and the customer notifies the bank within three working days of receiving the communication from the bank regarding the unauthorised transaction.
+D.3.2 Limited liability of a customer
+68. A customer shall be liable for the loss occurring due to unauthorised transactions in the following cases:
+ (1) In cases where the loss is due to negligence by a customer, such as where she / he has shared the payment credentials, the customer will bear the entire loss until she / he reports the unauthorised transaction to the bank. Any loss occurring after the reporting of the unauthorised transaction shall be borne by the bank.
+ (2) In cases where the responsibility for the unauthorised electronic banking transaction lies neither with the bank nor with the customer, but lies elsewhere in the system and the customer notifies the bank of such a transaction within four to seven working days of receiving a communication of the transaction, the per transaction liability of the customer shall be limited to the transaction value or the amount mentioned in 
+Table 1
+, whichever is lower.
+Table 1
+ Maximum liability of a customer under paragraph 68 (2)
+Type of Account
+Maximum liability
+ (₹)
+• BSBD accounts
+5,000
+• All other SB accounts
+ • Pre-paid Payment Instruments (PPIs) and gift cards
+ • Current / Cash Credit / Overdraft accounts of MSMEs
+ • Current accounts / Cash Credit / Overdraft accounts of individuals with annual average balance (during 365 days preceding the incidence of fraud) / limit up to ₹25 lakh
+ • Credit cards with limit up to ₹5 lakh
+10,000
+• All other Current / Cash Credit / Overdraft accounts
+ • Credit cards with limit above ₹5 lakh
+25,000
+69. Further, if the delay in reporting is beyond seven working days, the customer liability shall be determined as per the bank’s policy approved by its Board or a Committee to which powers have been delegated by the Board
+7
+. The bank shall provide the details of its policy regarding customers’ liability formulated in pursuance of these directions at the time of opening the accounts. The bank shall also display its approved policy in public domain for wider dissemination. The existing customers shall also be individually informed about the bank’s policy.
+70. Overall liability of the customer in third party breaches, as detailed in paragraphs 67(2) and 68(2) above, where the deficiency lies neither with the bank nor with the customer but lies elsewhere in the system, is summarised in 
+Table 2
+:
+Table 2
+ Summary of customer’s liability
+Time taken to report the fraudulent transaction from the date of receiving the communication
+Customer’s liability (₹)
+Within three working days
+Zero liability
+Within four to seven working days
+The transaction value or the amount mentioned in Table 1, whichever is lower
+Beyond seven working days
+As per the bank’s policy approved by its Board or a Committee to which powers have been delegated by the Board
+8
+71. The number of working days mentioned in Table 2 shall be counted as per the working schedule of the home branch of the customer excluding the date of receiving the communication.
+D.3.3 Reversal timeline for zero liability / limited liability of customer
+72. On being notified by the customer, the bank shall credit (shadow reversal) the amount involved in the unauthorised electronic transaction to the customer’s account within 10 working days from the date of such notification by the customer (without waiting for settlement of insurance claim, if any). The bank may also, at its discretion, decide to waive off any customer liability in case of unauthorised electronic banking transactions even in cases of customer negligence. The credit shall be value dated to be as of the date of the unauthorised transaction.
+73. Further, the bank shall ensure that:
+ (1) a complaint is resolved and liability of the customer, if any, established within such time, as may be specified in the bank’s policy approved by its Board or a Committee to which powers have been delegated by the Board
+9
+, but not exceeding 90 days from the date of receipt of the complaint, and the customer is compensated as per provisions of paragraphs 67 to 72 above;
+ (2) where it is unable to resolve the complaint or determine the customer liability, if any, within 90 days, the compensation as prescribed in paragraphs 67 to 72 is paid to the customer; and
+ (3) in case of debit card / bank account, the customer does not suffer loss of interest, and in case of credit card, the customer does not bear any additional burden of interest.
