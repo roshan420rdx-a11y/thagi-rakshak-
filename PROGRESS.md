@@ -6,7 +6,7 @@
 
 संकेत: ✅ पूरा और जाँचा हुआ · 🟡 लिखा गया, जाँच बाकी · ⏳ बाकी · ⛔ रुका हुआ · 👤 मालिक के हाथ का
 
-_आख़िरी अपडेट: 2026-11-21 शाम (TR-1 से TR-4 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
+_आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-5 का code बना और इस मशीन पर पूरी जाँच पास; GitHub repo बनने के बाद CI बाकी)_
 
 ## नया session या नया chat शुरू करने का तरीका
 
@@ -37,7 +37,7 @@ _आख़िरी अपडेट: 2026-11-21 शाम (TR-1 से TR-4 क�
 | TR-2 | Design system | 🟡 स्थानीय जाँच पास (tokens light+dark, 12 contrast-जोड़े ≥4.5, components) · GitHub CI बाकी |
 | TR-3 | भाषा ढाँचा, शब्दकोश, copy-lint | 🟡 स्थानीय जाँच पास (copy-lint ने नकली शब्द पकड़कर दिखाया) · GitHub CI बाकी |
 | TR-4 | ठगी के प्रकार + /turant | 🟡 स्थानीय जाँच पास: 70 unit tests + 8 browser जाँचें (बिना JS, offline, 404, 320px, dark mode, headers) · GitHub CI बाकी |
-| TR-5 | होम, navigation, footer, /bharosa | ⏳ |
+| TR-5 | होम, navigation, /pucho (7 आम निशान), /bharosa | 🟡 स्थानीय जाँच पास: 89 unit tests + 9 site browser जाँचें (+ /turant की 8) · GitHub CI बाकी |
 | TR-6 | नियम-तालिका v0 (RBI + MRM मूल text) | ⏳ |
 | TR-7 | rules-engine + fixtures | ⏳ |
 | TR-8 | /haq पन्ने | ⏳ |
@@ -60,7 +60,14 @@ _आख़िरी अपडेट: 2026-11-21 शाम (TR-1 से TR-4 क�
 - design में दो सुधार हुए: (1) "/turant 100KB से छोटा" की जगह "HTML 60KB से कम + बिना JS के पूरा काम", (2) शब्दकोश में "Indemnity bond" के लिए "क्षतिपूर्ति का काग़ज़" ("गारंटी" शब्द मना है)।
 - बाद के लिए छोटी बातें: (a) service worker का cache version build-id से जोड़ना (TR-12), (b) /turant के मुख्य पन्ने पर कदमों के शीर्षक h3 करना, (c) "offline में प्रकार पर tap" वाली जाँच को e2e में जोड़ना (एक बार हाथ से जाँचा, चलता है)।
 
+## TR-5 (विस्तार), 2026-11-21
+- branch `tr-a2a-home-bharosa` (`tr-a1-neev-turant` के ऊपर), plan `docs/superpowers/plans/2026-11-21-plan-a2a-home-bharosa.md`।
+- होम: दो दरवाज़े (ठगी हो गई / ठगी के आम निशान) + प्रतिज्ञा + WhatsApp बटन (सिर्फ़ तब, जब `NEXT_PUBLIC_WHATSAPP_NUMBER` सही रूप में set हो)।
+- फ़ोन पर नीचे का menu (होम, पूछो, भरोसा; "मेरा केस" TR-16 तक छिपा) · /turant पर कोई menu नहीं।
+- final review में मिली कमी ठीक की: फ़ोन पर footer की आख़िरी लाइन (कानूनी सलाह वाली) नीचे के menu के पीछे छिप रही थी (पहले failing e2e, फिर fix)।
+- **रुकावट:** RBI की वेबसाइट (rbi.org.in) environment में allow कर दी गई है, पर (a) web पढ़ने वाला सहायक उस तक नहीं पहुँचता, और (b) shell से download करने पर auto-mode की सुरक्षा जाँच ने रोक दिया। TR-6 के नियम मूल text के बिना "जाँच बाकी" के निशान के साथ बनेंगे, या मालिक की अनुमति के बाद पक्के होंगे।
+
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और `tr-a1-neev-turant` push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 🤖 फिर plan A2 (TR-5 से TR-8: होम, /bharosa, नियम-तालिका, rules-engine, /haq) लिखना और बनाना।
+2. 🤖 **Claude:** repo जोड़कर `main`, `tr-a1-neev-turant` और `tr-a2a-home-bharosa` push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 🤖 plan A2b (TR-6 से TR-8: नियम-तालिका, rules-engine, /haq) लिखना और बनाना। RBI का मूल text मिलने तक हर नियम "संभावित, मूल text से जाँच बाकी" दिखाएगा।
