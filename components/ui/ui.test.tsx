@@ -53,3 +53,8 @@ test("SiteFooter में प्रतिज्ञा और 'सरकार�
 test("ListenButton server पर कुछ नहीं दिखाता (बिना JS के बेकार बटन नहीं)", () => {
   expect(renderToStaticMarkup(<ListenButton targetId="x" />)).toBe("");
 });
+
+test("SiteFooter में legal पन्नों के links", () => {
+  const html = renderToStaticMarkup(<SiteFooter />);
+  for (const href of ["/legal/privacy", "/legal/terms", "/legal/shikayat"]) expect(html).toContain(`href="${href}"`);
+});
