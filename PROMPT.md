@@ -112,7 +112,7 @@ PART 4: पूरा Roadmap (छोटे हिस्से)
 
 | हिस्सा | काम |
 |---|---|
-| TR-23 | checker: तय नियम (patterns) + बाहरी संकेत (Web Risk, RDAP) |
+| TR-23 | checker: तय नियम (patterns) + बाहरी संकेत (Web Risk, RDAP) · **TR-23a (नियम, फ़ोन के अंदर) पहले बन गया, plan C1** |
 | TR-24 | checker: AI + combine (AI सिर्फ़ ख़तरा बढ़ाए) + सुनहरा test-set |
 | TR-25 | `/pucho` UI + share + "परिवार को भेजें" |
 | TR-26 | चरण B और C की समीक्षा (Design v2 भाग 12 वाले रुकने के संकेत) |
