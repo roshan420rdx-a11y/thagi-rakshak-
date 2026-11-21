@@ -1,1 +1,83 @@
 @import "tailwindcss";
+
+/* रंग: modules/design/tokens.ts के साथ मेल ज़रूरी (tokens-sync.test.ts जाँचता है) */
+:root {
+  --brand: #1D3A6B;
+  --brand-bg: #EEF2F8;
+  --danger: #B42318;
+  --danger-bg: #FEF3F2;
+  --on-danger: #FFFFFF;
+  --warn: #B54708;
+  --warn-bg: #FFFAEB;
+  --safe: #067647;
+  --safe-bg: #ECFDF3;
+  --on-safe: #FFFFFF;
+  --ink: #101828;
+  --muted: #475467;
+  --line: #E4E7EC;
+  --paper: #FFFFFF;
+  --surface: #F7F6F3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #9DB8EC;
+    --brand-bg: #1C2840;
+    --danger: #F97066;
+    --danger-bg: #3A1714;
+    --on-danger: #1A0B09;
+    --warn: #FDB022;
+    --warn-bg: #3A2A0C;
+    --safe: #47CD89;
+    --safe-bg: #0F2E1F;
+    --on-safe: #06210F;
+    --ink: #F2F4F7;
+    --muted: #A6B0BF;
+    --line: #2E3542;
+    --paper: #1A1F27;
+    --surface: #12151B;
+  }
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-bg: var(--brand-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-on-danger: var(--on-danger);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-safe: var(--safe);
+  --color-safe-bg: var(--safe-bg);
+  --color-on-safe: var(--on-safe);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+}
+
+/* कोई web font नहीं: Android/Windows में हिंदी font पहले से होता है (2G पर भी कोई अतिरिक्त फ़ाइल नहीं) */
+html {
+  font-size: 18px;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  line-height: 1.6;
+  font-family: "Noto Sans Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
