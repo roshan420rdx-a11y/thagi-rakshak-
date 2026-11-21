@@ -54,9 +54,10 @@
 | 2026-11-21 | बैंक-पन्ने बिना नंबर के live होंगे; नंबर सिर्फ़ `.bank.in` साइट से (जाँच 1) और मालिक की जाँच (जाँच 2) के बाद। पीड़ित को सिखाना: असली साइट `.bank.in` पर, नंबर card के पीछे या ऐप में | Claude |
 | 2026-11-21 | ज्ञानकोश का content typed TypeScript में (MDX नहीं); विशेषज्ञ-जाँच न होने तक हर पन्ने पर साफ़ लिखा "अभी बाकी" | Claude |
 | 2026-11-21 | निजता पन्ने के दावे e2e से साबित होंगे (कोई cookie नहीं, कोई बाहरी request नहीं); कुछ नया जुड़े तो पहले पन्ना बदले। मालिक की निजी जानकारी code में नहीं, env से | Claude |
+| 2026-11-21 | WhatsApp की शुरुआत API से नहीं, मालिक के फ़ोन की मुफ़्त **WhatsApp Business ऐप** से: Greeting message (पहला जवाब अपने आप), Away message, और Quick replies = `docs/JAWAB_KITAB.md`। API (bot, templates) चरण B में | Claude |
 
 ## 6. कहाँ पहुँचना है (roadmap, छोटा रूप)
-- **चरण A (24 दिसंबर तक, मुफ़्त launch):** TR-1 से TR-11 ✔ और TR-12 का code ✔ बने (नींव, इमरजेंसी पन्ने, होम, /bharosa, RBI नियम, rules engine, /haq, बैंक-पन्ने, ज्ञानकोश, legal मसौदे, launch की तैयारी; बैंक नंबर दो-जाँच के बाद) · TR-9 बैंकों के रास्ते · TR-10 ज्ञानकोश · TR-11 legal पन्ने · TR-12 deploy · TR-13 WhatsApp पहला जवाब + जवाब-किताब
+- **चरण A (24 दिसंबर तक, मुफ़्त launch):** TR-1 से TR-11 ✔, TR-12 का code ✔, TR-13 की जवाब-किताब ✔ बने (नींव, इमरजेंसी पन्ने, होम, /bharosa, RBI नियम, rules engine, /haq, बैंक-पन्ने, ज्ञानकोश, legal मसौदे, launch की तैयारी; बैंक नंबर दो-जाँच के बाद) · TR-9 बैंकों के रास्ते · TR-10 ज्ञानकोश · TR-11 legal पन्ने · TR-12 deploy · TR-13 WhatsApp पहला जवाब + जवाब-किताब
 - **चरण B (जनवरी-फ़रवरी 2027):** केस बनाना, tracker, याद दिलाना, अर्ज़ियाँ (PDF), भुगतान, screenshot पढ़ना
 - **चरण C (मार्च 2027):** "पहले पूछो" (ठगी पहचानने वाला checker)
 - **चरण D (अप्रैल 2027 के बाद):** परिवार रक्षक, मददगार, वकील panel, जिनका खाता freeze हुआ उनकी मदद, और भाषाएँ, ठगी का मौसम, B2B
@@ -85,3 +86,6 @@
 | `docs/superpowers/specs/2026-11-21-thagi-rakshak-structure-design.md` | भाग 2: हर पन्ना, design system, WhatsApp की script, code का ढाँचा, planning |
 | `docs/superpowers/specs/assets/` | mockups |
 | `docs/superpowers/plans/` | हर हिस्से की कदम-दर-कदम plan |
+| `docs/JAWAB_KITAB.md` | मालिक के लिए WhatsApp के तैयार जवाब और नियम |
+| `docs/DEPLOYMENT.md` | Render पर साइट चढ़ाने के कदम |
+| `docs/verify/BANKS.md` | बैंक नंबरों की दो-जाँच |

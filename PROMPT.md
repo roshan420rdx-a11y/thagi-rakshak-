@@ -92,7 +92,7 @@ PART 4: पूरा Roadmap (छोटे हिस्से)
 | TR-10 | ज्ञानकोश का ढाँचा + 5 सबसे ज़रूरी पन्ने | 🤖 | plan A3 |
 | TR-11 | `/legal`: privacy, terms, शिकायत अधिकारी (draft) | 🤖 + ⚖️ | plan A3 |
 | TR-12 | Render पर deploy, uptime जाँच, launch checklist | 🤖 + 👤 (खाता) | plan A4 |
-| TR-13 | WhatsApp: पहला automated जवाब + मालिक के लिए "जवाब-किताब" | 🤖 + 👤 (Meta खाता) | plan A4 |
+| TR-13 | WhatsApp: पहला automated जवाब (WhatsApp Business ऐप का Greeting message) + मालिक के लिए "जवाब-किताब" (`docs/JAWAB_KITAB.md`) | 🤖 + 👤 (फ़ोन पर setting) | — |
 
 ### चरण B: केस और साथ चलना (जनवरी से फ़रवरी 2027)
 

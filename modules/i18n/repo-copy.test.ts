@@ -31,3 +31,9 @@ test("repo में कोई मना किया शब्द नहीं 
   }
   expect(problems).toEqual([]);
 });
+
+// मालिक WhatsApp पर जो जवाब भेजते हैं, वे भी user-facing हैं
+test("जवाब-किताब (docs/JAWAB_KITAB.md) में भी कोई मना किया शब्द नहीं", () => {
+  const text = readFileSync(path.join(ROOT, "docs/JAWAB_KITAB.md"), "utf8");
+  expect(findForbidden(text, FORBIDDEN_PHRASES).map((h) => h.phrase)).toEqual([]);
+});

@@ -45,7 +45,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-10 | ज्ञानकोश + 5 पन्ने | 🟡 स्थानीय जाँच पास: `/gyan` + 5 पन्ने (digital arrest, नकली customer care, UPI PIN/QR, task/निवेश, APK फ़ाइल), तय ढाँचा, RBI हवालों की quote-जाँच, /pucho और /turant से links · 230 unit + 36 browser जाँचें · 👤 विशेषज्ञ (वकील/बैंक अधिकारी) की जाँच बाकी, पन्नों पर साफ़ लिखा है |
 | TR-11 | /legal (वकील की जाँच बाकी) | 🟡 मसौदा बना: निजता, शर्तें, शिकायत अधिकारी (env से, ख़ाली हो तो "अभी नियुक्त नहीं") · निजता के दावे e2e से साबित (कोई cookie नहीं, कोई बाहरी request नहीं; नकारात्मक जाँच भी की) · 241 unit + 41 browser जाँचें · ⚖️ वकील की जाँच और 👤 शिकायत अधिकारी का नाम/email बाकी |
 | TR-12 | Render deploy + launch checklist | 🟡 code वाला हिस्सा तैयार: sitemap, robots, manifest, icon, हर deploy पर नया offline cache, `render.yaml`, uptime workflow, `npm run launch-check` (आज 8 में से 8 बाकी), `docs/DEPLOYMENT.md` · 258 unit + 42 browser जाँचें · 👤 Render खाता और settings बाकी |
-| TR-13 | WhatsApp पहला जवाब + जवाब-किताब | ⏳ |
+| TR-13 | WhatsApp पहला जवाब + जवाब-किताब | 🟡 `docs/JAWAB_KITAB.md` तैयार: 5 पक्के नियम, WhatsApp Business ऐप की setting (Greeting, Away, Quick replies), 15 तैयार जवाब, ख़तरे वाले हालात (112, Tele-MANAS), निजता, रोज़ का तरीका · मना किए शब्दों की जाँच इस किताब पर भी · 👤 मालिक के फ़ोन पर setting बाकी |
 | TR-14 से TR-26 | चरण B और C (`PROMPT.md` Part 4) | ⏳ |
 
 ## ⛔ रुकावटें और सीमाएँ
@@ -108,5 +108,6 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 
 ## अगला कदम
 1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और आठों branches (`tr-a1-neev-turant`, `tr-a2a-home-bharosa`, `tr-a2b-niyam-haq`, `tr-9-bank-raste`, `tr-9b-bank-numbers`, `tr-10-gyan`, `tr-11-legal`, `tr-12-launch-taiyari`) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
-3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 🤖 TR-13 की जवाब-किताब (मालिक के लिए WhatsApp के तैयार जवाब); Meta खाता वाला हिस्सा बाद में।
+2. 🤖 **Claude:** repo जोड़कर `main` और नौ branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 👤 WhatsApp Business ऐप में जवाब-किताब की setting (`docs/JAWAB_KITAB.md` भाग 2) · ⚖️ वकील से legal पन्ने और ज्ञानकोश जँचवाना
+4. 🤖 चरण A का code पूरा है। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले सुधार कर सकता है।
