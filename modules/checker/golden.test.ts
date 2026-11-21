@@ -1,0 +1,91 @@
+import { expect, test } from "vitest";
+import { checkMessage, CHECKER_RULES } from "@/modules/checker";
+import { GYAN_PAGES } from "@/modules/gyan";
+import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
+
+// सुनहरा test-set: ठगी छूट जाना (false negative) सबसे बड़ी गलती है।
+// नंबर नकली/छुपाए हुए हैं। किसी असली व्यक्ति या कंपनी का नंबर नहीं।
+
+const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"|"$/g, "")));
+
+const SCAMS: string[] = [
+  ...fromGyan,
+  "Hello sir, main Airtel se bol raha hoon, aapka SIM band ho jayega, abhi aapke phone par jo OTP aaya hai wo bata dijiye",
+  "Dear Consumer, your electricity power will be disconnected tonight at 9.30 pm because your previous month bill was not updated. Please immediately contact our electricity officer 98XXXXXX21",
+  "Congratulations! Your number has won Rs 25,00,000 in KBC Lucky Draw. To claim, pay Rs 12,500 GST on WhatsApp",
+  "Mam aapka FedEx parcel Mumbai customs ne pakda hai, usme 5 passport aur MDMA mila hai. Call transfer kar raha hoon Mumbai Crime Branch ko",
+  "Sir I am from Amazon customer care, aapka refund process karne ke liye AnyDesk app install kijiye",
+  "Your loan of Rs 5000 is overdue. Pay today or your morphed photos will be sent to all your contacts",
+  "Maine galti se aapke Paytm pe 2000 bhej diye, please wapas kar do, mera beta hospital me hai",
+  "Earn ₹5000 daily from home! Just subscribe YouTube channels. Join Telegram: t.me/earnfast",
+  "बधाई हो! आपका ₹2,000 का cashback आया है। पैसे पाने के लिए यह QR scan करें और PIN डालें।",
+  "मैं तुम्हारा video रिकॉर्ड कर चुका हूँ। ₹20,000 भेजो वरना तुम्हारे सारे रिश्तेदारों को भेज दूँगा।",
+  "Join our VIP WhatsApp group for IPO allotment and get 200% profit in 1 month.",
+  "आपका बिजली बिल अपडेट नहीं हुआ है। आज रात 9:30 बजे आपका कनेक्शन काट दिया जाएगा। तुरंत 98XXXXXX12 पर संपर्क करें।",
+  "Hi, I am HR from a reputed company. Part time work available, earn 2000-5000 per day by rating hotels on Google. Reply YES",
+  "TRAI: आपका मोबाइल नंबर 2 घंटे में बंद कर दिया जाएगा क्योंकि इस नंबर से ग़ैरक़ानूनी गतिविधि हुई है। जानकारी के लिए 9 दबाएँ",
+  "Dear Customer, your SBI YONO account will be blocked today. Update your PAN immediately: http://sbi-yono-kyc.xyz",
+  "Your Netflix subscription expired. Update payment details within 24 hours: http://netflix-renew.co",
+  "आपका wallet balance ₹48,000 हो गया है। पैसा निकालने के लिए पहले ₹4,800 withdrawal fee जमा करें।",
+  "पापा, मेरा फ़ोन नंबर बदल गया है, यह मेरा नया नंबर है। अभी ₹10,000 भेज दो, बहुत ज़रूरी है",
+];
+
+const BENIGN: string[] = [
+  "123456 is your OTP for login to SBI YONO. Do not share it with anyone. -SBI",
+  "आपका OTP 482913 है। यह 10 मिनट तक मान्य है। इसे किसी के साथ साझा न करें। -PNB",
+  "Dear Customer, Rs.500.00 debited from A/c XX1234 on 20-11-26 to VPA shop@okaxis. Not you? Call 18001234567 -Bank",
+  "बेटा, शाम को सब्ज़ी लेते आना और दूध भी। मम्मी",
+  "Sharma Kirana: आपका बिल ₹1,240। धन्यवाद, फिर पधारें!",
+  "कल सुबह 10 से 2 बजे तक मरम्मत के कारण बिजली बंद रहेगी। असुविधा के लिए खेद है। -बिजली विभाग",
+  "Happy birthday bhai! Party kab de raha hai?",
+  "Your Amazon order #402-1234 has been delivered. Rate your experience in the app.",
+  "home loan की EMI ₹12,450 इस महीने 5 तारीख़ को कटेगी। खाते में बैलेंस रखें। -HDFC",
+  "मीटिंग कल 11 बजे है, लैपटॉप साथ लाना।",
+  "Your UPI payment of Rs 250 to Raju Tea Stall was successful. UPI Ref 412345678901",
+  "SBI never asks for OTP, PIN or CVV. Beware of fraud calls.",
+  "कृपया अपना OTP किसी को न बताएँ, बैंक कभी OTP नहीं माँगता।",
+  "Never share your OTP. Bank never asks you to share OTP.",
+  "Sir mera loan approve ho gaya, family ko party dunga",
+  "Bhai kal cricket match jeet gaye, party pay karega tu",
+  "News: पुलिस ने चोर को गिरफ़्तार किया",
+  "please double check the address",
+  "Your PIN code 110001 delivery address updated",
+];
+
+test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
+  expect(SCAMS.length).toBeGreaterThanOrEqual(20);
+  expect(BENIGN.length).toBeGreaterThanOrEqual(8);
+  expect(fromGyan.length).toBeGreaterThanOrEqual(10);
+});
+
+test.each(SCAMS)("ठगी पकड़ी जाए: %s", (msg) => {
+  expect(checkMessage(msg).level).not.toBe("no_signals");
+});
+
+test.each(BENIGN)("आम message पर कोई निशान नहीं: %s", (msg) => {
+  expect(checkMessage(msg).hits.map((h) => h.id)).toEqual([]);
+});
+
+test("ज़्यादातर ठगी वाले message 'पक्के निशान' (danger) वाले हों (कम से कम 70%)", () => {
+  const danger = SCAMS.filter((m) => checkMessage(m).level === "danger").length;
+  expect(danger / SCAMS.length).toBeGreaterThanOrEqual(0.7);
+});
+
+// plan C1: task/निवेश का पहला message (जिसमें अभी कुछ माँगा नहीं गया) "शक है" रहता है; बाकी हर उदाहरण danger
+test("ज्ञानकोश के उदाहरण: danger, सिवाय task/निवेश के पहले message के", () => {
+  const EARLY_STAGE = new Set(["task_job", "investment", "urgency", "link"]);
+  for (const msg of fromGyan) {
+    const r = checkMessage(msg);
+    if (r.level !== "danger") expect(r.hits.every((h) => EARLY_STAGE.has(h.id)), msg).toBe(true);
+  }
+});
+
+test("नियमों के label और समझाने वाली बात में कोई मना किया शब्द नहीं", () => {
+  const copy = CHECKER_RULES.map((r) => `${r.labelHi} ${r.explainHi}`).join("\n");
+  expect(findForbidden(copy, FORBIDDEN_PHRASES)).toEqual([]);
+});
+
+test("हर नियम कम से कम एक सुनहरे message में काम आए", () => {
+  const used = new Set(SCAMS.flatMap((m) => checkMessage(m).hits.map((h) => h.id)));
+  expect(CHECKER_RULES.map((r) => r.id).filter((id) => !used.has(id))).toEqual([]);
+});

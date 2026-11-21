@@ -56,15 +56,18 @@ const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
 const PIN = "(?<![a-z])pin(?!\\s*code|[a-z])|पिन(?!\\s*कोड)|\\bmpin\\b";
 const REQUEST = "request|रिक्वेस्ट|collect|approve|accept|स्वीकार|एक्सेप्ट|अप्रूव";
 
-const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)";
+const ARREST_DIRECT =
+  "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)|सरकारी\\s*खात|safe\\s*account|secure\\s*account|सुरक्षित\\s*खात|government\\s*account|rbi\\s*(?:के\\s*)?(?:खात|account)|बेगुनाह|ज़मानत\\s*(?:के\\s*लिए|राशि)";
+// ठग का message हमेशा पढ़ने वाले से बात करता है ("आपके नाम से…"); ख़बर वाले text पर danger न लगे
+const YOU = "आप|तुम|तेरा|तेरे|तेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b";
 const AUTHORITY =
   "पुलिस|police|\\bcbi\\b|सीबीआई|\\bncb\\b|narcotics|नारकोटिक्स|customs|कस्टम|\\btrai\\b|ट्राई|enforcement\\s*directorate|प्रवर्तन\\s*निदेशालय|crime\\s*branch|क्राइम\\s*ब्रांच|cyber\\s*cell|साइबर\\s*सेल|income\\s*tax\\s*officer|supreme\\s*court|सुप्रीम\\s*कोर्ट|\\bjudge\\b|fedex|फेडेक्स";
 const THREAT =
-  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर";
+  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध";
 
 const APK = "\\.apk\\b|\\bapk\\b|एपीके";
 const REMOTE =
-  "any\\s*desk|एनी\\s*डेस्क|team\\s*viewer|टीम\\s*व्यूअर|quick\\s*support|rust\\s*desk|air\\s*droid|screen\\s*shar|स्क्रीन\\s*शेयर";
+  "any\\s*desk|एनी\\s*डेस्क|team\\s*viewer|टीम\\s*व्यूअर|quick\\s*support|rust\\s*desk|air\\s*droid|screen\\s*shar|स्क्रीन\\s*शेयर|screen\\s*(?:पर|par)\\s*(?:देख|dekh)|स्क्रीन\\s*पर\\s*देख|(?:support|सपोर्ट|help|हेल्प)\\s*(?:app|ऐप|एप)";
 
 const MOBILE = "(?<!\\d)(?:\\+?91[\\s-]?)?[6-9]\\d{4}[\\s-]?\\d{5}(?!\\d)";
 const MASKED_NUMBER = "\\d{2}x{4,}\\d{2}";
@@ -75,7 +78,9 @@ const CUT =
 const CONTACT = `संपर्क|सम्पर्क|contact|\\bcall\\b|कॉल|officer|अधिकारी|whatsapp|व्हाट्सएप|${MOBILE}|${MASKED_NUMBER}`;
 
 const PRIZE =
-  "lottery|लॉटरी|लाटरी|lucky\\s*draw|लकी\\s*ड्रॉ|\\bkbc\\b|केबीसी|करोड़पति|\\bwon\\b|winner|जीत|\\bjeet|prize|इनाम|पुरस्कार|\\binam\\b";
+  "lottery|लॉटरी|लाटरी|lucky\\s*draw|लकी\\s*ड्रॉ|\\bkbc\\b|केबीसी|करोड़पति|winner|prize|इनाम|पुरस्कार|\\binam\\b";
+const WIN = "जीत|\\bjeet|\\bwon\\b";
+const AMOUNT = "लाख|करोड़|हज़ार|₹|\\brs\\.?\\s*\\d|\\binr\\b|\\blakh|\\bcrore";
 const FEE =
   "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक्स|processing|प्रोसेसिंग|\\bcharges?\\b|चार्ज|जमा\\s*कर|deposit|\\bgst\\b|registration|रजिस्ट्रेशन|\\bpay\\b|भुगतान";
 
@@ -87,8 +92,9 @@ const MONEY =
   "पैसे|पैसा|\\bpaise|\\bpaisa|\\bpay\\b|payment|money|रुपये|रुपए|rupees|₹|\\brs\\.?\\s*\\d|transfer|भेजो|\\bbhejo|\\bupi\\b";
 
 const LOAN = "\\bloan|लोन|ऋण|\\bemi\\b|ईएमआई|\\bkarz|क़र्ज़|\\bqarz|\\budhar|उधार";
-const LOAN_THREAT =
-  "photo|फ़ोटो|contacts?\\b|कॉन्टैक्ट|morph|मॉर्फ|nude|न्यूड|गाली|viral|वायरल|बदनाम|badnaam|रिश्तेदार|relatives|family|परिवार|सबको|सब\\s*को|सबके\\s*पास|धमकी";
+const LOAN_MEDIA = "photo|फ़ोटो|morph|मॉर्फ|nude|न्यूड|गाली|viral|वायरल|बदनाम|badnaam|धमकी";
+const LOAN_PEOPLE = "contacts?\\b|कॉन्टैक्ट|रिश्तेदार|relatives|family|परिवार|सबको|सब\\s*को|सबके\\s*पास";
+const LOAN_SEND = "भेज|\\bsend|\\bbhej|बता|\\btell|\\bcall|कॉल|message|मैसेज";
 
 const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
@@ -106,6 +112,13 @@ const MONEY_GAIN = "पैसे|पैसा|money|amount|रक़म|नि�
 const INVEST_DIRECT =
   "guarantee|गारंटी|assured\\s*return|fixed\\s*return|\\b\\d{2,4}\\s*%\\s*(?:return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ|daily|monthly|रोज़)|stock\\s*tips|स्टॉक\\s*टिप्स|trading\\s*(?:group|tips)|ट्रेडिंग\\s*ग्रुप|vip\\s*group|वीआईपी\\s*ग्रुप|crypto|क्रिप्टो|bitcoin|बिटकॉइन|ipo\\s*allot|institutional\\s*account|forex|फ़ॉरेक्स|daily\\s*profit|रोज़\\s*का\\s*मुनाफ़ा";
 
+const WITHDRAW = "निकाल|निकासी|withdraw|unlock|release";
+const WITHDRAW_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक्स|चार्ज|\\bcharges?\\b|जमा|deposit|\\bgst\\b";
+// सिर्फ़ "पैसे/₹" काफ़ी नहीं (ATM के असली शुल्क वाले message पर निशान न लगे); मुनाफ़ा/balance/wallet जैसा शब्द चाहिए
+const GAINS = "मुनाफ़ा|मुनाफ़े|profit|earning|कमाई|balance|बैलेंस|wallet|वॉलेट|commission|कमीशन|reward|bonus|बोनस";
+
+const NEW_NUMBER = "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number";
+
 const WRONG =
   "ग़लती\\s*से|\\bgalti\\s*se|\\bghalti\\s*se|by\\s*mistake|mistakenly|wrongly|accidentally|wrong\\s*(?:number|account|transfer)|भूल\\s*से|ग़लत\\s*(?:नंबर|खाते)";
 const SENT = "भेज|\\bsent\\b|transfer|ट्रांसफ़र|पैसे|money|₹|\\brs\\b|credited|\\bbhej";
@@ -120,7 +133,7 @@ const URGENT =
   "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
 const LINK =
-  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|io|app|biz)\\b(?!\\.\\d)";
+  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
 
 const R = {
   otp: near(OTP, ASK, 40),
@@ -137,12 +150,17 @@ const R = {
   cut: rx(CUT),
   contact: rx(CONTACT),
   prize: rx(PRIZE),
+  winAmount: near(WIN, AMOUNT, 30),
+  you: rx(YOU),
   fee: rx(FEE),
   media: rx(MEDIA),
   spread: rx(SPREAD),
   money: rx(MONEY),
   loan: rx(LOAN),
-  loanThreat: rx(LOAN_THREAT),
+  loanMedia: rx(LOAN_MEDIA),
+  loanPeople: rx(LOAN_PEOPLE),
+  loanSend: rx(LOAN_SEND),
+  newNumber: rx(NEW_NUMBER),
   kyc: rx(KYC),
   account: rx(ACCOUNT),
   block: rx(BLOCK),
@@ -151,6 +169,9 @@ const R = {
   jobSign: rx(JOB_SIGN),
   multiply: near(MULTIPLY, MONEY_GAIN, 25),
   investDirect: rx(INVEST_DIRECT),
+  withdraw: rx(WITHDRAW),
+  withdrawFee: rx(WITHDRAW_FEE),
+  gains: rx(GAINS),
   wrong: rx(WRONG),
   sent: rx(SENT),
   back: rx(BACK),
@@ -197,7 +218,8 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "'digital arrest' जैसी कोई कानूनी कार्रवाई नहीं होती। असली पुलिस video call पर पूछताछ नहीं करती, और न पैसे माँगती है।",
     gyan: "digital-arrest",
     turant: "digital-arrest",
-    test: (t) => R.arrestDirect.test(t.text) || (R.authority.test(t.text) && R.threat.test(t.text)),
+    test: (t) =>
+      R.arrestDirect.test(t.text) || (R.authority.test(t.text) && R.threat.test(t.text) && R.you.test(t.text)),
   },
   {
     id: "apk_file",
@@ -228,7 +250,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     level: "danger",
     labelHi: "इनाम या लॉटरी के लिए पहले पैसे माँगना",
     explainHi: "जिस लॉटरी का टिकट आपने ख़रीदा ही नहीं, वह नहीं लगती। इनाम के नाम पर 'fee' या 'tax' माँगना ठगी है।",
-    test: (t) => R.prize.test(t.text) && R.fee.test(t.text),
+    test: (t) => (R.prize.test(t.text) || R.winAmount.test(t.text)) && R.fee.test(t.text),
   },
   {
     id: "blackmail",
@@ -244,7 +266,17 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "loan के नाम पर photo या रिश्तेदारों को भेजने की धमकी",
     explainHi: "ऐसी धमकी देकर वसूली करना ग़ैरक़ानूनी है। पैसे न भेजें, सबूत रखें, और 1930 पर शिकायत करें।",
     turant: "loan-app",
-    test: (t) => R.loan.test(t.text) && R.loanThreat.test(t.text),
+    test: (t) =>
+      R.loan.test(t.text) && (R.loanMedia.test(t.text) || (R.loanPeople.test(t.text) && R.loanSend.test(t.text))),
+  },
+  {
+    id: "withdraw_fee",
+    level: "danger",
+    labelHi: "अपना पैसा निकालने के लिए पहले fee या tax माँगना",
+    explainHi: "यह task या निवेश वाली ठगी का आख़िरी कदम है। fee भरने से पैसा नहीं निकलता, और पैसे जाते हैं। आगे कुछ न भेजें।",
+    gyan: "task-investment",
+    turant: "investment-task",
+    test: (t) => R.withdraw.test(t.text) && R.withdrawFee.test(t.text) && R.gains.test(t.text),
   },
   {
     id: "kyc_block",
@@ -289,6 +321,13 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) =>
       (R.care.test(t.text) && (R.mobile.test(t.text) || R.careHook.test(t.text))) ||
       (R.mobile.test(t.text) && R.refundHook.test(t.text)),
+  },
+  {
+    id: "new_number",
+    level: "warn",
+    labelHi: "'मेरा नया नंबर है' वाला message",
+    explainHi: "ठग किसी अपने के नाम से नए नंबर से लिखते हैं, फिर पैसे माँगते हैं। उस इंसान को उसके पुराने नंबर पर call करके पक्का करें।",
+    test: (t) => R.newNumber.test(t.text),
   },
   {
     id: "urgency",

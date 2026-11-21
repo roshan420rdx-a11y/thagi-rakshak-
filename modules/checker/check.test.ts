@@ -15,6 +15,8 @@ const CASES: [string, string[], string[]][] = [
   ["lottery_fee", ["Congratulations! You won Rs 25 lakh in KBC lottery. Pay Rs 15,000 processing fee", "आपने 25 लाख की लॉटरी जीती है, टैक्स जमा करें"], ["लॉटरी का टिकट मत ख़रीदना"]],
   ["blackmail", ["तुम्हारा video सबको भेज दूँगा, पैसे भेजो", "your video will be viral, pay now"], ["video call पर बात करते हैं"]],
   ["loan_threat", ["loan नहीं भरा तो तेरी photo तेरे सारे contacts को भेज देंगे", "repay the loan or we will send your photos to all your contacts"], ["home loan की EMI इस महीने 5 तारीख़ को कटेगी"]],
+  ["withdraw_fee", ["आपका मुनाफ़ा ₹1,20,000 हो गया है। निकालने के लिए 10% tax पहले जमा कीजिए।", "To withdraw your profit of Rs 80,000 pay 15% unlock fee"], ["ATM से पैसे निकालने पर 5 बार के बाद शुल्क लगता है"]],
+  ["new_number", ["Hi Mummy, ye mera new number hai, purana kharab ho gaya", "पापा, मेरा नंबर बदल गया है"], ["गाड़ी की नंबर प्लेट बदलवानी है"]],
   ["kyc_block", ["Your account will be blocked today, update KYC by clicking the link", "आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें"], ["KYC के लिए शाखा में आधार लाएँ"]],
   ["task_job", ["Part-time job: video like कीजिए, हर like पर ₹50", "Work from home and earn 3000 daily by giving 5 star review"], ["कल office में meeting है"]],
   ["investment", ["पैसे दुगने करें 30 दिन में", "Join our VIP stock tips group, 300% return daily"], ["FD पर ब्याज दर 7% है"]],
