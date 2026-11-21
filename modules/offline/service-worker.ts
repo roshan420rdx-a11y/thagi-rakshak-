@@ -3,8 +3,21 @@ import { TURANT_SLUGS } from "@/modules/scams";
 // offline में खुलने वाले पन्ने: /turant, उसके सारे प्रकार (data से बनते हैं) और अपने बैंक को बताने का पन्ना
 export const OFFLINE_URLS: readonly string[] = ["/turant", ...TURANT_SLUGS.map((s) => `/turant/${s}`), "/gyan/bank"];
 
+// HTML में लिखी Next.js की static files (CSS/JS) के पते निकालना: <script src>/<link href> से, और RSC flight data
+// ("static/chunks/…js") से। offline पन्ना तभी पूरा चलता है जब उसकी JS भी cache में हो, वरना React पन्ना तोड़ देता है।
+// यह function service worker के अंदर भी जाता है। production build function के नाम छोटे (minify) कर देता है, इसलिए
+// इसका स्रोत एक string है (एक ही स्रोत: TypeScript वाला रूप भी इसी string से बनता है)।
+const EXTRACT_ASSETS_SRC = String.raw`function extractNextAssets(html) {
+  const found = new Set();
+  const re = /(?:\/_next\/)?static\/(?:chunks|css)\/[^"'\\\s]+?\.(?:js|css)/g;
+  for (const m of html.match(re) || []) found.add(m.startsWith("/_next/") ? m : "/_next/" + m);
+  return Array.from(found);
+}`;
+
+export const extractNextAssets = new Function(`${EXTRACT_ASSETS_SRC}; return extractNextAssets;`)() as (html: string) => string[];
+
 // service worker का code (string)। नियम:
-// - install पर /turant के पन्ने cache में; activate पर पुराने version के cache हटाना
+// - install पर हर offline पन्ना और उसकी static files (CSS/JS) cache में; activate पर पुराने version के cache हटाना
 // - URLS वाले पन्ने (और उनके नीचे के, जैसे /gyan/bank/sbi): पहले network (ताज़ा content), न मिले तो cache
 // - /_next/static (CSS/JS): पहले cache, न हो तो network से लाकर रखना
 // - बाकी सब: बिना छुए network
@@ -12,9 +25,30 @@ export function buildServiceWorker({ version, urls }: { version: string; urls: r
   return `
 const VERSION = ${JSON.stringify(version)};
 const URLS = ${JSON.stringify(urls)};
+${EXTRACT_ASSETS_SRC}
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(URLS)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(VERSION);
+      for (const u of URLS) {
+        const res = await fetch(u, { cache: "no-store" });
+        if (!res.ok) throw new Error("precache failed: " + u);
+        const html = await res.clone().text();
+        await cache.put(u, res);
+        for (const a of extractNextAssets(html)) {
+          if (await cache.match(a)) continue;
+          try {
+            const r = await fetch(a);
+            if (r.ok) await cache.put(a, r);
+          } catch (e) {
+            // एक file न मिले तो भी बाकी offline तैयारी चलती रहे
+          }
+        }
+      }
+      await self.skipWaiting();
+    })(),
+  );
 });
 
 self.addEventListener("activate", (event) => {

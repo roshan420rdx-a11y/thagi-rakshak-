@@ -90,6 +90,13 @@ await check("offline: दोबारा खुले और पट्टी द
   }),
 );
 
+await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
+  const res = await fetch(`${BASE}/sw.js`);
+  const js = await res.text();
+  assert(js.includes("function extractNextAssets(html)"), "extractNextAssets नहीं मिला");
+  assert(js.includes("/gyan/bank"), "/gyan/bank offline सूची में नहीं");
+});
+
 await check("security headers", () =>
   withPage({}, async (page) => {
     const res = await page.goto(`${BASE}/`);

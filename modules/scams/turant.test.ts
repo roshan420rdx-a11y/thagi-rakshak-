@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { TELE_MANAS, TURANT_CONTENT_VERSION, TURANT_SLUGS, getTurantPage, isTurantSlug } from "@/modules/scams";
+import { TELE_MANAS, TURANT_CONTENT_VERSION, TURANT_SLUGS, getTurantPage, isTurantSlug, type TurantAction } from "@/modules/scams";
 
 test("10 slug, सब अलग", () => {
   expect(TURANT_SLUGS).toHaveLength(10);
@@ -66,7 +66,7 @@ test("बैंक वाले कदम पर Google की चेताव�
 });
 
 test("हर बाहरी link https://cybercrime.gov.in", () => {
-  const links = TURANT_SLUGS.flatMap((s) => getTurantPage(s).steps.flatMap((st) => st.actions)).filter((a) => a.kind === "link" && a.external);
+  const links = TURANT_SLUGS.flatMap((s) => getTurantPage(s).steps.flatMap((st) => st.actions)).filter((a): a is Extract<TurantAction, { kind: "link" }> => a.kind === "link" && a.external);
   expect(links.length).toBeGreaterThan(0);
   for (const l of links) expect(l.href).toBe("https://cybercrime.gov.in");
 });

@@ -1,1 +1,1 @@
-export { OFFLINE_URLS, buildServiceWorker } from "./service-worker";
+export { OFFLINE_URLS, buildServiceWorker, extractNextAssets } from "./service-worker";
