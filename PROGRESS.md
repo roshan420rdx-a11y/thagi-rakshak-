@@ -1,6 +1,6 @@
 # PROGRESS: ठगी रक्षक
 
-पूरी योजना `PROMPT.md` में है, और design `docs/superpowers/specs/` में। इस फ़ाइल में सिर्फ़ यह दर्ज होता है कि क्या बन चुका है और क्या बाकी है।
+**दिशा (कभी न भूलने वाली बातें): `DISHA.md`, हर session में सबसे पहले।** पूरी योजना `PROMPT.md` में है, और design `docs/superpowers/specs/` में। इस फ़ाइल में सिर्फ़ यह दर्ज होता है कि क्या बन चुका है और क्या बाकी है।
 
 **नियम:** कोई चीज़ तभी ✅ होगी, जब वह सच में चलाकर जाँची जा चुकी हो (CI run id के साथ)। सिर्फ़ फ़ाइल लिखी हो, तो 🟡 रहेगा।
 
@@ -12,7 +12,7 @@ _आख़िरी अपडेट: 2026-11-21 शाम (TR-1 से TR-4 क�
 
 नया chat खोलकर सबसे पहले यही लिखें:
 
-> Repo roshan420rdx-a11y/thagi-rakshak hai. PROGRESS.md padho, "अगला कदम" से continue karo.
+> Repo roshan420rdx-a11y/thagi-rakshak hai. Pehle DISHA.md padho, phir PROGRESS.md ka "अगला कदम" se continue karo.
 
 **मालिक के बारे में (हर chat में याद रखें):**
 - सिर्फ़ Android फ़ोन से काम करते हैं, terminal के बिल्कुल beginner।

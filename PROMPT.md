@@ -5,7 +5,7 @@ Primary Goal: ठगी के बाद पीड़ित को पहले 
 
 Development Philosophy: Victim First • Trust by Design • Rules in Code, not in AI • Small Parts, Each Verified • Free Where It Matters • Evidence-Based Engineering
 
-पूरा design इन दो दस्तावेज़ों में है, और यह फ़ाइल उन्हीं पर टिकी है:
+**सबसे पहले `DISHA.md` पढ़ें** (दिशा, कभी न टूटने वाले नियम, अब तक के फ़ैसले)। पूरा design इन दो दस्तावेज़ों में है, और यह फ़ाइल उन्हीं पर टिकी है:
 - `docs/superpowers/specs/2026-11-21-thagi-rakshak-design.md` (Design Doc v2: **क्या और क्यों**)
 - `docs/superpowers/specs/2026-11-21-thagi-rakshak-structure-design.md` (भाग 2: **कैसा दिखेगा, कैसे बनेगा, कब**)
 
@@ -84,10 +84,10 @@ PART 4: पूरा Roadmap (छोटे हिस्से)
 | TR-2 | Design system: रंग-tokens, contrast-जाँच, मूल components | 🤖 | plan A1 |
 | TR-3 | भाषा ढाँचा, शब्दकोश, copy-lint | 🤖 | plan A1 |
 | TR-4 | ठगी के प्रकार + `/turant` (बिना JS, offline) | 🤖 | plan A1 |
-| TR-5 | होम (दो दरवाज़े), navigation, footer, `/bharosa` | 🤖 | plan A2 |
-| TR-6 | RBI के 24 जून 2026 वाले निर्देश + MRM SOP पढ़कर नियम-तालिका v0 (मूल text की लाइनों के साथ) | 🤖 (+👤 दूसरी जाँच) | plan A2 |
-| TR-7 | rules-engine (शुद्ध) + fixtures | 🤖 | plan A2 |
-| TR-8 | `/haq` पन्ने: rbi-2027, frozen-money, failed-txn | 🤖 | plan A2 |
+| TR-5 | होम (दो दरवाज़े), navigation, `/pucho` (ठगी के आम निशान, checker आने तक), `/bharosa` | 🤖 | plan A2a |
+| TR-6 | RBI के 24 जून 2026 वाले निर्देश + MRM SOP पढ़कर नियम-तालिका v0 (मूल text की लाइनों के साथ) | 🤖 (+👤 दूसरी जाँच) | plan A2b |
+| TR-7 | rules-engine (शुद्ध) + fixtures | 🤖 | plan A2b |
+| TR-8 | `/haq` पन्ने: rbi-2027, frozen-money, failed-txn | 🤖 | plan A2b |
 | TR-9 | 10 बड़े बैंकों के आधिकारिक ठगी-रिपोर्ट रास्ते + `/gyan/bank` पन्ने | 🤖 जाँच 1 + 👤 जाँच 2 | plan A3 |
 | TR-10 | ज्ञानकोश का ढाँचा + 5 सबसे ज़रूरी पन्ने | 🤖 | plan A3 |
 | TR-11 | `/legal`: privacy, terms, शिकायत अधिकारी (draft) | 🤖 + ⚖️ | plan A3 |
