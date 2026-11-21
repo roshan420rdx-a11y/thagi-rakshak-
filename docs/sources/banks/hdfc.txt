@@ -1,0 +1,17 @@
+# hdfc: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.hdfc.bank.in/
+title: Personal Banking & Netbanking Services | HDFC Bank
+link: "Block Lost/Stolen Card" -> /credit-cards/block-loststolen-card
+link: "Block My Credit Card" -> /credit-cards/block-loststolen-card
+link: "Block Your Debit Card Instantly" -> /debit-cards/services/block-debit-card-instantly
+link: "Report UPI Frauds" -> /upi/report-frauds
+
+## https://www.hdfc.bank.in/upi/report-frauds
+title: Report Fraud and Dispute
+link: "Block Lost/Stolen Card" -> /credit-cards/block-loststolen-card
+link: "Block My Credit Card" -> /credit-cards/block-loststolen-card
+link: "Block Your Debit Card Instantly" -> /debit-cards/services/block-debit-card-instantly
+link: "Report UPI Frauds" -> /upi/report-frauds
+quote: To report any unauthorised Credit Card, Debit Card, NetBanking, or UPI transactions, please call 1800 258 6161.
+

@@ -1,0 +1,9 @@
+# canara: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.canarabank.bank.in/
+title: Canara Bank - Personal & Corporate Banking Services
+link: "Lost card Liability Fraudulent Transaction Cover" -> https://www.canarabank.bank.in/documents/d/guest/loss-on-card
+link: "Online Channels/Account blocking through Email NEW" -> https://www.canarabank.bank.in/online-channels/account-blocking-through-email1
+link: "Online Channels/Account blocking through Email" -> javascript:void(0);
+link: "REPORT UNAUTHORISED/FRAUDULENT.." -> https://canarites.canarabank.bank.in/GRSCRM
+

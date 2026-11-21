@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BankChannelView } from "@/components/banks/bank-channel";
 import { BankTips } from "@/components/banks/bank-tips";
 import { BigDoor } from "@/components/ui/big-door";
-import { ActionLink } from "@/components/ui/action-link";
 import { IconAlert } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/notice";
 import { BANKS, getBank, liveChannels, liveSite } from "@/modules/banks";
-import { formatHindiDate } from "@/modules/rules-engine";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,12 +34,7 @@ export default async function BankPage({ params }: Props) {
         <section className="space-y-2 rounded-xl border border-line bg-paper p-3">
           <h2 className="text-[19px] font-bold">बैंक के आधिकारिक रास्ते</h2>
           {channels.map((c) => (
-            <div key={`${c.kind}-${c.value}`} className="space-y-1">
-              {c.kind === "tel" ? <ActionLink action={{ kind: "tel", number: c.value, labelHi: `${c.labelHi}: ${c.value}` }} primary /> : <p className="font-semibold">{c.labelHi}: {c.value}</p>}
-              <p className="text-[13px] text-muted">
-                स्रोत: बैंक की अपनी वेबसाइट · दो बार जाँचा{c.verifiedOn ? `: ${formatHindiDate(c.verifiedOn)}` : ""}
-              </p>
-            </div>
+            <BankChannelView key={`${c.kind}-${c.value}`} channel={c} />
           ))}
         </section>
       ) : (

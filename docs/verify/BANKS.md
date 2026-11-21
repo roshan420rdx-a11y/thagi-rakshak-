@@ -23,17 +23,19 @@
 ## स्थिति
 संकेत: ⏳ बाकी · 🤖 Claude ने जाँचा (अभी छिपा) · ✅ दोनों जाँच, साइट पर दिख रहा
 
-| बैंक | website (.bank.in) | ठगी का नंबर | आख़िरी जाँच |
+| बैंक | website (.bank.in) | ठगी का रास्ता (जाँच 1 में मिला) | मालिक यह link खोलें (जाँच 2) |
 |---|---|---|---|
-| SBI | ⏳ | ⏳ | — |
-| HDFC बैंक | ⏳ | ⏳ | — |
-| ICICI बैंक | ⏳ | ⏳ | — |
-| PNB | ⏳ | ⏳ | — |
-| बैंक ऑफ़ बड़ौदा | ⏳ | ⏳ | — |
-| केनरा बैंक | ⏳ | ⏳ | — |
-| यूनियन बैंक ऑफ़ इंडिया | ⏳ | ⏳ | — |
-| Axis बैंक | ⏳ | ⏳ | — |
-| कोटक महिंद्रा बैंक | ⏳ | ⏳ | — |
-| बैंक ऑफ़ इंडिया | ⏳ | ⏳ | — |
+| SBI | 🤖 sbi.bank.in | होम पेज पर "Unauthorized Digital Transaction Reporting" link (अलग फ़ोन नंबर नहीं मिला) | https://sbi.bank.in/ |
+| HDFC बैंक | 🤖 www.hdfc.bank.in | 📞 1800 258 6161 | https://www.hdfc.bank.in/upi/report-frauds |
+| ICICI बैंक | 🤖 www.icici.bank.in | 📞 1800 1080 | https://www.icici.bank.in/personal-banking/help/online-safe-banking |
+| PNB | 🤖 www.pnb.bank.in | होम पेज पर "नेट बैंकिंग ब्लॉक करें" link | https://www.pnb.bank.in/ |
+| बैंक ऑफ़ बड़ौदा | 🤖 bankofbaroda.bank.in | 📞 1800 5700 / 1800 5000 | https://bankofbaroda.bank.in/customer-support |
+| केनरा बैंक | 🤖 www.canarabank.bank.in | होम पेज पर "REPORT UNAUTHORISED/FRAUDULENT.." link | https://www.canarabank.bank.in/ |
+| यूनियन बैंक ऑफ़ इंडिया | 🤖 www.unionbankofindia.bank.in | 📞 1800 2222 44 / 1800 2222 43 | https://www.unionbankofindia.bank.in/en/common/cyber-security |
+| Axis बैंक | 🤖 www.axis.bank.in | होम पेज पर "Report A Fraud" link | https://www.axis.bank.in/ |
+| कोटक महिंद्रा बैंक | 🤖 www.kotak.bank.in | होम पेज पर "Report a fraud" link | https://www.kotak.bank.in/ |
+| बैंक ऑफ़ इंडिया | ⏳ (साइट bot-जाँच के कारण नहीं खुली) | ⏳ | — |
 
-**जाँच 1 के लिए क्या चाहिए:** इन बैंकों की `.bank.in` साइटें इस मशीन से खोलनी होंगी। इसके लिए environment में उन hosts की अनुमति, और उन्हें download करने की मालिक की अनुमति चाहिए (TR-9b)।
+जाँच 1: Claude, 2026-11-21। मूल लाइनें `docs/sources/banks/<बैंक>.txt` में। अभी इनमें से कुछ भी साइट पर नहीं दिखता।
+
+**जाँच 1 के लिए:** मालिक की अनुमति (2026-11-21) से 10 बैंकों के `.bank.in` hosts environment में जोड़े गए।

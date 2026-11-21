@@ -1,0 +1,11 @@
+# union: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.unionbankofindia.bank.in/en/home
+title: Union Bank of India - Personal, Corporate & NRI Banking Online
+link: "Report Unauthorised Transaction" -> https://unauthdigitxn.unionbankportal.bank.in/portal/en/signin
+
+## https://www.unionbankofindia.bank.in/en/common/cyber-security
+title: Cyber Security Tips | Union Bank of India
+link: "Report Unauthorised Transaction" -> https://unauthdigitxn.unionbankportal.bank.in/portal/en/signin
+quote: To block your card or to report fraud/disputed transactions, call Bank’s All-India Toll Free number - 1800 2222 44 / 1800 2222 43.
+

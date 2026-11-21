@@ -1,0 +1,17 @@
+# sbi: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://sbi.bank.in/
+title: SBI - Loans, Accounts, Cards, Investment, Deposits, Net Banking - Personal Banking
+link: "Signing of ADB Line of Credit USD 90.50 million by ESG & CFU, on 20.12.2024 at Department of Economic Affairs, Ministry of Finance, North Block, New Delhi" -> /documents/43752844/43758861/02052026_ADB_signing+Ceremony_v2.pdf/3927e6d7-b6ea-e55e-83d3-8cf44c002ebd?t=1777716418213
+link: "TO BLOCK DEBIT CARD" -> https://retail.onlinesbi.sbi/retail/blockatmcardintermediate.htm
+link: "To Report Unauthorized Complaint" -> https://crh.sbi.bank.in?resd=7CXPF4unuvIuNVDCjIdeyJKgsSsRsozkGHBhqjbsjJHVQ1LpFyPfX8/929SOCU1Q
+link: "Unauthorized Digital Transaction Reporting" -> https://crh.sbi.bank.in?resd=7CXPF4unuvIuNVDCjIdeyJKgsSsRsozkGHBhqjbsjJHVQ1LpFyPfX8/929SOCU1Q
+
+## https://sbi.bank.in/web/personal-banking/cyber-security
+title: Cyber Security - Personal Banking
+link: "Cyber Fraud - Be Scam Safe" -> /documents/16012/14424788/191124-Cyber_Fraud-Be_Scam_Safe.pdf/ada32ee3-a9f8-9413-e2fc-8d3574f301d7?t=1732014038530
+link: "Signing of ADB Line of Credit USD 90.50 million by ESG & CFU, on 20.12.2024 at Department of Economic Affairs, Ministry of Finance, North Block, New Delhi" -> /documents/43752844/43758861/02052026_ADB_signing+Ceremony_v2.pdf/3927e6d7-b6ea-e55e-83d3-8cf44c002ebd?t=1777716418213
+link: "TO BLOCK DEBIT CARD" -> https://retail.onlinesbi.sbi/retail/blockatmcardintermediate.htm
+link: "Unauthorized Digital Transaction Reporting" -> https://crh.sbi.bank.in?resd=7CXPF4unuvIuNVDCjIdeyJKgsSsRsozkGHBhqjbsjJHVQ1LpFyPfX8/929SOCU1Q
+quote: To report any cyber incident, please email at  report.phishing@sbi.co.in  or call cyber crime helpline number 1930
+

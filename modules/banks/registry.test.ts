@@ -48,3 +48,45 @@ test("getBank", () => {
   expect(getBank("sbi")?.nameEn).toBe("State Bank of India");
   expect(getBank("xyz")).toBeUndefined();
 });
+
+// ---- TR-9b: जाँच 1 (Claude) के नतीजे ----
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+const srcText = (slug: string) => norm(readFileSync(path.resolve(__dirname, "../../docs/sources/banks", `${slug}.txt`), "utf8"));
+
+test("9 बैंकों की website Claude ने जाँची (BOI बाकी), अभी कोई live नहीं", () => {
+  const checked = BANKS.filter((b) => b.officialSite?.verifiedBy.includes("claude")).map((b) => b.slug);
+  expect(checked).toEqual(["sbi", "hdfc", "icici", "pnb", "bob", "canara", "union", "axis", "kotak"]);
+  expect(getBank("boi")?.officialSite).toBeNull();
+  expect(BANKS.filter((b) => liveSite(b) || liveChannels(b).length > 0)).toEqual([]);
+});
+
+test("हर channel की मूल लाइन docs/sources/banks में जस की तस", () => {
+  for (const b of BANKS)
+    for (const c of b.channels) expect(srcText(b.slug), `${b.slug} ${c.value}`).toContain(norm(c.sourceQuote));
+});
+
+test("हर tel नंबर अपनी मूल लाइन में मौजूद (अंकों से मिलाकर)", () => {
+  const digits = (s: string) => s.replace(/\D/g, "");
+  for (const b of BANKS)
+    for (const c of b.channels.filter((x) => x.kind === "tel")) {
+      expect(c.value).toMatch(/^\d{8,11}$/);
+      expect(digits(c.sourceQuote), `${b.slug} ${c.value}`).toContain(c.value);
+    }
+});
+
+test("web channel: बैंक का .bank.in होम पेज", () => {
+  for (const b of BANKS)
+    for (const c of b.channels.filter((x) => x.kind === "web")) expect(new URL(c.value).hostname.endsWith(".bank.in")).toBe(true);
+});
+
+test("ठगी के लिए अलग नंबर: HDFC, BoB, Union, ICICI", () => {
+  const tel = (slug: string) => getBank(slug)!.channels.filter((c) => c.kind === "tel").map((c) => c.value);
+  expect(tel("hdfc")).toEqual(["18002586161"]);
+  expect(tel("bob")).toEqual(["18005700", "18005000"]);
+  expect(tel("union")).toEqual(["1800222244", "1800222243"]);
+  expect(tel("icici")).toEqual(["18001080"]);
+  expect(tel("sbi")).toEqual([]);
+});

@@ -1,0 +1,11 @@
+# axis: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.axis.bank.in/
+title: Personal Banking | Internet Banking | Corporate, NRI Banking Services Online - Axis Bank
+link: "Avoid Online Fraud" -> /fraud-awareness/safe-banking/beware-of-online-frauds
+link: "Block and Replace Credit Card" -> https://application.axis.bank.in/WebForms/axis-support/Block-cccard.aspx?utm_source=website&amp;utm_medium=homepage-new&
+link: "Fraud Awareness" -> /fraud-awareness
+link: "Report A Fraud" -> https://application.axis.bank.in/webforms/axis-support/sub-issues/FND-Fraud-ccdcsa-4.aspx?_gl=1*13t61ey*_gcl_au*MTcwOTQ1
+link: "Report a Fraud" -> https://application.axis.bank.in/webforms/axis-support/sub-issues/FND-Fraud-ccdcsa-4.aspx?_gl=1*13t61ey*_gcl_au*MTcwOTQ1
+link: "What is Loan fraud? - Signs, safety & types" -> /blogs/generic/what-is-loan-fraud
+

@@ -1,0 +1,9 @@
+# icici: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.icici.bank.in/personal-banking/help/online-safe-banking
+title: Safe Banking for online Services | Safe Net Banking | ICICI Bank
+link: "Net Banking Use Net Banking to minimise the risk of fraud." -> /online-safe-banking/internet-banking
+link: "Report unauthorized transaction" -> /personal-banking/help/online-safe-banking
+link: "Report unauthorized transaction" -> /personal-banking/products/online-safe-banking/report-unauthorized-transaction
+quote: Report unauthorized transaction Toll Free No 1800 1080
+

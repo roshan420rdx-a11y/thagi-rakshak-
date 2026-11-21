@@ -1,0 +1,5 @@
+# pnb: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://www.pnb.bank.in/
+title: Personal Banking | Corporate Banking | Netbanking Services| Bank | PNB
+link: "नेट बैंकिंग ब्लॉक करें" -> block-net-banking.html

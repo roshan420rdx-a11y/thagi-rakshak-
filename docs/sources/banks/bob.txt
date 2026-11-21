@@ -1,0 +1,13 @@
+# bob: बैंक की अपनी .bank.in साइट से अंश (जाँच 1: Claude, 2026-11-21)
+
+## https://bankofbaroda.bank.in/
+title: Bank of Baroda - Personal Banking, NetBanking, Corporate Banking, NRI Banking Services Online
+link: "Cyber Fraud Awareness" -> /cyber-fraud-awareness
+link: "Report suspicious/fraud transaction" -> /customer-support?scroll=reportsection
+
+## https://bankofbaroda.bank.in/customer-support
+title: Customer Support Contact Information, FAQs, and Assistance | Bank of Baroda
+link: "Online Account Blocking Portal" -> https://appstackweb.bankofbaroda.bank.in/debitfreeze/
+link: "Report suspicious/fraud transaction" -> /customer-support?scroll=reportsection
+quote: In case Fraud taken place, immediately block respective channel or Freeze the Account for Debit Transactions by calling Bank’s Toll-Free No. 1800 5700 / 1800 5000
+
