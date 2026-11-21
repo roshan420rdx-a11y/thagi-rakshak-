@@ -1,1 +1,4 @@
-[]
+[
+  { "file": "modules/checker/patterns.ts", "phrase": "guarantee", "why": "ठगों के message पहचानने वाला pattern, user को दिखने वाली बात नहीं" },
+  { "file": "modules/checker/patterns.ts", "phrase": "गारंटी", "why": "ठगों के message पहचानने वाला pattern, user को दिखने वाली बात नहीं" }
+]
