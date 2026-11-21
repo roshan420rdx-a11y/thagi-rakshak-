@@ -110,5 +110,13 @@ await check("फ़ोन: footer की आख़िरी लाइन नी�
   }),
 );
 
+await check("होम: प्रतिज्ञा एक ही बार (दोहराव नहीं)", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    const n = await page.getByText("हम कभी OTP, PIN, password नहीं माँगते", { exact: false }).count();
+    assert(n === 1, `प्रतिज्ञा ${n} बार`);
+  }),
+);
+
 await browser.close();
 process.exit(failed ? 1 : 0);

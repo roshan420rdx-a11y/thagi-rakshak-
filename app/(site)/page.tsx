@@ -1,8 +1,8 @@
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconSearch } from "@/components/ui/icons";
-import { TrustBar } from "@/components/ui/trust-bar";
 import { getSiteConfig, whatsappLink } from "@/modules/site";
 
+// प्रतिज्ञा footer में हर पन्ने पर है (और छोटे होम पर पहली screen में ही दिखती है), इसलिए यहाँ दोबारा नहीं
 export default function HomePage() {
   const { whatsappNumber } = getSiteConfig();
   return (
@@ -22,7 +22,6 @@ export default function HomePage() {
         tone="safe"
         icon={<IconSearch className="h-8 w-8" />}
       />
-      <TrustBar />
       {whatsappNumber ? (
         <a
           href={whatsappLink(whatsappNumber, "नमस्ते, मुझे ठगी से जुड़ी मदद चाहिए")}
