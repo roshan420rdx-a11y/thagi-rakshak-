@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "launch-check": "vitest run --config vitest.launch.config.ts"
   },
   "dependencies": {
     "next": "15.5.29",
