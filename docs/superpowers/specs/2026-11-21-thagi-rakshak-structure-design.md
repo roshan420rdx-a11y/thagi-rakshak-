@@ -150,7 +150,7 @@
 | Beneficiary | पैसा पाने वाला |
 | Nodal Officer | बैंक के शिकायत अधिकारी (Nodal Officer) |
 | Ombudsman | RBI लोकपाल (Ombudsman) |
-| Indemnity bond | वापसी की गारंटी वाला काग़ज़ (Indemnity bond) |
+| Indemnity bond | क्षतिपूर्ति का काग़ज़ (Indemnity bond) — "गारंटी" शब्द मना है |
 | Eligible | हक़ बनता है |
 | Compensation | मुआवज़ा |
 | Fraudulent transaction | ठगी वाला लेन-देन |

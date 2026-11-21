@@ -151,7 +151,7 @@ CSR का पैसा लेने वाली संस्था के ल�
 ### 5.1 वेबसाइट का नक्शा
 ```
 /                         होम: 🔴 "ठगी हो गई"  |  🟢 "पहले पूछो"
-├── /turant                🔴 पहले 60 मिनट (बिना login, offline, 2G पर भी, 100KB से छोटा)
+├── /turant                🔴 पहले 60 मिनट (बिना login, offline, 2G पर भी; HTML 60KB से कम, बिना JavaScript के भी पूरा काम)
 │   └── /turant/[type]     upi | card | netbanking | wallet | digital-arrest | sextortion | loan-app | investment-task | customer-care-fake
 ├── /pucho                 🟢 पहले पूछो: text, screenshot, नंबर, UPI ID, link, QR
 │   └── /pucho/result/[id] नतीजा (share करने लायक, निजी जानकारी छिपाकर)
@@ -518,7 +518,7 @@ audit_log          id, actor_id, action, entity, entity_id, at, ip_hash
 8. AI provider बदलना पड़े, तो सिर्फ़ `lib/ai` बदले, बाकी code नहीं।
 
 ### 9.7 कमज़ोर फ़ोन, नेटवर्क और पढ़ाई
-- /turant पहले से बना static पन्ना, 100KB से छोटा, offline भी।
+- /turant पहले से बना static पन्ना: HTML 60KB से कम, बिना JavaScript के भी पूरा काम, offline भी। (App Router का अपना JS ~100KB है, इसलिए "पूरा पन्ना 100KB से कम" वाली शर्त plan A1 में इस तरह सुधारी गई।)
 - अक्षर कम से कम 18px, बटन 48px से ऊँचे, रंग के साथ icon।
 - भाषा पाँचवीं कक्षा के स्तर की, हर कदम पर 🔊 "सुनें"।
 - बोलकर पूछने के लिए पहले WhatsApp का voice note।
