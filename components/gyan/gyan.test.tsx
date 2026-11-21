@@ -29,3 +29,8 @@ test("/turant/customer-care-fake से दोनों जुड़े ज्�
   expect(html).toContain('href="/gyan/customer-care-fake"');
   expect(html).toContain('href="/gyan/apk-file"');
 });
+
+test("ज्ञानकोश पन्ने में 'सुनें' के लिए सार, निशान और नियम वाले हिस्सों की id", async () => {
+  const html = renderToStaticMarkup(await GyanPageRoute({ params: Promise.resolve({ slug: "digital-arrest" }) }));
+  for (const id of ["gyan-summary", "gyan-signs", "gyan-rules"]) expect(html).toContain(`id="${id}"`);
+});

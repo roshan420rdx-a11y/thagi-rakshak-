@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert } from "@/components/ui/icons";
+import { ListenButton } from "@/components/ui/listen-button";
 import type { GyanPage } from "@/modules/gyan";
 import { formatHindiDate } from "@/modules/rules-engine";
 
@@ -11,8 +12,10 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
   return (
     <article className="space-y-5">
       <h1 className="text-[22px] font-bold leading-snug">{p.titleHi}</h1>
+      {/* सुनें: सार, निशान और नियम (पूरा पन्ना बहुत लंबा हो जाता) */}
+      <ListenButton targetId={["gyan-summary", "gyan-signs", "gyan-rules"]} />
 
-      <section className="space-y-1 rounded-xl bg-brand-bg p-3 text-brand">
+      <section id="gyan-summary" className="space-y-1 rounded-xl bg-brand-bg p-3 text-brand">
         <h2 className="font-bold">30 सेकंड में</h2>
         {p.summaryHi.map((line) => (
           <p key={line}>{line}</p>
@@ -30,7 +33,7 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
         </ol>
       </section>
 
-      <section className="space-y-2">
+      <section id="gyan-signs" className="space-y-2">
         <h2 className={H2}>पहचान के 5 निशान</h2>
         <ul className="space-y-2">
           {p.signsHi.map((s) => (
@@ -54,7 +57,7 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
         ))}
       </section>
 
-      <section className="space-y-2">
+      <section id="gyan-rules" className="space-y-2">
         <h2 className={H2}>बचने के 3 नियम</h2>
         <ol className="space-y-2">
           {p.rulesHi.map((r, i) => (

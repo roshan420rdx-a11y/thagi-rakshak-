@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { IconSpeaker } from "./icons";
 
-// 🔊 सुनें: पन्ने के कदम हिंदी आवाज़ में पढ़कर सुनाना। mount से पहले, या जहाँ browser में आवाज़ नहीं, वहाँ कुछ नहीं दिखता।
-export function ListenButton({ targetId }: { targetId: string }) {
+// 🔊 सुनें: पन्ने के हिस्से हिंदी आवाज़ में पढ़कर सुनाना (एक या कई id, क्रम से)। mount से पहले, या जहाँ browser में आवाज़ नहीं, वहाँ कुछ नहीं दिखता।
+export function ListenButton({ targetId }: { targetId: string | string[] }) {
   const [supported, setSupported] = useState(false);
   const [speaking, setSpeaking] = useState(false);
 
@@ -24,7 +24,11 @@ export function ListenButton({ targetId }: { targetId: string }) {
       setSpeaking(false);
       return;
     }
-    const text = document.getElementById(targetId)?.innerText ?? "";
+    const ids = Array.isArray(targetId) ? targetId : [targetId];
+    const text = ids
+      .map((id) => document.getElementById(id)?.innerText ?? "")
+      .filter(Boolean)
+      .join("\n");
     if (!text) return;
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "hi-IN";

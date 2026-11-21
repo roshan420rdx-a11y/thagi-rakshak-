@@ -115,6 +115,30 @@ await check("/pucho: बिजली वाले message के नतीजे
   }),
 );
 
+await check("सुनें: सार, निशान और नियम हिंदी आवाज़ में (FAQ नहीं)", async () => {
+  const context = await browser.newContext();
+  // आवाज़ वाला हिस्सा नकली: जो बोला जाता, उसे पकड़ लें
+  await context.addInitScript(() => {
+    window.__spoken = [];
+    if (!("SpeechSynthesisUtterance" in window)) window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: { speak: (u) => window.__spoken.push({ text: u.text, lang: u.lang }), cancel: () => {} },
+    });
+  });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/gyan/digital-arrest`);
+    await page.getByRole("button", { name: "सुनें" }).click();
+    const spoken = await page.evaluate(() => window.__spoken);
+    assert(spoken.length === 1 && spoken[0].lang === "hi-IN", `spoken: ${JSON.stringify(spoken).slice(0, 80)}`);
+    for (const part of ["30 सेकंड में", "पहचान के 5 निशान", "बचने के 3 नियम"]) assert(spoken[0].text.includes(part), `${part} नहीं बोला`);
+    assert(!spoken[0].text.includes("अक्सर पूछे सवाल"), "FAQ भी बोला");
+  } finally {
+    await context.close();
+  }
+});
+
 await check("फ़ोन पर नियमों के नंबर ('1.') एक ही लाइन में, टूटें नहीं", () =>
   withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
     await page.goto(`${BASE}/gyan/digital-arrest`);
