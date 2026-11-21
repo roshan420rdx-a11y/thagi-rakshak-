@@ -21,16 +21,19 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "4.3.5",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "4.14.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.29",
     "playwright": "1.63.0",
     "tailwindcss": "4.3.5",
     "typescript": "5.9.3",
-    "vitest": "3.2.7"
+    "vite": "7.3.8",
+    "vitest": "4.1.12"
   }
 }
