@@ -23,7 +23,7 @@ export default function TurantIndex() {
         ))}
       </ul>
       <h2 className="mt-6 mb-3 text-[19px] font-bold">पता नहीं? ये काम अभी करें</h2>
-      <TurantSteps page={getTurantPage("pata-nahi")} />
+      <TurantSteps page={getTurantPage("pata-nahi")} headingLevel={3} />
     </>
   );
 }

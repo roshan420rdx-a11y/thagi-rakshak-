@@ -26,3 +26,15 @@ test("digital-arrest: banner कदमों से पहले", () => {
 test("upi पर Tele-MANAS नहीं", () => {
   expect(renderToStaticMarkup(<TurantSteps page={getTurantPage("upi")} />)).not.toContain("tel:14416");
 });
+
+test("मुख्य /turant पन्ने पर कदमों के शीर्षक h3 (ऊपर 'पता नहीं?' वाला h2 है)", () => {
+  const html = renderToStaticMarkup(<TurantSteps page={getTurantPage("pata-nahi")} headingLevel={3} />);
+  expect(html).toContain("<h3");
+  expect(html).not.toContain("<h2");
+});
+
+test("अपने पन्ने पर कदम h2 ही रहें (पहले जैसा)", () => {
+  const html = renderToStaticMarkup(<TurantSteps page={getTurantPage("upi")} />);
+  expect(html).toContain("<h2");
+  expect(html).not.toContain("<h3");
+});

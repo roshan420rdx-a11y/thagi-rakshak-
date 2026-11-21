@@ -5,13 +5,13 @@ import { TELE_MANAS, type TurantPage } from "@/modules/scams";
 
 // एक /turant पन्ने के कदम: ऊपर चेतावनी (हो तो), फिर क्रम से कदम, फिर (ज़रूरत हो तो) Tele-MANAS।
 // id="turant-steps" वाला हिस्सा ही "सुनें" बटन पढ़कर सुनाता है।
-export function TurantSteps({ page }: { page: TurantPage }) {
+export function TurantSteps({ page, headingLevel = 2 }: { page: TurantPage; headingLevel?: 2 | 3 }) {
   return (
     <div id="turant-steps" className="space-y-3">
       {page.banner ? <Notice tone={page.banner.tone}>{page.banner.textHi}</Notice> : null}
       <ol className="space-y-3">
         {page.steps.map((step, i) => (
-          <StepCard key={step.id} n={i + 1} title={step.titleHi} urgency={step.urgencyHi}>
+          <StepCard key={step.id} n={i + 1} title={step.titleHi} urgency={step.urgencyHi} headingLevel={headingLevel}>
             <p>{step.bodyHi}</p>
             {step.warningHi ? <Notice tone="warn">{step.warningHi}</Notice> : null}
             {step.actions.length > 0 ? (

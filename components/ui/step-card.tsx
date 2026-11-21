@@ -6,14 +6,17 @@ export function StepCard({
   title,
   urgency,
   status = "todo",
+  headingLevel = 2,
   children,
 }: {
   n: number;
   title: string;
   urgency?: string;
   status?: "todo" | "done";
+  headingLevel?: 2 | 3; // ऊपर पहले से h2 हो (जैसे मुख्य /turant पन्ना), तो 3
   children: ReactNode;
 }) {
+  const Heading = headingLevel === 3 ? "h3" : "h2";
   return (
     <li data-status={status} className="flex gap-3 rounded-xl border border-line bg-paper p-3">
       <span
@@ -23,10 +26,10 @@ export function StepCard({
         {n}
       </span>
       <div className="min-w-0 flex-1">
-        <h2 className="text-[17px] font-bold leading-snug">
+        <Heading className="text-[17px] font-bold leading-snug">
           <span className="sr-only">कदम {n}: </span>
           {title}
-        </h2>
+        </Heading>
         {urgency ? (
           <p className="mt-1 inline-block rounded-md bg-danger-bg px-2 text-[14px] font-semibold text-danger">{urgency}</p>
         ) : null}
