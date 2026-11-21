@@ -8,8 +8,7 @@ export default function TurantLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <header className="flex items-center justify-between border-b border-line bg-paper px-4 py-2">
-        <Link
- href="/" className="inline-flex min-h-12 items-center font-bold text-danger no-underline">
+        <Link href="/" className="inline-flex min-h-12 items-center font-bold text-danger no-underline">
           ← वापस
         </Link>
         <ListenButton targetId="turant-steps" />

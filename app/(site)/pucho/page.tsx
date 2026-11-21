@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/notice";
@@ -30,6 +31,9 @@ export default function PuchoPage() {
         tone="danger"
         icon={<IconAlert className="h-8 w-8" />}
       />
+      <Link href="/gyan" className="flex min-h-12 items-center font-semibold text-brand">
+        ठगी के प्रकार विस्तार से: ज्ञानकोश →
+      </Link>
     </div>
   );
 }

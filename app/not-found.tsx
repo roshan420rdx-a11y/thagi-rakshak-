@@ -15,8 +15,7 @@ export default function NotFound() {
         icon={<IconAlert className="h-8 w-8" />}
       />
       <p>
-        <Link
- href="/" className="inline-flex min-h-12 items-center font-semibold text-brand">
+        <Link href="/" className="inline-flex min-h-12 items-center font-semibold text-brand">
           होम पर जाएँ
         </Link>
       </p>
