@@ -21,7 +21,8 @@ export function FailedTxnView({ params, today }: { params: Params; today: string
       <h1 className="text-[22px] font-bold leading-snug">लेन-देन fail हुआ, पैसा अटका: ₹100 रोज़</h1>
       <p>पैसा कट गया पर पहुँचा नहीं, तो बैंक को तय दिनों में लौटाना होता है। देर हुई, तो हर दिन ₹100 देना होता है, बिना माँगे।</p>
       {parsed.ok === false ? <FormErrors errorsHi={parsed.errorsHi} /> : null}
-      <form method="get" action="/haq/failed-txn" className="space-y-4 rounded-xl border border-line bg-paper p-3">
+      {/* action में #nateeja: भेजने के बाद browser सीधे नतीजे पर जाए; बिना JS के भी */}
+      <form method="get" action="/haq/failed-txn#nateeja" className="space-y-4 rounded-xl border border-line bg-paper p-3">
         <Field label="क्या हुआ?" htmlFor="ch">
           <select id="ch" name="ch" required defaultValue={v(params, "ch")} className={INPUT_CLS}>
             <option value="" disabled>

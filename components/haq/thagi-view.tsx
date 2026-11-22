@@ -33,7 +33,8 @@ export function ThagiView({ params, today }: { params: Params; today: string }) 
 
       {parsed.ok === false ? <FormErrors errorsHi={parsed.errorsHi} /> : null}
 
-      <form method="get" action="/haq/thagi" className="space-y-4 rounded-xl border border-line bg-paper p-3">
+      {/* action में #nateeja: भेजने के बाद browser सीधे नतीजे पर जाए (फ़ोन पर वह लंबे form के नीचे है); बिना JS के भी */}
+      <form method="get" action="/haq/thagi#nateeja" className="space-y-4 rounded-xl border border-line bg-paper p-3">
         <Field label="ठगी किस तारीख़ को हुई?" htmlFor="txn">
           <input id="txn" name="txn" type="date" max={today} required defaultValue={v(params, "txn")} className={INPUT_CLS} />
         </Field>

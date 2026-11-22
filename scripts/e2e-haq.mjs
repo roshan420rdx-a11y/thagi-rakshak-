@@ -49,6 +49,9 @@ await check("JS बंद: form भरकर हिसाब (संभावि
     await page.fill("#rbank", today);
     await Promise.all([page.waitForURL(/\/haq\/thagi\?/), page.click('button[type="submit"]')]);
     await page.getByText("आपका हिसाब").waitFor();
+    assert(page.url().endsWith("#nateeja"), `URL में #nateeja नहीं: ${page.url()}`);
+    const box = await page.getByRole("heading", { name: "आपका हिसाब" }).boundingBox();
+    assert(box && box.y >= 0 && box.y < 740, `JS बंद पर नतीजा screen पर नहीं (y=${box && Math.round(box.y)})`);
     assert((await page.getByText("संभावित", { exact: true }).count()) > 0, "'संभावित' नहीं मिला");
     assert((await page.locator('a[href^="https://www.rbi.org.in/"]').count()) > 0, "मूल text link नहीं");
   }),
@@ -67,6 +70,35 @@ await check("रकम comma, ₹ और पैसे के साथ (₹4,999
     await Promise.all([page.waitForURL(/\/haq\/thagi\?/), page.click('button[type="submit"]')]);
     await page.getByText("आपका हिसाब").waitFor();
     assert((await page.getByText("कितने पैसे गए, सही रकम लिखें।").count()) === 0, "सही रकम पर ग़लती दिखी");
+  }),
+);
+
+await check("'हिसाब देखें' के बाद फ़ोन पर नतीजा सीधे सामने (लंबे form के नीचे छिपा न रहे)", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/haq/thagi`);
+    await page.fill("#txn", minusDays(2));
+    await page.fill("#loss", "40000");
+    await page.check('input[name="shared"][value="yes"]');
+    await Promise.all([page.waitForURL(/\/haq\/thagi\?/), page.click('button[type="submit"]')]);
+    const h = page.getByRole("heading", { name: "आपका हिसाब" });
+    await h.waitFor();
+    await page.waitForFunction(() => window.scrollY > 0, null, { timeout: 5000 }).catch(() => {});
+    const box = await h.boundingBox();
+    assert(box && box.y >= 0 && box.y < 740, `नतीजा screen पर नहीं (y=${box && Math.round(box.y)})`);
+  }),
+);
+
+await check("fail लेन-देन: 'हिसाब देखें' के बाद नतीजा सीधे सामने", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/haq/failed-txn`);
+    await page.selectOption("#ch", { index: 1 });
+    await page.fill("#txn", minusDays(5));
+    await Promise.all([page.waitForURL(/\/haq\/failed-txn\?/), page.click('button[type="submit"]')]);
+    const h = page.getByRole("heading", { name: "आपका हिसाब" });
+    await h.waitFor();
+    await page.waitForFunction(() => window.scrollY > 0, null, { timeout: 5000 }).catch(() => {});
+    const box = await h.boundingBox();
+    assert(box && box.y >= 0 && box.y < 740, `नतीजा screen पर नहीं (y=${box && Math.round(box.y)})`);
   }),
 );
 
