@@ -224,6 +224,13 @@ export function MeraCase() {
         </Link>
       </section>
 
+      <Link
+        href="/arzi"
+        className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline"
+      >
+        बैंक, पुलिस और RBI के लिए पत्र बनाएँ (print/PDF) →
+      </Link>
+
       <details className="rounded-xl border border-line bg-paper p-3">
         <summary className="flex min-h-12 cursor-pointer items-center text-[17px] font-bold text-brand">मेरे केस का सार (copy करें)</summary>
         <p className="mb-2 text-[14px] text-muted">बैंक या थाने में दिखाने या भेजने के लिए। इसमें सिर्फ़ वही है जो आपने ऊपर भरा है।</p>

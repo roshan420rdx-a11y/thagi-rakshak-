@@ -15,6 +15,7 @@ export function publicRoutes(): string[] {
     "/haq/frozen-money",
     "/shikayat-rasta",
     "/case",
+    "/arzi",
     "/gyan",
     ...GYAN_PAGES.map((p) => `/gyan/${p.slug}`),
     "/gyan/bank",

@@ -88,6 +88,38 @@ await check("'सब मिटाएँ' → 'हाँ, सब मिटाए�
   }),
 );
 
+await check("अर्ज़ी: 'मेरा केस' की तारीख़/रकम पत्र में, पुलिस वाले पत्र में ठग की जानकारी, print बटन, कोई request नहीं", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(2));
+    await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("12,500");
+    await page.getByText("फ़ोन में सेव हो गया").waitFor();
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.waitForLoadState("networkidle");
+    const requests = [];
+    page.on("request", (r) => requests.push(r.url()));
+    const letter = page.locator("#arzi-print");
+    assert((await letter.innerText()).includes("₹12,500"), "रकम पत्र में नहीं");
+    await page.getByLabel("आपका नाम").fill("राम कुमार");
+    assert((await letter.innerText()).includes("राम कुमार"), "नाम पत्र में नहीं");
+    await page.getByText("थाने या cyber cell को शिकायत पत्र").click();
+    await page.getByLabel("ठग का नंबर, UPI ID या link").fill("abc@ybl");
+    assert((await letter.innerText()).includes("abc@ybl"), "ठग की जानकारी नहीं");
+    await page.evaluate(() => {
+      window.__printed = 0;
+      window.print = () => (window.__printed += 1);
+    });
+    await page.getByRole("button", { name: "Print / PDF बनाएँ" }).click();
+    assert((await page.evaluate(() => window.__printed)) === 1, "print नहीं चला");
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+    await page.emulateMedia({ media: "print" });
+    assert(await letter.isVisible(), "print में पत्र नहीं");
+    const navHidden = await page.locator('nav[aria-label="मुख्य menu"]').evaluate((n) => getComputedStyle(n).visibility === "hidden");
+    assert(navHidden, "print में menu दिखा");
+  }),
+);
+
 await check("JS बंद: साफ़ संदेश और शिकायत के रास्ते का link", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/case`);

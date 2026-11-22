@@ -98,6 +98,7 @@ export const SHIKAYAT_STAGES: readonly ShikayatStage[] = [
     actions: [
       { kind: "link", href: "/gyan/bank", labelHi: "अपने बैंक का सही रास्ता देखें", external: false },
       { kind: "link", href: "/haq/thagi", labelHi: "RBI के नियमों से अपना हक़ देखें", external: false },
+      { kind: "link", href: "/arzi", labelHi: "बैंक का पत्र बनाएँ (print/PDF)", external: false },
     ],
     sources: [],
   },
@@ -112,7 +113,10 @@ export const SHIKAYAT_STAGES: readonly ShikayatStage[] = [
     ],
     keepHi: ["शिकायत या FIR की copy", "थाने का नाम और तारीख़"],
     noteHi: '"पुलिस" या "वकील" बनकर फ़ोन करने वाले, या "पैसा वापस दिलाने" का दावा करके fee माँगने वाले भी ठग होते हैं। असली पुलिस पैसे नहीं माँगती।',
-    actions: [{ kind: "link", href: "/haq/frozen-money", labelHi: "ठग के खाते में पैसा रुका: वापस कैसे माँगें", external: false }],
+    actions: [
+      { kind: "link", href: "/arzi", labelHi: "थाने का पत्र बनाएँ (print/PDF)", external: false },
+      { kind: "link", href: "/haq/frozen-money", labelHi: "ठग के खाते में पैसा रुका: वापस कैसे माँगें", external: false },
+    ],
     sources: [],
   },
   {

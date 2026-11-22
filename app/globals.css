@@ -81,3 +81,27 @@ body {
     transition: none !important;
   }
 }
+
+/* अर्ज़ी (/arzi) छापते समय सिर्फ़ पत्र छपे: menu, बटन, बाकी सब छिपे। सिर्फ़ उसी पन्ने पर (:has) */
+@media print {
+  @page {
+    margin: 16mm;
+  }
+  body:has(#arzi-print) * {
+    visibility: hidden !important;
+  }
+  body:has(#arzi-print) #arzi-print,
+  body:has(#arzi-print) #arzi-print * {
+    visibility: visible !important;
+  }
+  body:has(#arzi-print) #arzi-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

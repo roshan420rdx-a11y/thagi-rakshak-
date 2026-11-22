@@ -13,3 +13,12 @@ test("/case पन्ना: शीर्षक, बिना JS वाला �
   expect(html).toContain("<noscript>");
   expect(html).toContain('href="/shikayat-rasta"');
 });
+
+test("/arzi पन्ना: शीर्षक, बिना JS वाला संदेश; ArziBuilder mount से पहले कुछ नहीं", async () => {
+  const { default: ArziPage } = await import("@/app/(site)/arzi/page");
+  const { ArziBuilder } = await import("@/components/arzi/arzi-builder");
+  const html = renderToStaticMarkup(<ArziPage />);
+  expect(html).toContain("अर्ज़ियाँ");
+  expect(html).toContain("<noscript>");
+  expect(renderToStaticMarkup(<ArziBuilder />)).toBe("");
+});
