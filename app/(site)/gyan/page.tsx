@@ -14,6 +14,7 @@ const TOOLS = [
   { href: "/turant", label: "ठगी हो गई: पहले 60 मिनट में क्या करें" },
   { href: "/haq/thagi", label: "आपका हक़: पूरा पैसा वापस या मुआवज़ा?" },
   { href: "/haq/frozen-money", label: "ठग के खाते में पैसा रुका: वापस कैसे माँगें" },
+  { href: "/shikayat-rasta", label: "शिकायत का पूरा रास्ता: 1930 से RBI Ombudsman तक" },
   { href: "/gyan/bank", label: "अपने बैंक को ठगी कैसे बताएँ" },
   { href: "/pucho", label: "message जाँचें और ठगी के 7 आम निशान" },
 ] as const;

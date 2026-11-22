@@ -137,6 +137,28 @@ await check("offline: /turant/upi से 'अपने बैंक का स�
   }
 });
 
+await check("/shikayat-rasta: पाँच पड़ाव क्रम से, RBI का मूल text link", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/shikayat-rasta`);
+    const titles = await page.locator("#shikayat-steps h2").allInnerTexts();
+    assert(titles.length === 5, `${titles.length} पड़ाव`);
+    assert(titles[0].includes("1930") && titles[4].includes("RBI Ombudsman"), `क्रम: ${titles.join(" | ")}`);
+    assert((await page.locator('a[href^="https://www.rbi.org.in/commonman/"]').count()) > 0, "RBI मूल text link नहीं");
+  }),
+);
+
+await check("offline: /turant/upi के 'लिखित शिकायत' कदम से 'शिकायत का पूरा रास्ता' खुले", async () => {
+  await withPage({ viewport: PHONE }, async (page, context) => {
+    await page.goto(`${BASE}/turant/upi`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.getByRole("link", { name: "शिकायत का पूरा रास्ता देखें" }).click();
+    await page.getByRole("heading", { name: "ठगी की शिकायत: पूरा रास्ता" }).waitFor();
+  });
+});
+
 await check("sitemap, robots, manifest, icon", async () => {
   const sm = await fetch(`${BASE}/sitemap.xml`);
   const smText = await sm.text();

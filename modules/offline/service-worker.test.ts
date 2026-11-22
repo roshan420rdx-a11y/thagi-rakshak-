@@ -6,7 +6,8 @@ test("OFFLINE_URLS: /turant, 10 पन्ने, /gyan/bank और /pucho (ज�
   expect(OFFLINE_URLS).toContain("/turant/digital-arrest");
   expect(OFFLINE_URLS).toContain("/gyan/bank");
   expect(OFFLINE_URLS).toContain("/pucho");
-  expect(OFFLINE_URLS).toHaveLength(13);
+  expect(OFFLINE_URLS).toContain("/shikayat-rasta");
+  expect(OFFLINE_URLS).toHaveLength(14);
 });
 
 test("worker में version और हर URL", () => {
@@ -41,7 +42,7 @@ test("worker install में हर पन्ने की static files भी
 });
 
 test("swVersion: content version + commit के 7 अक्षर", () => {
-  expect(swVersion({ RENDER_GIT_COMMIT: "abcdef123456" })).toBe("turant-2026-11-21.2-abcdef1");
-  expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-21.2-9999999");
-  expect(swVersion({})).toBe("turant-2026-11-21.2-local");
+  expect(swVersion({ RENDER_GIT_COMMIT: "abcdef123456" })).toBe("turant-2026-11-22.1-abcdef1");
+  expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-22.1-9999999");
+  expect(swVersion({})).toBe("turant-2026-11-22.1-local");
 });

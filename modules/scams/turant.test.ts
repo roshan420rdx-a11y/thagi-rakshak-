@@ -90,4 +90,4 @@ test("बैंक वाले कदमों पर अपने बैंक
   }
 });
 
-test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-21.2"));
+test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-22.1"));

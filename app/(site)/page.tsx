@@ -35,6 +35,12 @@ export default function HomePage() {
       <Link href="/haq" className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline">
         अपना हक़ जानें: RBI के नियमों से हिसाब →
       </Link>
+      <Link
+        href="/shikayat-rasta"
+        className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline"
+      >
+        शिकायत कहाँ और कैसे करें: पूरा रास्ता →
+      </Link>
       {whatsappNumber ? (
         <a
           href={whatsappLink(whatsappNumber, "नमस्ते, मुझे ठगी से जुड़ी मदद चाहिए")}

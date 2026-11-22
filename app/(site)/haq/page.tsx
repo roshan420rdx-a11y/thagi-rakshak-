@@ -13,6 +13,7 @@ const CARDS = [
   { href: "/haq/thagi", title: "ठगी में पैसा गया", body: "पूरा पैसा वापस, या ₹25,000 तक मुआवज़ा? RBI के नियमों से हिसाब" },
   { href: "/haq/failed-txn", title: "लेन-देन fail हुआ, पैसा अटका", body: "देर पर ₹100 रोज़ का हिसाब (यह ठगी नहीं है)" },
   { href: "/haq/frozen-money", title: "ठग के खाते में पैसा रुका (freeze)", body: "वापस कैसे माँगें" },
+  { href: "/shikayat-rasta", title: "शिकायत का पूरा रास्ता", body: "1930, cybercrime.gov.in, बैंक, पुलिस और RBI Ombudsman: क्रम से" },
 ] as const;
 
 export default function HaqIndexPage() {

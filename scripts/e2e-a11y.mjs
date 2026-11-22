@@ -21,6 +21,7 @@ const PAGES = [
   `/haq/thagi?txn=${today}&loss=40000&shared=yes&r1930=${today}&rbank=${today}`,
   "/haq/failed-txn",
   "/haq/frozen-money",
+  "/shikayat-rasta",
   "/gyan",
   "/gyan/digital-arrest",
   "/gyan/bank",

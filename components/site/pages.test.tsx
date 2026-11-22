@@ -30,3 +30,15 @@ test("/pucho: 7 निशान और /turant का दरवाज़ा", ()
   expect((html.match(/<li/g) ?? []).length).toBe(7);
   expect(html).toContain('href="/turant"');
 });
+
+test("/shikayat-rasta: पाँच पड़ाव, 1930, cybercrime.gov.in, cms.rbi.org.in, 14448 और RBI मूल text", async () => {
+  const { default: ShikayatRastaPage } = await import("@/app/(site)/shikayat-rasta/page");
+  const html = renderToStaticMarkup(<ShikayatRastaPage />);
+  expect((html.match(/<li data-status=/g) ?? []).length).toBe(5);
+  for (const h of ['href="tel:1930"', 'href="https://cybercrime.gov.in"', 'href="https://cms.rbi.org.in"', 'href="tel:14448"', 'href="https://www.rbi.org.in/commonman/']) expect(html).toContain(h);
+  expect(html).toContain('id="shikayat-steps"');
+});
+
+test("होम पर 'शिकायत का पूरा रास्ता' का link", () => {
+  expect(renderToStaticMarkup(<HomePage />)).toContain('href="/shikayat-rasta"');
+});
