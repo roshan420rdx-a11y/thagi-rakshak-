@@ -51,7 +51,27 @@ await check("बैंक की तारीख़ भरने पर आग�
     await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(3));
     await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("5000");
     await page.locator('[data-stage="bank"]').getByLabel("कब की?").fill(minusDays(2));
-    await page.getByText("RBI Ombudsman की आख़िरी तारीख़", { exact: false }).waitFor();
+    await page.locator('section[aria-labelledby="case-dates"]').getByText("RBI Ombudsman की आख़िरी तारीख़", { exact: false }).waitFor();
+  }),
+);
+
+await check("सार copy हो, और तारीख़ों की calendar file (.ics) फ़ोन में ही बने", () =>
+  withPage({ viewport: PHONE, acceptDownloads: true }, async (page, context) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
+    await open(page);
+    await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(3));
+    await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("5000");
+    await page.locator('[data-stage="bank"]').getByLabel("कब की?").fill(minusDays(2));
+    const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "फ़ोन के calendar में जोड़ें" }).click()]);
+    assert(download.suggestedFilename().endsWith(".ics"), `file: ${download.suggestedFilename()}`);
+    const { readFile } = await import("node:fs/promises");
+    const ics = await readFile(await download.path(), "utf8");
+    assert(ics.startsWith("BEGIN:VCALENDAR") && ics.includes("RBI Ombudsman"), "ics ग़लत");
+    await page.getByText("मेरे केस का सार (copy करें)").click();
+    await page.getByRole("button", { name: "Copy करें" }).click();
+    await page.getByRole("button", { name: "Copy हो गया ✓" }).waitFor();
+    const clip = await page.evaluate(() => navigator.clipboard.readText());
+    assert(clip.startsWith("मेरे केस का सार") && clip.includes("₹5,000"), `clipboard: ${clip.slice(0, 50)}`);
   }),
 );
 

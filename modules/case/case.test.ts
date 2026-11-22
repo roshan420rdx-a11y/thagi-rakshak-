@@ -64,3 +64,29 @@ test("आगे की तारीख़ें rules engine से: बैं�
 test("ठगी की तारीख़ या रकम न हो तो कोई हिसाब नहीं (अंदाज़ा नहीं)", () => {
   expect(caseDeadlines(emptyCase(), TODAY)).toEqual([]);
 });
+
+test("केस का सार: तारीख़ें हिंदी में, नंबर, बाकी पड़ाव 'अभी नहीं', आगे की तारीख़ें", async () => {
+  const { caseSummaryText } = await import("@/modules/case");
+  const c = emptyCase();
+  c.txnDate = "2026-11-20";
+  c.amount = 40000;
+  c.stages.call_1930 = { on: "2026-11-20", number: "31611230012345" };
+  c.stages.bank = { on: "2026-11-21", number: "" };
+  const t = caseSummaryText(c, TODAY);
+  expect(t).toContain("20 नवंबर 2026");
+  expect(t).toContain("₹40,000");
+  expect(t).toContain("31611230012345");
+  expect(t).toContain("cybercrime.gov.in पर online शिकायत: अभी नहीं");
+  expect(t).toContain("RBI Ombudsman की आख़िरी तारीख़");
+});
+
+test("calendar (.ics): हर तारीख़ का पूरे दिन वाला event, सही ढाँचा", async () => {
+  const { caseIcs } = await import("@/modules/case");
+  const ics = caseIcs([{ labelHi: "RBI Ombudsman की आख़िरी तारीख़", date: "2027-05-20", status: "likely" }], "20261122T000000Z");
+  expect(ics.startsWith("BEGIN:VCALENDAR\r\n")).toBe(true);
+  expect(ics).toContain("DTSTART;VALUE=DATE:20270520");
+  expect(ics).toContain("DTEND;VALUE=DATE:20270521");
+  expect(ics).toContain("SUMMARY:RBI Ombudsman की आख़िरी तारीख़ (अनुमान)");
+  expect(ics.trimEnd().endsWith("END:VCALENDAR")).toBe(true);
+  expect((ics.match(/BEGIN:VEVENT/g) ?? []).length).toBe(1);
+});

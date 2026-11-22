@@ -3,8 +3,22 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ActionLink } from "@/components/ui/action-link";
+import { CopyBlock } from "@/components/ui/copy-block";
 import { Notice } from "@/components/ui/notice";
-import { CASE_KEY, MAX_NUMBER_CHARS, STAGE_IDS, caseDeadlines, cleanNumber, emptyCase, nextStage, parseCase, serializeCase, type LocalCase } from "@/modules/case";
+import {
+  CASE_KEY,
+  MAX_NUMBER_CHARS,
+  STAGE_IDS,
+  caseDeadlines,
+  caseIcs,
+  caseSummaryText,
+  cleanNumber,
+  emptyCase,
+  nextStage,
+  parseCase,
+  serializeCase,
+  type LocalCase,
+} from "@/modules/case";
 import { parseRupees } from "@/modules/haq/money";
 import { formatHindiDate, todayInKolkata } from "@/modules/rules-engine";
 import { SHIKAYAT_STAGES, type ShikayatStageId } from "@/modules/shikayat";
@@ -70,6 +84,20 @@ export function MeraCase() {
 
   const next = nextStage(c);
   const deadlines = caseDeadlines(c, today);
+
+  // तारीख़ें phone के calendar के लिए .ics file में (फ़ोन में ही बनती है, कहीं भेजी नहीं जाती)
+  function downloadCalendar() {
+    const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const url = URL.createObjectURL(new Blob([caseIcs(deadlines, stamp)], { type: "text/calendar;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "thagi-rakshak-tareekhen.ics";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus("calendar वाली file बन गई; खोलकर अपने calendar में जोड़ें");
+  }
 
   return (
     <div className="space-y-5">
@@ -182,10 +210,25 @@ export function MeraCase() {
         ) : (
           <p>ठगी की तारीख़ और रकम भरें, तो RBI के नियमों से तारीख़ें यहाँ दिखेंगी।</p>
         )}
-        <Link href="/haq/thagi" className="inline-flex min-h-12 items-center font-semibold text-brand">
+        {deadlines.length ? (
+          <button
+            type="button"
+            onClick={downloadCalendar}
+            className="inline-flex min-h-12 items-center rounded-[10px] border border-line bg-paper px-4 font-semibold text-brand"
+          >
+            फ़ोन के calendar में जोड़ें
+          </button>
+        ) : null}
+        <Link href="/haq/thagi" className="flex min-h-12 items-center font-semibold text-brand">
           पूरा हिसाब: अपना हक़ देखें →
         </Link>
       </section>
+
+      <details className="rounded-xl border border-line bg-paper p-3">
+        <summary className="flex min-h-12 cursor-pointer items-center text-[17px] font-bold text-brand">मेरे केस का सार (copy करें)</summary>
+        <p className="mb-2 text-[14px] text-muted">बैंक या थाने में दिखाने या भेजने के लिए। इसमें सिर्फ़ वही है जो आपने ऊपर भरा है।</p>
+        <CopyBlock text={caseSummaryText(c, today)} label="मेरे केस का सार" />
+      </details>
 
       <p aria-live="polite" className="text-[15px] text-muted">
         {status}
