@@ -1,4 +1,5 @@
 import type { Source } from "@/modules/rules-engine";
+import { SRC_RBIOS_2026 } from "@/modules/rules-engine/sources";
 import type { TurantAction } from "@/modules/scams";
 
 // ठगी की शिकायत का पूरा रास्ता, क्रम से। RBI वाली हर बात का quote मूल text (docs/sources/rbi) में है, test जाँचता है।
@@ -17,8 +18,8 @@ export type ShikayatStage = {
   sources: Source[];
 };
 
-const RBIOS_FILE = "docs/sources/rbi/2026-07-01-rbios-2026-faq.txt";
-const RBIOS_URL = "https://www.rbi.org.in/commonman/english/scripts/FAQs.aspx?Id=3407";
+const RBIOS_FILE = SRC_RBIOS_2026.file;
+const RBIOS_URL = SRC_RBIOS_2026.url;
 
 export const RBIOS_FIRST_BANK: Source = {
   file: RBIOS_FILE,

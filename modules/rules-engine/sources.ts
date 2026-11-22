@@ -13,3 +13,9 @@ export const SRC_TAT_2019 = {
   file: "docs/sources/rbi/2019-09-20-tat-failed-transactions.txt",
   url: "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11693",
 } as const;
+
+// RBI Ombudsman Scheme 2026 (1 जुलाई 2026 से), RBI का अपना FAQ पन्ना
+export const SRC_RBIOS_2026 = {
+  file: "docs/sources/rbi/2026-07-01-rbios-2026-faq.txt",
+  url: "https://www.rbi.org.in/commonman/english/scripts/FAQs.aspx?Id=3407",
+} as const;
