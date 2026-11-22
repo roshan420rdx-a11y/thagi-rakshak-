@@ -1,7 +1,10 @@
 import { apkFile } from "@/content/gyan/hi/apk-file";
+import { apnaBankar } from "@/content/gyan/hi/apna-bankar";
 import { bijliBill } from "@/content/gyan/hi/bijli-bill";
 import { customerCareFake } from "@/content/gyan/hi/customer-care-fake";
 import { digitalArrest } from "@/content/gyan/hi/digital-arrest";
+import { galtiSePaise } from "@/content/gyan/hi/galti-se-paise";
+import { kycLink } from "@/content/gyan/hi/kyc-link";
 import { loanApp } from "@/content/gyan/hi/loan-app";
 import { lotteryInaam } from "@/content/gyan/hi/lottery-inaam";
 import { sextortion } from "@/content/gyan/hi/sextortion";
@@ -20,6 +23,9 @@ export const GYAN_PAGES: readonly GyanPage[] = [
   lotteryInaam,
   sextortion,
   loanApp,
+  kycLink,
+  apnaBankar,
+  galtiSePaise,
 ];
 
 export function getGyanPage(slug: string): GyanPage | undefined {

@@ -3,10 +3,10 @@ import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { absoluteUrl, publicRoutes } from "@/modules/site";
 
-test("43 public रास्ते, कोई दोहराव नहीं, कोई API नहीं", () => {
+test("46 public रास्ते, कोई दोहराव नहीं, कोई API नहीं", () => {
   const r = publicRoutes();
-  expect(r).toHaveLength(43);
-  expect(new Set(r).size).toBe(43);
+  expect(r).toHaveLength(46);
+  expect(new Set(r).size).toBe(46);
   expect(r.some((x) => x.startsWith("/api") || x === "/sw.js")).toBe(false);
   for (const must of ["/", "/turant/sextortion", "/gyan/apk-file", "/gyan/bank/hdfc", "/haq/thagi", "/legal/shikayat", "/bharosa", "/pucho"]) expect(r).toContain(must);
 });
@@ -18,7 +18,7 @@ test("absoluteUrl: आख़िर वाले / से दोहरा // न�
 
 test("sitemap: हर रास्ते का पूरा URL", () => {
   const urls = sitemap().map((e) => e.url);
-  expect(urls).toHaveLength(43);
+  expect(urls).toHaveLength(46);
   expect(urls.every((u) => /^https?:\/\//.test(u))).toBe(true);
 });
 

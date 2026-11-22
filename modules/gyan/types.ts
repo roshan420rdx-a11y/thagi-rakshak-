@@ -10,7 +10,10 @@ export type GyanSlug =
   | "bijli-bill"
   | "lottery-inaam"
   | "sextortion"
-  | "loan-app";
+  | "loan-app"
+  | "kyc-link"
+  | "apna-bankar"
+  | "galti-se-paise";
 
 export type RbiRef = { file: string; paragraph: string; quote: string };
 

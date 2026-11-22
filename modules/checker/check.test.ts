@@ -17,6 +17,7 @@ const CASES: [string, string[], string[]][] = [
   ["loan_threat", ["loan नहीं भरा तो तेरी photo तेरे सारे contacts को भेज देंगे", "repay the loan or we will send your photos to all your contacts"], ["home loan की EMI इस महीने 5 तारीख़ को कटेगी"]],
   ["withdraw_fee", ["आपका मुनाफ़ा ₹1,20,000 हो गया है। निकालने के लिए 10% tax पहले जमा कीजिए।", "To withdraw your profit of Rs 80,000 pay 15% unlock fee"], ["ATM से पैसे निकालने पर 5 बार के बाद शुल्क लगता है"]],
   ["loan_advance_fee", ["Pre-approved loan of Rs 5 lakh! Pay Rs 2,999 processing fee to get disbursement today", "आपका ₹2 लाख का loan मंज़ूर है, पाने के लिए ₹1,500 फ़ीस पहले जमा करें"], ["Your loan EMI of Rs 5,000 is due on 5th. Pay via the bank app to avoid late fee."]],
+  ["new_number_money", ["पापा, मेरा फ़ोन ख़राब हो गया, यह मेरा नया नंबर है। अभी ₹15,000 भेज दो", "Hi Mom, this is my new number, please send money urgently"], ["पापा, मेरा फ़ोन नंबर बदल गया है, नया नंबर सेव कर लो"]],
   ["new_number", ["Hi Mummy, ye mera new number hai, purana kharab ho gaya", "पापा, मेरा नंबर बदल गया है"], ["गाड़ी की नंबर प्लेट बदलवानी है"]],
   ["kyc_block", ["Your account will be blocked today, update KYC by clicking the link", "आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें"], ["KYC के लिए शाखा में आधार लाएँ"]],
   ["task_job", ["Part-time job: video like कीजिए, हर like पर ₹50", "Work from home and earn 3000 daily by giving 5 star review"], ["कल office में meeting है"]],

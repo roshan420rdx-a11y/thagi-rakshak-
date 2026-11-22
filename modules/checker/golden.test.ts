@@ -48,6 +48,7 @@ const SCAMS: string[] = [
   "I am army officer, want to buy your OLX sofa. I will send QR code, scan it to receive payment",
   "आपके बेटे को पुलिस ने पकड़ लिया है, छुड़ाने के लिए तुरंत ₹50,000 भेजो",
   "India Post: your parcel is on hold due to incomplete address. Update within 24 hours: indiapost-track.top",
+  "Hi beta, ye mera naya number hai. Purana wala kharab ho gaya, ise save kar lo.",
 ];
 
 const BENIGN: string[] = [
@@ -117,6 +118,12 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("lottery_fee")).toBe("lottery-inaam");
   expect(gyanOf("blackmail")).toBe("sextortion");
   expect(gyanOf("loan_threat")).toBe("loan-app");
+  expect(gyanOf("loan_advance_fee")).toBe("loan-app");
+  expect(gyanOf("kyc_block")).toBe("kyc-link");
+  expect(gyanOf("bank_lookalike")).toBe("kyc-link");
+  expect(gyanOf("new_number")).toBe("apna-bankar");
+  expect(gyanOf("new_number_money")).toBe("apna-bankar");
+  expect(gyanOf("wrong_transfer")).toBe("galti-se-paise");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
 });

@@ -8,7 +8,7 @@ import { isTurantSlug } from "@/modules/scams";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
 const ALLOWED_LINKS = ["/haq/thagi", "/gyan/bank", "/haq/frozen-money", "/turant"];
 
-test("9 पन्ने, तय क्रम", () =>
+test("12 पन्ने, तय क्रम", () =>
   expect(GYAN_PAGES.map((p) => p.slug)).toEqual([
     "digital-arrest",
     "customer-care-fake",
@@ -19,6 +19,9 @@ test("9 पन्ने, तय क्रम", () =>
     "lottery-inaam",
     "sextortion",
     "loan-app",
+    "kyc-link",
+    "apna-bankar",
+    "galti-se-paise",
   ]));
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे के गिनती वाले नियम", (_s, p) => {
@@ -49,6 +52,9 @@ test("हो गया है? का सही /turant पन्ना", () => 
   expect(getGyanPage("lottery-inaam")?.turantSlug).toBe("upi");
   expect(getGyanPage("sextortion")?.turantSlug).toBe("sextortion");
   expect(getGyanPage("loan-app")?.turantSlug).toBe("loan-app");
+  expect(getGyanPage("kyc-link")?.turantSlug).toBe("netbanking");
+  expect(getGyanPage("apna-bankar")?.turantSlug).toBe("upi");
+  expect(getGyanPage("galti-se-paise")?.turantSlug).toBe("upi");
 });
 
 test("gyanForTurant: customer-care-fake → customer care, APK और बिजली बिल", () =>
@@ -59,6 +65,12 @@ test("sextortion पन्ने में Tele-MANAS और 'आपकी ग�
   expect(text).toContain("14416");
   expect(text).toContain("आपकी गलती नहीं");
 });
+
+test("KYC वाले पन्ने में .bank.in का RBI हवाला", () =>
+  expect(getGyanPage("kyc-link")!.faq.some((f) => f.source?.paragraph.startsWith("RBI/2025-26/28"))).toBe(true));
+
+test("loan-app पन्ने में 'loan से पहले fee' वाला सवाल", () =>
+  expect(getGyanPage("loan-app")!.faq.some((f) => f.qHi.includes("fee"))).toBe(true));
 
 test("getGyanPage ग़लत slug पर undefined", () => expect(getGyanPage("xyz")).toBeUndefined());
 
