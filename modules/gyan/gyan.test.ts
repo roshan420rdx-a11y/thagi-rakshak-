@@ -76,3 +76,11 @@ test("getGyanPage ग़लत slug पर undefined", () => expect(getGyanPage(
 
 test("digital arrest के FAQ में दबाव/धमकी वाली RBI परिभाषा", () =>
   expect(getGyanPage("digital-arrest")!.faq.some((f) => f.source?.paragraph === "4(15A)")).toBe(true));
+
+test("ज्ञानकोश के समूह: हर पन्ना ठीक एक समूह में, तय क्रम", async () => {
+  const { GYAN_GROUPS } = await import("@/modules/gyan");
+  expect(GYAN_GROUPS.map((g) => g.titleHi)).toEqual(["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR या ऐप से ठगी"]);
+  const all = GYAN_GROUPS.flatMap((g) => g.slugs);
+  expect([...all].sort()).toEqual(GYAN_PAGES.map((p) => p.slug).sort());
+  expect(new Set(all).size).toBe(all.length);
+});

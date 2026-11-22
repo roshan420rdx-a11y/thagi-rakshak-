@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
-import { GYAN_PAGES } from "@/modules/gyan";
+import { GYAN_GROUPS, getGyanPage } from "@/modules/gyan";
 
 export const metadata: Metadata = pageMeta({
   title: "ठगी का ज्ञानकोश",
@@ -23,16 +23,24 @@ export default function GyanIndexPage() {
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold leading-snug">ठगी का ज्ञानकोश</h1>
       <p>ठगी कैसे होती है, कैसे पहचानें, और हो जाए तो क्या करें। आसान भाषा में।</p>
-      <ul className="space-y-3">
-        {GYAN_PAGES.map((p) => (
-          <li key={p.slug}>
-            <Link href={`/gyan/${p.slug}`} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline">
-              <span className="block text-[17px] font-bold text-brand">{p.navTitleHi} →</span>
-              <span className="block text-[15px]">{p.summaryHi[0]}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {GYAN_GROUPS.map((g) => (
+        <section key={g.titleHi} className="space-y-2">
+          <h2 className="text-[19px] font-bold">{g.titleHi}</h2>
+          <ul className="space-y-3">
+            {g.slugs.map((slug) => {
+              const p = getGyanPage(slug)!;
+              return (
+                <li key={slug}>
+                  <Link href={`/gyan/${slug}`} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline">
+                    <span className="block text-[17px] font-bold text-brand">{p.navTitleHi} →</span>
+                    <span className="block text-[15px]">{p.summaryHi[0]}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
       <h2 className="text-[19px] font-bold">काम के रास्ते</h2>
       <ul className="space-y-2">
         {TOOLS.map((t) => (

@@ -11,7 +11,7 @@ import { sextortion } from "@/content/gyan/hi/sextortion";
 import { taskInvestment } from "@/content/gyan/hi/task-investment";
 import { upiPinQr } from "@/content/gyan/hi/upi-pin-qr";
 import type { TurantSlug } from "@/modules/scams";
-import type { GyanPage } from "./types";
+import type { GyanPage, GyanSlug } from "./types";
 
 export const GYAN_PAGES: readonly GyanPage[] = [
   digitalArrest,
@@ -26,6 +26,14 @@ export const GYAN_PAGES: readonly GyanPage[] = [
   kycLink,
   apnaBankar,
   galtiSePaise,
+];
+
+// /gyan पर समूह: 12 पन्नों की लंबी सूची की जगह, ठगी के तरीके के हिसाब से (हर पन्ना ठीक एक समूह में; test पक्का करता है)
+export const GYAN_GROUPS: readonly { titleHi: string; slugs: readonly GyanSlug[] }[] = [
+  { titleHi: "डर दिखाकर ठगी", slugs: ["digital-arrest", "bijli-bill", "kyc-link", "sextortion", "loan-app"] },
+  { titleHi: "लालच देकर ठगी", slugs: ["task-investment", "lottery-inaam"] },
+  { titleHi: "अपना या मददगार बनकर ठगी", slugs: ["customer-care-fake", "apna-bankar", "galti-se-paise"] },
+  { titleHi: "PIN, QR या ऐप से ठगी", slugs: ["upi-pin-qr", "apk-file"] },
 ];
 
 export function getGyanPage(slug: string): GyanPage | undefined {
