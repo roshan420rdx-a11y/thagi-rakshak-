@@ -43,7 +43,7 @@
 | 2026-11-21 | Design v2 + भाग 2 (ढाँचा, design, planning) मंज़ूर | मालिक |
 | 2026-11-21 | **Developer: Claude।** WhatsApp पर पीड़ितों को जवाब मालिक देंगे, इसलिए product ज़्यादा से ज़्यादा अपने आप चले, और मालिक के लिए "जवाब-किताब" बने | मालिक |
 | 2026-11-21 | Stack: Next.js 15.5 + TypeScript + Tailwind 4 + Zod + Vitest + Playwright। आगे Supabase (Mumbai) + Render | Claude |
-| 2026-11-21 | अलग GitHub repo `thagi-rakshak` (marketplace से अलग) | Claude, मालिक बनाएँगे |
+| 2026-11-21 | अलग GitHub repo (marketplace से अलग); मालिक ने 2026-11-22 को `roshan420rdx-a11y/thagi-rakshak-` नाम से बनाया (Private) | Claude, मालिक |
 | 2026-11-21 | launch 24 दिसंबर 2026, पूरी तरह मुफ़्त जानकारी के साथ | Claude |
 | 2026-11-21 | /turant की शर्त: "HTML 60KB से कम + बिना JS के पूरा काम" (पुरानी "100KB" वाली शर्त Next.js के साथ मुमकिन नहीं थी) | Claude |
 | 2026-11-21 | शब्दकोश: "Indemnity bond" = "क्षतिपूर्ति का काग़ज़" ("गारंटी" शब्द मना है) | Claude |

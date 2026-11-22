@@ -79,7 +79,7 @@ PART 4: पूरा Roadmap (छोटे हिस्से)
 
 | हिस्सा | काम | कौन | plan |
 |---|---|---|---|
-| TR-0 | GitHub पर नया repo `thagi-rakshak` बनाना · नाम पर हाँ | 👤 | — |
+| TR-0 | GitHub पर नया repo बनाना (बना: `roshan420rdx-a11y/thagi-rakshak-`) | 👤 | — |
 | TR-1 | नींव: Next.js, CI, `/api/health`, security headers | 🤖 | plan A1 |
 | TR-2 | Design system: रंग-tokens, contrast-जाँच, मूल components | 🤖 | plan A1 |
 | TR-3 | भाषा ढाँचा, शब्दकोश, copy-lint | 🤖 | plan A1 |

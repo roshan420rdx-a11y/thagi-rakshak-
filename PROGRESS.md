@@ -12,7 +12,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 
 नया chat खोलकर सबसे पहले यही लिखें:
 
-> Repo roshan420rdx-a11y/thagi-rakshak hai. Pehle DISHA.md padho, phir PROGRESS.md ka "अगला कदम" se continue karo.
+> Repo roshan420rdx-a11y/thagi-rakshak- hai (naam ke aakhir mein dash). Pehle DISHA.md padho, phir PROGRESS.md ka "अगला कदम" se continue karo.
 
 **मालिक के बारे में (हर chat में याद रखें):**
 - सिर्फ़ Android फ़ोन से काम करते हैं, terminal के बिल्कुल beginner।
@@ -32,7 +32,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 |---|---|---|
 | Design | Design Doc v2 + भाग 2 (ढाँचा, design, planning) + mockups | ✅ लिखा गया और मालिक ने मंज़ूर किया (2026-11-21) |
 | Plan A1 | TR-1 से TR-4 की विस्तृत plan | ✅ लिखी गई: `docs/superpowers/plans/2026-11-21-plan-a1-neev-aur-turant.md` |
-| TR-0 | GitHub पर नया repo `thagi-rakshak` | ⏳ 👤 |
+| TR-0 | GitHub पर नया repo | ✅ मालिक ने बनाया (2026-11-22): `roshan420rdx-a11y/thagi-rakshak-` (Private; नाम के आख़िर में dash, वही रखा गया) · `main` + 22 branches push हुईं · ⛔ GitHub Actions इस खाते पर चल ही नहीं रहे (नीचे "रुकावटें") |
 | TR-1 | नींव: Next.js, CI, health, security headers | 🟡 स्थानीय जाँच पास (lint, typecheck, build, `/api/health` ok, headers) · GitHub CI बाकी |
 | TR-2 | Design system | 🟡 स्थानीय जाँच पास (tokens light+dark, 12 contrast-जोड़े ≥4.5, components) · GitHub CI बाकी |
 | TR-3 | भाषा ढाँचा, शब्दकोश, copy-lint | 🟡 स्थानीय जाँच पास (copy-lint ने नकली शब्द पकड़कर दिखाया) · GitHub CI बाकी |
@@ -63,6 +63,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 | TR-23b से TR-26 | link-जाँच (Web Risk), screenshot, AI, समीक्षा | ⏳ |
 
 ## ⛔ रुकावटें और सीमाएँ
+- **GitHub Actions (CI) शुरू ही नहीं होते (2026-11-22):** `thagi-rakshak-` का पहला CI run (`45002173547`) 4 सेकंड में fail हुआ: कोई machine नहीं मिली (`runner_id: 0`, कोई log नहीं)। marketplace के सारे CI run भी 14 नवंबर से इसी तरह fail हैं। यानी दिक़्क़त खाते की है (private repos के मुफ़्त Actions-मिनट ख़त्म, या billing), code की नहीं। रास्ते: (1) repo को Public करना (CI मुफ़्त और बिना सीमा), (2) महीना बदलने का इंतज़ार, (3) GitHub billing में payment। 👤 मालिक का फ़ैसला बाकी। तब तक हर हिस्सा स्थानीय जाँच (unit + browser + सुलभता) से 🟡।
 - GitHub पर नया repo Claude नहीं बना सकता। मालिक बनाएँगे (TR-0)।
 - **वकील अभी नहीं है।** जब तक वकील अर्ज़ियों के ढाँचे और legal पन्ने न जाँचे, कोई paid किट नहीं बिकेगी। launch मुफ़्त जानकारी वाला होगा।
 - RBI के अंतिम निर्देशों में दो बातें अभी पक्की नहीं: (1) रिपोर्ट करने की समय-सीमा, (2) co-operative banks पर नियम लागू है या नहीं। ये TR-6 में मूल text से पक्की होंगी।
@@ -137,7 +138,7 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - जाँच के दौरान मिली बात: पिछला `next-server` चलता रह गया था और नए build के साथ ग़लत नतीजे दे रहा था; अब हर e2e से पहले पुराना server बंद किया जाता है (CI में यह दिक़्क़त नहीं, वहाँ हर बार नई मशीन)।
 
 ## अगला कदम
-1. 👤 **मालिक:** GitHub पर नया repo `thagi-rakshak` बनाएँ, फिर chat में लिखें: "repo बन गया"।
-2. 🤖 **Claude:** repo जोड़कर `main` और सारी branches (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`, `tr-4b-turant-safai`, `tr-23a2-link-pata`, `tr-10c-gyan-suno`, `tr-23a3-nateeja-suno`, `tr-23a4-pucho-offline`, `tr-23a5-aur-message`, `tr-5b-bharosa-pucho`, `tr-2b-a11y`, `deps-zod4`, `deps-postcss`, `tr-3b-hindi-awaz`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
+1. 👤 **मालिक:** CI के लिए फ़ैसला (ऊपर "रुकावटें" देखें): repo Public करें, या महीना बदलने का इंतज़ार, या billing।
+2. 🤖 **Claude:** (repo जुड़ गया, सब push हो गया।) CI चलते ही दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो हर हिस्से पर ✅ और run id। आगे से नया काम branch पर, फिर `main` पर। push हुई branches: (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`, `tr-4b-turant-safai`, `tr-23a2-link-pata`, `tr-10c-gyan-suno`, `tr-23a3-nateeja-suno`, `tr-23a4-pucho-offline`, `tr-23a5-aur-message`, `tr-5b-bharosa-pucho`, `tr-2b-a11y`, `deps-zod4`, `deps-postcss`, `tr-3b-hindi-awaz`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
 3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 👤 WhatsApp Business ऐप में जवाब-किताब की setting (`docs/JAWAB_KITAB.md` भाग 2) · ⚖️ वकील से legal पन्ने और ज्ञानकोश जँचवाना
 4. 🤖 चरण A का code पूरा है, और चरण C का पहला हिस्सा (TR-23a) भी। चरण B (TR-14 से: Supabase, केस, tracker) के लिए मालिक का Supabase खाता चाहिए; तब तक Claude बिना खाते वाले काम करेगा (ज्ञानकोश के 4 और पन्ने और /turant की सफ़ाई हो गई; link का असली पता भी दिखने लगा; ज्ञानकोश और "पहले पूछो" के नतीजे पर "सुनें" भी; जवाब-किताब में भी "पहले पूछो", और वह offline भी चलता है; checker का test-set भी बड़ा हुआ; /bharosa पर निजता, checker की समीक्षा, vitest की सुरक्षा, और सुलभता की जाँच भी; zod 4 और postcss भी (npm audit: 0); आगे: ज्ञानकोश/हक़ के पन्नों की अपनी समीक्षा)।
