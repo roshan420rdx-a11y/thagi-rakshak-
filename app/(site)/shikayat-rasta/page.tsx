@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SourceLine } from "@/components/haq/source-line";
 import { ActionLink } from "@/components/ui/action-link";
+import { CopyBlock } from "@/components/ui/copy-block";
 import { ListenButton } from "@/components/ui/listen-button";
 import { Notice } from "@/components/ui/notice";
 import { StepCard } from "@/components/ui/step-card";
-import { SHIKAYAT_STAGES } from "@/modules/shikayat";
+import { BANK_EMAIL_SAMPLES, SHIKAYAT_STAGES } from "@/modules/shikayat";
 import { pageMeta } from "@/modules/site/meta";
 
 export const metadata: Metadata = pageMeta({
@@ -40,6 +41,15 @@ export default function ShikayatRastaPage() {
               <span className="font-semibold">सँभालें: </span>
               {s.keepHi.join(" · ")}
             </p>
+            {s.id === "bank"
+              ? BANK_EMAIL_SAMPLES.map((m) => (
+                  <details key={m.lang} className="rounded-[10px] border border-line bg-paper p-2">
+                    <summary className="flex min-h-12 cursor-pointer items-center font-semibold text-brand">{m.labelHi}</summary>
+                    <p className="mb-2 text-[14px] text-muted">[ ] वाली जगहें अपनी जानकारी से भरें। पूरा खाता या card नंबर, OTP, PIN कभी न लिखें।</p>
+                    <CopyBlock text={m.text} label={m.labelHi} />
+                  </details>
+                ))
+              : null}
             {s.noteHi ? <Notice tone="warn">{s.noteHi}</Notice> : null}
             {s.actions.length ? (
               <div className="flex flex-wrap gap-2">

@@ -147,6 +147,18 @@ await check("/shikayat-rasta: पाँच पड़ाव क्रम से, 
   }),
 );
 
+await check("बैंक का नमूना email: खोलें, 'Copy करें' दबाएँ, clipboard में वही text", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
+    await page.goto(`${BASE}/shikayat-rasta`);
+    await page.getByText("नमूना email (हिंदी)").click();
+    await page.getByRole("button", { name: "Copy करें" }).first().click();
+    await page.getByRole("button", { name: "Copy हो गया ✓" }).waitFor();
+    const clip = await page.evaluate(() => navigator.clipboard.readText());
+    assert(clip.includes("लेन-देन नंबर (UTR)") && clip.includes("[UTR नंबर]"), `clipboard: ${clip.slice(0, 60)}`);
+  }),
+);
+
 await check("offline: /turant/upi के 'लिखित शिकायत' कदम से 'शिकायत का पूरा रास्ता' खुले", async () => {
   await withPage({ viewport: PHONE }, async (page, context) => {
     await page.goto(`${BASE}/turant/upi`);

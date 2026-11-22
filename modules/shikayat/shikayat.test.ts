@@ -42,3 +42,15 @@ test("कोई वादा नहीं (मना किए शब्द न�
   expect(findForbidden(all, FORBIDDEN_PHRASES)).toEqual([]);
   expect(all).toContain("पैसा वापस दिलाने");
 });
+
+test("बैंक के email का नमूना (हिंदी + English): ख़ाली जगहें, कोई OTP/PIN या पूरा खाता नंबर नहीं, कोई धारा नहीं", async () => {
+  const { BANK_EMAIL_SAMPLES } = await import("@/modules/shikayat");
+  expect(BANK_EMAIL_SAMPLES.map((s) => s.lang)).toEqual(["hi", "en"]);
+  for (const s of BANK_EMAIL_SAMPLES) {
+    expect(s.text).toContain("[UTR");
+    expect(s.text).toMatch(/1930/);
+    expect(s.text).not.toMatch(/\bOTP\b.*:|\bPIN\b.*:|CVV/);
+    expect(s.text).not.toMatch(/धारा|section \d/i);
+    expect(findForbidden(s.text, FORBIDDEN_PHRASES)).toEqual([]);
+  }
+});

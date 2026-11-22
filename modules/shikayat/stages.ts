@@ -136,3 +136,50 @@ export const SHIKAYAT_STAGES: readonly ShikayatStage[] = [
     sources: [RBIOS_FIRST_BANK, RBIOS_90_DAYS, RBIOS_FREE, RBIOS_COMPENSATION],
   },
 ];
+
+// बैंक को भेजने का नमूना email: सिर्फ़ सीधी बात और ख़ाली जगहें [ ]। कोई क़ानूनी धारा नहीं (DISHA: वह वकील की
+// जाँच के बाद ही)। पूरा खाता/card नंबर, OTP, PIN या password कभी न लिखें।
+export const BANK_EMAIL_SAMPLES: readonly { lang: "hi" | "en"; labelHi: string; text: string }[] = [
+  {
+    lang: "hi",
+    labelHi: "नमूना email (हिंदी)",
+    text: `विषय: अनधिकृत लेन-देन / ठगी की शिकायत, खाता नंबर के आख़िरी 4 अंक [XXXX]
+
+महोदय/महोदया,
+
+मेरे खाते (आख़िरी 4 अंक [XXXX]) से [तारीख़] को [समय] बजे ₹[रकम] का लेन-देन हुआ, जो ठगी से हुआ है / जो मैंने नहीं किया।
+लेन-देन नंबर (UTR): [UTR नंबर]
+मैंने इसकी शिकायत 1930 / cybercrime.gov.in पर की है, शिकायत नंबर: [नंबर]
+
+कृपया:
+1. मेरे खाते/card पर आगे के लेन-देन तुरंत रोकें।
+2. इस शिकायत का नंबर और पावती दें।
+3. RBI के नियमों के अनुसार जाँच करके मेरी रकम लौटाने की कार्रवाई करें।
+
+साथ में: पैसे कटने के SMS / statement के screenshot
+
+नाम: [आपका नाम]
+mobile: [आपका नंबर]`,
+  },
+  {
+    lang: "en",
+    labelHi: "नमूना email (English, अगर बैंक अंग्रेज़ी माँगे)",
+    text: `Subject: Complaint of unauthorised / fraudulent transaction, account ending [XXXX]
+
+Dear Sir/Madam,
+
+A transaction of Rs [amount] was made from my account (ending [XXXX]) on [date] at [time]. This was a fraud / was not done by me.
+Transaction reference (UTR): [UTR number]
+I have reported it on 1930 / cybercrime.gov.in, complaint number: [number]
+
+Please:
+1. Block further transactions on my account/card immediately.
+2. Give me a complaint number and acknowledgement.
+3. Investigate as per RBI rules and take action to refund my money.
+
+Attached: screenshots of the debit SMS / statement
+
+Name: [your name]
+Mobile: [your number]`,
+  },
+];
