@@ -90,5 +90,6 @@
 | `docs/superpowers/specs/assets/` | mockups |
 | `docs/superpowers/plans/` | हर हिस्से की कदम-दर-कदम plan |
 | `docs/JAWAB_KITAB.md` | मालिक के लिए WhatsApp के तैयार जवाब और नियम |
+| `docs/MALIK_KE_KAAM.md` | मालिक के सारे काम एक सूची में (क्यों, कितना समय, कैसे, chat में क्या लिखें) |
 | `docs/DEPLOYMENT.md` | Render पर साइट चढ़ाने के कदम |
 | `docs/verify/BANKS.md` | बैंक नंबरों की दो-जाँच |

@@ -6,6 +6,7 @@
 - काम की स्थिति: `PROGRESS.md`
 - Design: `docs/superpowers/specs/`
 - हर हिस्से की plan: `docs/superpowers/plans/`
+- मालिक के काम (एक सूची): `docs/MALIK_KE_KAAM.md`
 
 ## तकनीक
 Next.js (App Router) · TypeScript · Tailwind CSS · Zod · Vitest · Playwright

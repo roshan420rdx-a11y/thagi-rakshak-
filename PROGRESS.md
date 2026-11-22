@@ -149,6 +149,8 @@ _आख़िरी अपडेट: 2026-11-21 रात (TR-1 से TR-9 क�
 - जाँच के दौरान मिली बात: पिछला `next-server` चलता रह गया था और नए build के साथ ग़लत नतीजे दे रहा था; अब हर e2e से पहले पुराना server बंद किया जाता है (CI में यह दिक़्क़त नहीं, वहाँ हर बार नई मशीन)।
 
 ## अगला कदम
+> 👤 मालिक के सारे काम एक जगह, क्रम से, आसान हिंदी में: **`docs/MALIK_KE_KAAM.md`**
+
 1. 👤 **मालिक:** CI के लिए फ़ैसला (ऊपर "रुकावटें" देखें): repo Public करें, या महीना बदलने का इंतज़ार, या billing।
 2. 🤖 **Claude:** (repo जुड़ गया, सब push हो गया।) CI चलते ही दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो हर हिस्से पर ✅ और run id। आगे से नया काम branch पर, फिर `main` पर। push हुई branches: (`tr-a1-neev-turant` … `tr-12-launch-taiyari`, `tr-13-jawab-kitab`, `tr-23a-pucho-niyam`, `tr-10b-gyan-aur`, `tr-4b-turant-safai`, `tr-23a2-link-pata`, `tr-10c-gyan-suno`, `tr-23a3-nateeja-suno`, `tr-23a4-pucho-offline`, `tr-23a5-aur-message`, `tr-5b-bharosa-pucho`, `tr-2b-a11y`, `deps-zod4`, `deps-postcss`, `tr-3b-hindi-awaz`, `repo-github`, `tr-1b-console-saaf`, `tr-8b-rakam`, `tr-12b-seo`, `tr-4c-dheema-net`, `tr-4d-kab`, `tr-10d-gyan-teen`, `tr-10e-gyan-samooh`, `tr-4e-pehli-screen`, `tr-8c-nateeja-upar`; आख़िरी branch में पिछला सब शामिल है) push करना → CI के दोनों jobs (checks, e2e) के log पढ़ना → हरे हों तो TR-1 से TR-4 पर ✅ और run id।
 3. 👤 बैंकों की जाँच 2 · 👤 Render पर साइट (`docs/DEPLOYMENT.md`) · 👤 WhatsApp Business ऐप में जवाब-किताब की setting (`docs/JAWAB_KITAB.md` भाग 2) · ⚖️ वकील से legal पन्ने और ज्ञानकोश जँचवाना
