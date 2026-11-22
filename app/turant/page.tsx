@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import { TurantSteps } from "@/components/turant/turant-steps";
 import { TURANT_SLUGS, getTurantPage } from "@/modules/scams";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "ठगी हो गई? अभी क्या करें — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "ठगी हो गई? अभी क्या करें",
+  description:
+    "डिजिटल ठगी हो गई? घबराइए नहीं। UPI, card, digital arrest, loan ऐप: हर तरह की ठगी के बाद अभी क्या करें। मुफ़्त, बिना login, internet के बिना भी।",
+  path: "/turant",
+});
 
 export default function TurantIndex() {
   const types = TURANT_SLUGS.filter((s) => s !== "pata-nahi");

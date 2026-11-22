@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import { Notice } from "@/components/ui/notice";
 import { StepCard } from "@/components/ui/step-card";
 
-export const metadata: Metadata = { title: "ठग के खाते में पैसा रुका: वापस कैसे माँगें — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "ठग के खाते में पैसा रुका: वापस कैसे माँगें",
+  description:
+    "पुलिस ने ठग के खाते में आपका पैसा रोक (freeze) दिया? छोटी रकम के लिए online अर्ज़ी, बड़ी के लिए FIR और कोर्ट: कदम-दर-कदम।",
+  path: "/haq/frozen-money",
+});
 
 export default function FrozenMoneyPage() {
   return (

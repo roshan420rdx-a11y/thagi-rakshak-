@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "आपका हक़ — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "आपका हक़",
+  description:
+    "डिजिटल ठगी या fail लेन-देन में आपका हक़: RBI के नियमों से हिसाब कि पैसा वापस मिल सकता है या नहीं, और कितने दिन में। मुफ़्त।",
+  path: "/haq",
+});
 
 const CARDS = [
   { href: "/haq/thagi", title: "ठगी में पैसा गया", body: "पूरा पैसा वापस, या ₹25,000 तक मुआवज़ा? RBI के नियमों से हिसाब" },

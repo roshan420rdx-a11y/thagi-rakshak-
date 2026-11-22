@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconSearch } from "@/components/ui/icons";
 import Link from "next/link";
 import { getSiteConfig, whatsappLink } from "@/modules/site";
+import { pageMeta } from "@/modules/site/meta";
+
+export const metadata: Metadata = pageMeta({
+  fullTitle: "ठगी रक्षक: डिजिटल ठगी हो गई? अभी क्या करें",
+  description:
+    "डिजिटल ठगी हो गई? पहले 60 मिनट में क्या करें, RBI के नियमों से आपका हक़, और ठगी पहचानने की मुफ़्त जाँच। आसान हिंदी में।",
+  path: "/",
+});
 
 // प्रतिज्ञा footer में हर पन्ने पर है (और छोटे होम पर पहली screen में ही दिखती है), इसलिए यहाँ दोबारा नहीं
 export default function HomePage() {

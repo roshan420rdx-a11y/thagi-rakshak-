@@ -1,8 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import { FAKE_CHANNELS, NEVER_LIST, getSiteConfig } from "@/modules/site";
 
-export const metadata: Metadata = { title: "हम पर भरोसा क्यों करें — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "हम पर भरोसा क्यों करें",
+  description:
+    "ठगी रक्षक कौन है, हम कभी क्या नहीं करेंगे (OTP, PIN, screen-share), हमारे असली रास्ते, और आपकी जानकारी कहाँ जाती है।",
+  path: "/bharosa",
+});
 
 function hostOf(url: string): string {
   try {

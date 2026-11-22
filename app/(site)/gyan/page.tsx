@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { GYAN_PAGES } from "@/modules/gyan";
 
-export const metadata: Metadata = {
-  title: "ठगी का ज्ञानकोश — ठगी रक्षक",
-  description: "डिजिटल ठगी के आम प्रकार: कैसे होती है, कैसे पहचानें, कैसे बचें, और हो जाए तो क्या करें। आसान हिंदी में, मुफ़्त।",
-};
+export const metadata: Metadata = pageMeta({
+  title: "ठगी का ज्ञानकोश",
+  description:
+    "डिजिटल ठगी के आम प्रकार: कैसे होती है, कैसे पहचानें, कैसे बचें, और हो जाए तो क्या करें। आसान हिंदी में, मुफ़्त।",
+  path: "/gyan",
+});
 
 const TOOLS = [
   { href: "/turant", label: "ठगी हो गई: पहले 60 मिनट में क्या करें" },

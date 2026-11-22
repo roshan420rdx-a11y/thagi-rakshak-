@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import { notFound } from "next/navigation";
 import { BankChannelView } from "@/components/banks/bank-channel";
 import { BankTips } from "@/components/banks/bank-tips";
@@ -17,7 +18,13 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const b = getBank((await params).slug);
-  return b ? { title: `${b.nameHi}: ठगी कैसे बताएँ — ठगी रक्षक` } : {};
+  return b
+    ? pageMeta({
+        title: `${b.nameHi}: ठगी कैसे बताएँ`,
+        description: `${b.nameHi} के खाते से ठगी हुई? बैंक को ठगी बताने का सही रास्ता, असली वेबसाइट (.bank.in) पहचानना, और पहले 30 मिनट में क्या करें।`,
+        path: `/gyan/bank/${b.slug}`,
+      })
+    : {};
 }
 
 export default async function BankPage({ params }: Props) {

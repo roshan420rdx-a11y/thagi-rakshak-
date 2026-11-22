@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { BankTips } from "@/components/banks/bank-tips";
 import { Notice } from "@/components/ui/notice";
 import { BANKS } from "@/modules/banks";
 
-export const metadata: Metadata = { title: "अपने बैंक को ठगी कैसे बताएँ — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "अपने बैंक को ठगी कैसे बताएँ",
+  description:
+    "10 बड़े बैंकों को ठगी बताने का सही रास्ता, और बैंक की असली वेबसाइट (.bank.in) पहचानने का तरीका। Google पर मिले नंबर से बचें।",
+  path: "/gyan/bank",
+});
 
 export default function BankIndexPage() {
   return (

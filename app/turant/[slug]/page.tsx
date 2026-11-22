@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TURANT_DESCRIPTIONS, pageMeta } from "@/modules/site/meta";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { TurantSteps } from "@/components/turant/turant-steps";
@@ -16,7 +17,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (!isTurantSlug(slug)) return {};
-  return { title: `${getTurantPage(slug).titleHi} — ठगी रक्षक` };
+  return pageMeta({ title: `${getTurantPage(slug).titleHi}: अभी क्या करें`, description: TURANT_DESCRIPTIONS[slug], path: `/turant/${slug}` });
 }
 
 export default async function TurantPageRoute({ params }: Props) {

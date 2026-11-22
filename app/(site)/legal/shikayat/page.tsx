@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { DraftBanner } from "@/components/legal/draft-banner";
 import { Notice } from "@/components/ui/notice";
 import { getSiteConfig } from "@/modules/site";
 
-export const metadata: Metadata = { title: "शिकायत अधिकारी — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "शिकायत अधिकारी",
+  description:
+    "ठगी रक्षक की सेवा से कोई शिकायत हो, तो शिकायत अधिकारी से कैसे संपर्क करें। ठगी की शिकायत के लिए 1930 पर call करें।",
+  path: "/legal/shikayat",
+});
 
 export default function ShikayatPage() {
   const { orgName, grievanceName, grievanceEmail } = getSiteConfig();

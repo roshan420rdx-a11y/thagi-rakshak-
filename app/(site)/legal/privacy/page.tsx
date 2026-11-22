@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { DraftBanner } from "@/components/legal/draft-banner";
 import { LegalSection } from "@/components/legal/section";
 
-export const metadata: Metadata = { title: "निजता (privacy) — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "निजता (privacy)",
+  description:
+    "ठगी रक्षक आपकी कौन-सी जानकारी लेता है और कौन-सी नहीं: कोई cookie या tracker नहीं, 'पहले पूछो' का message आपके फ़ोन में ही।",
+  path: "/legal/privacy",
+});
 
 // इस पन्ने के दावे (कोई cookie नहीं, कोई बाहरी request नहीं) scripts/e2e-legal.mjs से जाँचे जाते हैं।
 // साइट में कुछ भी नया जुड़े जो जानकारी ले, तो पहले यह पन्ना बदलें।

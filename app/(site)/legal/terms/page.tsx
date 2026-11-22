@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import { DraftBanner } from "@/components/legal/draft-banner";
 
-export const metadata: Metadata = { title: "सेवा की शर्तें — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "सेवा की शर्तें",
+  description:
+    "ठगी रक्षक की सेवा की शर्तें: हम क्या करते हैं, क्या नहीं, और यहाँ दी गई जानकारी की सीमाएँ।",
+  path: "/legal/terms",
+});
 
 const TERMS = [
   "यह जानकारी देने वाली मुफ़्त सेवा है। यह कानूनी सलाह नहीं है।",

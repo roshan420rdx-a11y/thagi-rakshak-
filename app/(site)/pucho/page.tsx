@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { CheckerBox } from "@/components/pucho/checker-box";
 import { BigDoor } from "@/components/ui/big-door";
@@ -6,10 +7,12 @@ import { IconAlert } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/notice";
 import { absoluteUrl, getSiteConfig, SCAM_SIGNS } from "@/modules/site";
 
-export const metadata: Metadata = {
-  title: "यह message ठगी है? पहले पूछो — ठगी रक्षक",
-  description: "संदिग्ध SMS या WhatsApp message चिपकाएँ और ठगी के निशान देखें। जाँच आपके फ़ोन में ही होती है। साथ में ठगी के 7 आम निशान।",
-};
+export const metadata: Metadata = pageMeta({
+  title: "यह message ठगी है? पहले पूछो",
+  description:
+    "संदिग्ध SMS या WhatsApp message चिपकाएँ और ठगी के निशान देखें। जाँच आपके फ़ोन में ही होती है। साथ में ठगी के 7 आम निशान।",
+  path: "/pucho",
+});
 
 // "पहले पूछो" (TR-23a): नियमों वाली जाँच फ़ोन के अंदर (CheckerBox, JS से)। बिना JS के भी 7 आम निशान दिखते हैं।
 // screenshot और AI वाली जाँच TR-24 में।

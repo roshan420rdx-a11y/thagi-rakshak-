@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { DraftBanner } from "@/components/legal/draft-banner";
 
-export const metadata: Metadata = { title: "नियम और नीतियाँ — ठगी रक्षक" };
+export const metadata: Metadata = pageMeta({
+  title: "नियम और नीतियाँ",
+  description:
+    "ठगी रक्षक के नियम और नीतियाँ: निजता (privacy), सेवा की शर्तें, और शिकायत अधिकारी।",
+  path: "/legal",
+});
 
 const ITEMS = [
   { href: "/legal/privacy", title: "निजता (privacy)", body: "हम कौन-सी जानकारी लेते हैं और कौन-सी नहीं" },
