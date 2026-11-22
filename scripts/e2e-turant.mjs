@@ -111,6 +111,24 @@ await check("मुख्य /turant: 'पता नहीं?' h2 के नी
   }),
 );
 
+await check("धीमा internet (Slow 3G, 2 सेकंड की देरी): '1930 पर call करें' 4.5 सेकंड के अंदर दिखे", async () => {
+  // गाँव के धीमे network पर भी पहला कदम एक round-trip में: पन्ना server पर बनकर आता है, JS का इंतज़ार नहीं
+  const context = await browser.newContext({ viewport: { width: 360, height: 740 } });
+  const page = await context.newPage();
+  try {
+    const cdp = await context.newCDPSession(page);
+    await cdp.send("Network.enable");
+    await cdp.send("Network.emulateNetworkConditions", { offline: false, latency: 2000, downloadThroughput: (400 * 1024) / 8, uploadThroughput: (400 * 1024) / 8 });
+    const t0 = Date.now();
+    await page.goto(`${BASE}/turant/upi`, { waitUntil: "commit", timeout: 60000 });
+    await page.getByText("1930 पर call करें").first().waitFor({ timeout: 60000 });
+    const ms = Date.now() - t0;
+    assert(ms < 4500, `${ms}ms लगे`);
+  } finally {
+    await context.close();
+  }
+});
+
 await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
   const res = await fetch(`${BASE}/sw.js`);
   const js = await res.text();
