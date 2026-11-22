@@ -1,7 +1,6 @@
 // ज्ञानकोश (/gyan) की असली browser में जाँच। चलाने से पहले: npm run build && npm start
-import { chromium } from "playwright";
+import { BASE, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
 
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const PAGES = [
   ["digital-arrest", "digital-arrest"],
   ["customer-care-fake", "customer-care-fake"],
@@ -16,33 +15,6 @@ const PAGES = [
   ["apna-bankar", "upi"],
   ["galti-se-paise", "upi"],
 ];
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page);
-  } finally {
-    await context.close();
-  }
-}
 
 await check("/gyan: सारे 12 पन्नों के links", () =>
   withPage({}, async (page) => {
@@ -118,58 +90,26 @@ await check("/pucho: बिजली वाले message के नतीजे
   }),
 );
 
-await check("सुनें: सार, निशान और नियम हिंदी आवाज़ में (FAQ नहीं)", async () => {
-  const context = await browser.newContext();
-  // आवाज़ वाला हिस्सा नकली: जो बोला जाता, उसे पकड़ लें
-  await context.addInitScript(() => {
-    window.__spoken = [];
-    // नकली utterance: असली वाला नकली voice object नहीं लेता
-    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
-    Object.defineProperty(window, "speechSynthesis", {
-      configurable: true,
-      value: {
-        speak: (u) => window.__spoken.push({ text: u.text, lang: u.lang, voice: u.voice?.name }),
-        cancel: () => {},
-        getVoices: () => [{ lang: "en-IN", name: "English", localService: true }, { lang: "hi-IN", name: "Hindi", localService: true }],
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      },
+await check("सुनें: सार, निशान और नियम हिंदी आवाज़ में (FAQ नहीं)", () =>
+  withPage({}, async (page, context) => {
+    await installSpeechStub(context, {
+      voices: [
+        { lang: "en-IN", name: "English", localService: true },
+        { lang: "hi-IN", name: "Hindi", localService: true },
+      ],
     });
-  });
-  const page = await context.newPage();
-  try {
     await page.goto(`${BASE}/gyan/digital-arrest`);
     await page.getByRole("button", { name: "सुनें" }).click();
     const spoken = await page.evaluate(() => window.__spoken);
     assert(spoken.length === 1 && spoken[0].lang === "hi-IN" && spoken[0].voice === "Hindi", `spoken: ${JSON.stringify(spoken).slice(0, 80)}`);
     for (const part of ["30 सेकंड में", "पहचान के 5 निशान", "बचने के 3 नियम"]) assert(spoken[0].text.includes(part), `${part} नहीं बोला`);
     assert(!spoken[0].text.includes("अक्सर पूछे सवाल"), "FAQ भी बोला");
-  } finally {
-    await context.close();
-  }
-});
+  }),
+);
 
-await check("सुनें: Hindi आवाज़ न हो तो बटन नहीं; आवाज़ देर से आए तो बटन आ जाए", async () => {
-  const context = await browser.newContext();
-  await context.addInitScript(() => {
-    const listeners = [];
-    window.__voices = [{ lang: "en-US", name: "English", localService: true }];
-    window.__fireVoices = () => listeners.forEach((f) => f());
-    // नकली utterance: असली वाला नकली voice object नहीं लेता
-    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
-    Object.defineProperty(window, "speechSynthesis", {
-      configurable: true,
-      value: {
-        speak: () => {},
-        cancel: () => {},
-        getVoices: () => window.__voices,
-        addEventListener: (_e, f) => listeners.push(f),
-        removeEventListener: () => {},
-      },
-    });
-  });
-  const page = await context.newPage();
-  try {
+await check("सुनें: Hindi आवाज़ न हो तो बटन नहीं; आवाज़ देर से आए तो बटन आ जाए", () =>
+  withPage({}, async (page, context) => {
+    await installSpeechStub(context, { voices: [{ lang: "en-US", name: "English", localService: true }] });
     await page.goto(`${BASE}/gyan/digital-arrest`);
     await page.getByRole("heading", { level: 1 }).waitFor();
     await page.waitForTimeout(300);
@@ -179,10 +119,8 @@ await check("सुनें: Hindi आवाज़ न हो तो बटन 
       window.__fireVoices();
     });
     await page.getByRole("button", { name: "सुनें" }).waitFor();
-  } finally {
-    await context.close();
-  }
-});
+  }),
+);
 
 await check("फ़ोन पर नियमों के नंबर ('1.') एक ही लाइन में, टूटें नहीं", () =>
   withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
@@ -199,5 +137,4 @@ await check("फ़ोन पर नियमों के नंबर ('1.') �
   }),
 );
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();

@@ -1,39 +1,9 @@
 // legal पन्नों की जाँच, और निजता (privacy) पन्ने में लिखे दावों का सबूत:
 // (1) किसी पन्ने पर cookie नहीं लगती, (2) हर request अपनी ही साइट पर जाती है (कोई बाहरी script/tracker नहीं)।
 // साइट में ऐसा कुछ जुड़े जो ये तोड़े, तो पहले /legal/privacy बदलें, फिर यह जाँच।
-import { chromium } from "playwright";
+import { BASE, today, check, assert, withPage, finish } from "./e2e-lib.mjs";
 
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const ORIGIN = new URL(BASE).origin;
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page, context);
-  } finally {
-    await context.close();
-  }
-}
-
-const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 
 await check("तीनों legal पन्ने खुलें, मसौदे वाली चेतावनी के साथ", () =>
   withPage({}, async (page) => {
@@ -114,5 +84,4 @@ await check("footer से legal पन्ने", () =>
   }),
 );
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();

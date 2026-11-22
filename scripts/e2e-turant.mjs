@@ -1,35 +1,6 @@
 // /turant की असली browser में जाँच (Playwright)। चलाने से पहले app चालू हो: npm run build && npm start
 // हर जाँच "✓ नाम" छापती है; पहली गड़बड़ी पर "✗ नाम: कारण" छापकर exit 1।
-import { chromium } from "playwright";
-
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page, context);
-  } finally {
-    await context.close();
-  }
-}
+import { BASE, browser, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 await check("upi: कदम, tel:1930, HTML 60KB से छोटा", () =>
   withPage({}, async (page) => {
@@ -179,34 +150,17 @@ await check("digital-arrest: 'call काटिए' वाली चेताव
   }),
 );
 
-await check("सुनें (/turant): चेतावनी और कदम बोले, 'यह कब हुआ?' नहीं", async () => {
-  const context = await browser.newContext();
-  await context.addInitScript(() => {
-    window.__spoken = [];
-    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
-    Object.defineProperty(window, "speechSynthesis", {
-      configurable: true,
-      value: {
-        speak: (u) => window.__spoken.push(u.text),
-        cancel: () => {},
-        getVoices: () => [{ lang: "hi-IN", name: "Hindi", localService: true }],
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      },
-    });
-  });
-  const page = await context.newPage();
-  try {
+await check("सुनें (/turant): चेतावनी और कदम बोले, 'यह कब हुआ?' नहीं", () =>
+  withPage({}, async (page, context) => {
+    await installSpeechStub(context);
     await page.goto(`${BASE}/turant/digital-arrest`);
     await page.getByRole("heading", { name: "यह कब हुआ?" }).waitFor();
     await page.getByRole("button", { name: "सुनें" }).click();
-    const spoken = (await page.evaluate(() => window.__spoken)).join(" ");
+    const spoken = (await page.evaluate(() => window.__spoken)).map((s) => s.text).join(" ");
     assert(spoken.includes("call काटिए") && spoken.includes("1930 पर call करें"), `spoken: ${spoken.slice(0, 80)}`);
     assert(!spoken.includes("यह कब हुआ"), "'कब हुआ?' भी बोला");
-  } finally {
-    await context.close();
-  }
-});
+  }),
+);
 
 await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
   const res = await fetch(`${BASE}/sw.js`);
@@ -232,5 +186,4 @@ await check("dark mode: background dark surface", () =>
   }),
 );
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();

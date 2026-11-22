@@ -1,37 +1,7 @@
 // /haq (हक़ का हिसाब) की असली browser में जाँच। चलाने से पहले: npm run build && npm start
 // "आज" असली तारीख़ है (Asia/Kolkata), इसलिए तारीख़ें आज से पीछे गिनकर बनती हैं।
-import { chromium } from "playwright";
+import { BASE, today, check, assert, withPage, finish } from "./e2e-lib.mjs";
 
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page);
-  } finally {
-    await context.close();
-  }
-}
-
-const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 const minusDays = (n) => {
   const d = new Date(`${today}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() - n);
@@ -141,5 +111,4 @@ await check("होम पर /haq का link", () =>
   }),
 );
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();

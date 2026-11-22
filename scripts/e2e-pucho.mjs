@@ -1,36 +1,6 @@
 // "पहले पूछो" की असली browser में जाँच। चलाने से पहले: npm run build && npm start
 // सबसे ज़रूरी दावा (निजता पन्ने में लिखा): जाँच के समय message कहीं नहीं जाता (कोई network request नहीं), न URL में, न storage में।
-import { chromium } from "playwright";
-
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
-const PHONE = { width: 360, height: 740 };
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page, context);
-  } finally {
-    await context.close();
-  }
-}
+import { BASE, PHONE, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 const BOX = "संदिग्ध message यहाँ चिपकाएँ";
 const TOKEN = "Zebra7781";
@@ -130,36 +100,18 @@ await check("link वाला message: असली पता और .bank.in �
   }),
 );
 
-await check("सुनें: नतीजा और कारण बोले, message का पता नहीं", async () => {
-  const context = await browser.newContext({ viewport: PHONE });
-  await context.addInitScript(() => {
-    window.__spoken = [];
-    // नकली utterance: असली वाला नकली voice object नहीं लेता
-    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
-    Object.defineProperty(window, "speechSynthesis", {
-      configurable: true,
-      value: {
-        speak: (u) => window.__spoken.push(u.text),
-        cancel: () => {},
-        getVoices: () => [{ lang: "hi-IN", name: "Hindi", localService: true }],
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      },
-    });
-  });
-  const page = await context.newPage();
-  try {
+await check("सुनें: नतीजा और कारण बोले, message का पता नहीं", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await installSpeechStub(context);
     await openBox(page);
     await checkText(page, "Your account will be blocked today, update KYC: http://sbi-yono-kyc.xyz/login");
     await page.getByRole("region", { name: "जाँच का नतीजा" }).getByRole("button", { name: "सुनें" }).click();
-    const spoken = (await page.evaluate(() => window.__spoken)).join(" ");
+    const spoken = (await page.evaluate(() => window.__spoken)).map((s) => s.text).join(" ");
     // KYC + .bank.in नहीं + link = 3 शक वाले निशान → "पक्के निशान"
     assert(spoken.includes("ठगी के पक्के निशान") && spoken.includes("कई शक वाले निशान एक साथ") && spoken.includes("KYC या खाता बंद होने का डर"), `spoken: ${spoken.slice(0, 80)}`);
     assert(!spoken.includes("sbi-yono"), "message का पता आवाज़ में गया");
-  } finally {
-    await context.close();
-  }
-});
+  }),
+);
 
 await check("offline: internet बंद होने पर भी 'पहले पूछो' खुले और जाँच करे", () =>
   withPage({ viewport: PHONE }, async (page, context) => {
@@ -192,5 +144,4 @@ await check("320px: नतीजे के साथ भी बगल में 
   }),
 );
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();

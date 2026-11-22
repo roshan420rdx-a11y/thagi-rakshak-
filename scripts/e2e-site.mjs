@@ -1,35 +1,5 @@
 // होम, menu, /pucho, /bharosa की असली browser में जाँच। चलाने से पहले: npm run build && npm start
-import { chromium } from "playwright";
-
-const BASE = process.env.BASE_URL ?? "http://localhost:3000";
-const PHONE = { width: 360, height: 740 };
-const browser = await chromium.launch();
-let failed = false;
-
-async function check(name, fn) {
-  if (failed) return;
-  try {
-    await fn();
-    console.log(`✓ ${name}`);
-  } catch (err) {
-    failed = true;
-    console.log(`✗ ${name}: ${err instanceof Error ? err.message : String(err)}`);
-  }
-}
-
-function assert(cond, msg) {
-  if (!cond) throw new Error(msg);
-}
-
-async function withPage(options, fn) {
-  const context = await browser.newContext(options);
-  const page = await context.newPage();
-  try {
-    return await fn(page);
-  } finally {
-    await context.close();
-  }
-}
+import { BASE, PHONE, browser, check, assert, withPage, finish } from "./e2e-lib.mjs";
 
 const MENU = 'nav[aria-label="मुख्य menu"]';
 
@@ -179,5 +149,4 @@ await check("sitemap, robots, manifest, icon", async () => {
   assert(ic.status === 200, `icon status ${ic.status}`);
 });
 
-await browser.close();
-process.exit(failed ? 1 : 0);
+await finish();
