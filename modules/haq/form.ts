@@ -1,7 +1,7 @@
 // /haq के GET form (searchParams) को जाँचकर rules engine का input बनाना। ग़लतियाँ हिंदी में।
-import { z } from "zod";
 import { TAT_ROWS, daysBetween, isValidIsoDate } from "@/modules/rules-engine";
 import type { AccountKind, FraudInput, HowHappened, Instrument, TatChannel } from "@/modules/rules-engine";
+import { parseRupees } from "./money";
 
 type Params = Record<string, string | string[] | undefined>;
 type Parsed<T> = { ok: true; input: T } | { ok: false; errorsHi: string[] } | { ok: "empty" };
@@ -14,8 +14,6 @@ const one = (p: Params, k: string): string => {
 function pick<T extends string>(value: string, allowed: readonly T[], fallback: T): T {
   return (allowed as readonly string[]).includes(value) ? (value as T) : fallback;
 }
-
-const Money = z.coerce.number().int().min(0).max(1_000_000_000);
 
 const HOW: readonly HowHappened[] = ["credentials_taken", "coerced", "self_sent_deceived", "unauthorised", "unknown"];
 const INST: readonly Instrument[] = ["bank_account", "credit_card", "wallet"];
@@ -45,11 +43,10 @@ export function parseFraudForm(params: Params, today: string): Parsed<FraudInput
 
   const errors: string[] = [];
   checkTxnDate(txn, today, errors);
-  const loss = Money.safeParse(lossRaw);
-  if (!loss.success || loss.data <= 0) errors.push("कितने पैसे गए, सही रकम लिखें।");
-  const backRaw = one(params, "back");
-  const back = Money.safeParse(backRaw || "0");
-  if (!back.success) errors.push("वापस मिली रकम सही लिखें।");
+  const loss = parseRupees(lossRaw);
+  if (loss === null || loss <= 0) errors.push("कितने पैसे गए, सही रकम लिखें।");
+  const back = parseRupees(one(params, "back") || "0");
+  if (back === null) errors.push("वापस मिली रकम सही लिखें।");
   const r1930 = optionalReport(one(params, "r1930"), txn, today, errors);
   const rbank = optionalReport(one(params, "rbank"), txn, today, errors);
   if (errors.length > 0) return { ok: false, errorsHi: [...new Set(errors)] };
@@ -59,8 +56,8 @@ export function parseFraudForm(params: Params, today: string): Parsed<FraudInput
     ok: true,
     input: {
       txnDate: txn,
-      grossLoss: loss.data!,
-      recovered: back.data!,
+      grossLoss: loss!,
+      recovered: back!,
       customerType: pick(one(params, "who"), ["individual", "sole_proprietor", "other"] as const, "individual"),
       howHappened: pick(one(params, "how"), HOW, "unknown"),
       fault: SHARED_TO_FAULT[shared],

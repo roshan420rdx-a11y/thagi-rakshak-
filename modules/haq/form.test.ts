@@ -55,3 +55,15 @@ test("failed: ख़ाली → empty; सही → input; ग़लत chann
   const early = parseFailedForm({ ch: "atm", txn: "2027-03-05", res: "2027-03-01" }, TODAY);
   expect(early.ok === false && early.errorsHi).toContain("पैसा लौटने की तारीख़ लेन-देन से पहले की नहीं हो सकती।");
 });
+
+test("रकम comma, ₹ और पैसे के साथ भी (लोग ऐसे ही लिखते हैं)", () => {
+  const today = "2026-11-21";
+  const r = parseFraudForm({ txn: "2026-11-20", loss: "₹4,999.50", back: "1,000" }, today);
+  expect(r.ok).toBe(true);
+  if (r.ok === true) {
+    expect(r.input.grossLoss).toBe(4999.5);
+    expect(r.input.recovered).toBe(1000);
+  }
+  const bad = parseFraudForm({ txn: "2026-11-20", loss: "बहुत सारे" }, today);
+  expect(bad.ok === false && bad.errorsHi).toContain("कितने पैसे गए, सही रकम लिखें।");
+});

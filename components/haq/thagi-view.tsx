@@ -38,10 +38,10 @@ export function ThagiView({ params, today }: { params: Params; today: string }) 
           <input id="txn" name="txn" type="date" max={today} required defaultValue={v(params, "txn")} className={INPUT_CLS} />
         </Field>
         <Field label="कुल कितने पैसे गए? (₹)" htmlFor="loss">
-          <input id="loss" name="loss" type="number" inputMode="numeric" min={1} required defaultValue={v(params, "loss")} className={INPUT_CLS} />
+          <input id="loss" name="loss" type="text" inputMode="decimal" autoComplete="off" required defaultValue={v(params, "loss")} className={INPUT_CLS} />
         </Field>
         <Field label="अब तक कितने वापस मिले? (₹)" hint="कुछ नहीं मिला तो 0 रहने दें" htmlFor="back">
-          <input id="back" name="back" type="number" inputMode="numeric" min={0} defaultValue={v(params, "back") || "0"} className={INPUT_CLS} />
+          <input id="back" name="back" type="text" inputMode="decimal" autoComplete="off" defaultValue={v(params, "back") || "0"} className={INPUT_CLS} />
         </Field>
         <Field label="पैसे कहाँ से गए?">
           <Radios

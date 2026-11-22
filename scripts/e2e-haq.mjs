@@ -54,6 +54,29 @@ await check("JS बंद: form भरकर हिसाब (संभावि
   }),
 );
 
+await check("रकम comma, ₹ और पैसे के साथ (₹4,999.50): browser न रोके, हिसाब आए", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/haq/thagi`);
+    await page.fill("#txn", minusDays(2));
+    await page.fill("#loss", "₹4,999.50");
+    await page.fill("#back", "1,000");
+    await page.check('input[name="shared"][value="yes"]');
+    await page.selectOption("#how", "credentials_taken");
+    await page.fill("#r1930", today);
+    await page.fill("#rbank", today);
+    await Promise.all([page.waitForURL(/\/haq\/thagi\?/), page.click('button[type="submit"]')]);
+    await page.getByText("आपका हिसाब").waitFor();
+    assert((await page.getByText("कितने पैसे गए, सही रकम लिखें।").count()) === 0, "सही रकम पर ग़लती दिखी");
+  }),
+);
+
+await check("ग़लत रकम ('बहुत सारे') पर हिंदी ग़लती", () =>
+  withPage({}, async (page) => {
+    await page.goto(`${BASE}/haq/thagi?txn=${minusDays(2)}&loss=${encodeURIComponent("बहुत सारे")}`);
+    await page.getByText("कितने पैसे गए, सही रकम लिखें।").waitFor();
+  }),
+);
+
 await check("ग़लत तारीख़ पर हिंदी ग़लती", () =>
   withPage({}, async (page) => {
     await page.goto(`${BASE}/haq/thagi?txn=2027-02-30&loss=100`);
