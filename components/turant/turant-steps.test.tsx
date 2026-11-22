@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import { getTurantPage } from "@/modules/scams";
+import { KabChips } from "./kab-chips";
 import { TurantSteps } from "./turant-steps";
 
 test("upi: क्रम से 4 कदम, tel:1930, Google वाली चेतावनी", () => {
@@ -37,4 +38,8 @@ test("अपने पन्ने पर कदम h2 ही रहें (प�
   const html = renderToStaticMarkup(<TurantSteps page={getTurantPage("upi")} />);
   expect(html).toContain("<h2");
   expect(html).not.toContain("<h3");
+});
+
+test("'यह कब हुआ?': mount से पहले कुछ नहीं (JS बंद हो तो पन्ना पहले जैसा)", () => {
+  expect(renderToStaticMarkup(<KabChips />)).toBe("");
 });

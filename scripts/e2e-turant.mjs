@@ -129,6 +129,39 @@ await check("धीमा internet (Slow 3G, 2 सेकंड की देर�
   }
 });
 
+await check("'यह कब हुआ?': '1 घंटे से कम' पर पहले घंटे वाली सलाह और हक़ का link; 1930 पहली screen में", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/turant/upi`);
+    await page.getByRole("heading", { name: "यह कब हुआ?" }).waitFor();
+    const call = await page.locator('a[href="tel:1930"]').first().boundingBox();
+    assert(call && call.y + call.height <= 740, `1930 का बटन पहली screen से नीचे (${call && Math.round(call.y + call.height)}px)`);
+    await page.getByRole("button", { name: "1 घंटे से कम" }).click();
+    await page.getByText("अभी पहला घंटा चल रहा है", { exact: false }).waitFor();
+    // सलाह के साथ 1930 का बटन भी, और वह पहली screen में
+    const callInAdvice = await page.locator('[aria-labelledby="kab-title"] a[href="tel:1930"]').boundingBox();
+    assert(callInAdvice && callInAdvice.y + callInAdvice.height <= 740, "सलाह वाला 1930 बटन पहली screen में नहीं");
+    assert((await page.getByRole("button", { name: "1 घंटे से कम" }).getAttribute("aria-pressed")) === "true", "aria-pressed नहीं");
+    assert((await page.locator('a[href="/haq/thagi"]').count()) === 1, "हक़ का link नहीं");
+    await page.getByRole("button", { name: "5 दिन से ज़्यादा पहले" }).click();
+    await page.getByText("देर हो गई है, फिर भी शिकायत ज़रूर करें", { exact: false }).waitFor();
+  }),
+);
+
+await check("'यह कब हुआ?' sextortion/loan-app पर नहीं, और JS बंद पर नहीं", async () => {
+  await withPage({}, async (page) => {
+    for (const slug of ["sextortion", "loan-app"]) {
+      await page.goto(`${BASE}/turant/${slug}`);
+      await page.waitForLoadState("networkidle");
+      assert((await page.getByText("यह कब हुआ?").count()) === 0, `${slug} पर सवाल दिखा`);
+    }
+  });
+  await withPage({ javaScriptEnabled: false }, async (page) => {
+    await page.goto(`${BASE}/turant/upi`);
+    assert((await page.getByText("यह कब हुआ?").count()) === 0, "JS बंद पर सवाल दिखा");
+    assert((await page.locator('a[href="tel:1930"]').count()) > 0, "JS बंद पर 1930 नहीं");
+  });
+});
+
 await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
   const res = await fetch(`${BASE}/sw.js`);
   const js = await res.text();
