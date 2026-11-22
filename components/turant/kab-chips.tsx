@@ -16,7 +16,7 @@ export function KabChips() {
   if (!mounted) return null;
 
   return (
-    <section aria-labelledby="kab-title" className="mb-3 space-y-2">
+    <section aria-labelledby="kab-title" className="space-y-2">
       <h2 id="kab-title" className="text-[17px] font-bold">
         यह कब हुआ?
       </h2>

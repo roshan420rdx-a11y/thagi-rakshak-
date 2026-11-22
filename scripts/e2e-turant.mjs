@@ -162,6 +162,52 @@ await check("'यह कब हुआ?' sextortion/loan-app पर नहीं,
   });
 });
 
+await check("मुख्य /turant: प्रकार चुनने से पहले ही '1930 मिलाएँ' पहली screen में", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/turant`);
+    const call = await page.locator('a[href="tel:1930"]').first().boundingBox();
+    assert(call && call.y + call.height <= 740, `1930 पहली screen से नीचे (${call && Math.round(call.y + call.height)}px)`);
+  }),
+);
+
+await check("digital-arrest: 'call काटिए' वाली चेतावनी 'यह कब हुआ?' से ऊपर", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/turant/digital-arrest`);
+    const kab = await page.getByRole("heading", { name: "यह कब हुआ?" }).boundingBox();
+    const banner = await page.locator("#turant-banner").boundingBox();
+    assert(kab && banner && banner.y < kab.y, `चेतावनी ${banner && Math.round(banner.y)} / कब ${kab && Math.round(kab.y)}`);
+  }),
+);
+
+await check("सुनें (/turant): चेतावनी और कदम बोले, 'यह कब हुआ?' नहीं", async () => {
+  const context = await browser.newContext();
+  await context.addInitScript(() => {
+    window.__spoken = [];
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: {
+        speak: (u) => window.__spoken.push(u.text),
+        cancel: () => {},
+        getVoices: () => [{ lang: "hi-IN", name: "Hindi", localService: true }],
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      },
+    });
+  });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/turant/digital-arrest`);
+    await page.getByRole("heading", { name: "यह कब हुआ?" }).waitFor();
+    await page.getByRole("button", { name: "सुनें" }).click();
+    const spoken = (await page.evaluate(() => window.__spoken)).join(" ");
+    assert(spoken.includes("call काटिए") && spoken.includes("1930 पर call करें"), `spoken: ${spoken.slice(0, 80)}`);
+    assert(!spoken.includes("यह कब हुआ"), "'कब हुआ?' भी बोला");
+  } finally {
+    await context.close();
+  }
+});
+
 await check("/sw.js में offline की तैयारी वाला code (build ने नाम नहीं बदला)", async () => {
   const res = await fetch(`${BASE}/sw.js`);
   const js = await res.text();

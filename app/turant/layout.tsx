@@ -11,7 +11,7 @@ export default function TurantLayout({ children }: { children: ReactNode }) {
         <Link href="/" className="inline-flex min-h-12 items-center font-bold text-danger no-underline">
           ← वापस
         </Link>
-        <ListenButton targetId="turant-steps" />
+        <ListenButton targetId={["turant-banner", "turant-steps"]} />
       </header>
       <OfflineBanner />
       <main className="mx-auto max-w-[680px] px-4 py-4">{children}</main>

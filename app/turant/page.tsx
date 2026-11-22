@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import { TurantSteps } from "@/components/turant/turant-steps";
+import { ActionLink } from "@/components/ui/action-link";
 import { TURANT_SLUGS, getTurantPage } from "@/modules/scams";
 import Link from "next/link";
 
@@ -16,6 +17,11 @@ export default function TurantIndex() {
   return (
     <>
       <h1 className="text-[22px] font-bold leading-snug">घबराइए नहीं। क्या हुआ?</h1>
+      {/* प्रकार चुनने से पहले ही: पैसे गए हों तो पहला कदम हर प्रकार में 1930 है (DISHA: 3 सेकंड में अगला कदम) */}
+      <div className="mt-3 space-y-2 rounded-xl border-2 border-danger bg-danger-bg p-3">
+        <p className="font-bold text-danger">पैसे गए हैं? सबसे पहले 1930 पर call करें, फिर नीचे अपना प्रकार चुनें।</p>
+        <ActionLink action={{ kind: "tel", number: "1930", labelHi: "1930 मिलाएँ" }} primary />
+      </div>
       <ul className="mt-3 grid gap-2 sm:grid-cols-2">
         {types.map((slug) => (
           <li key={slug}>

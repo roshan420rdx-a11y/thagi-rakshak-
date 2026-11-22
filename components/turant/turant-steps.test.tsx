@@ -43,3 +43,21 @@ test("अपने पन्ने पर कदम h2 ही रहें (प�
 test("'यह कब हुआ?': mount से पहले कुछ नहीं (JS बंद हो तो पन्ना पहले जैसा)", () => {
   expect(renderToStaticMarkup(<KabChips />)).toBe("");
 });
+
+test("चेतावनी (banner) सबसे ऊपर, फिर 'कब हुआ?' वाली जगह (slot), फिर कदम", () => {
+  const html = renderToStaticMarkup(<TurantSteps page={getTurantPage("digital-arrest")} slot={<p>SLOT</p>} />);
+  const banner = html.indexOf("call काटिए");
+  const slot = html.indexOf("SLOT");
+  const firstStep = html.indexOf("1930 पर call करें");
+  expect(banner).toBeGreaterThan(-1);
+  expect(banner).toBeLessThan(slot);
+  expect(slot).toBeLessThan(firstStep);
+  expect(html).toContain('id="turant-banner"');
+});
+
+test("मुख्य /turant: प्रकारों की सूची से पहले ही 1930 का बटन", async () => {
+  const { default: TurantIndex } = await import("@/app/turant/page");
+  const html = renderToStaticMarkup(<TurantIndex />);
+  expect(html.indexOf('href="tel:1930"')).toBeGreaterThan(-1);
+  expect(html.indexOf('href="tel:1930"')).toBeLessThan(html.indexOf('href="/turant/upi"'));
+});
