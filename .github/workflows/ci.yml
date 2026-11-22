@@ -96,6 +96,7 @@ jobs:
           node scripts/e2e-gyan.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-legal.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-pucho.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
+          node scripts/e2e-case.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-a11y.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-console.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }
           node scripts/e2e-seo.mjs || { echo "--- next.log ---"; cat next.log; exit 1; }

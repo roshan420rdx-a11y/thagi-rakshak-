@@ -3,11 +3,11 @@ import { expect, test } from "vitest";
 import { BottomNavView } from "./bottom-nav-view";
 import { SiteHeader } from "./site-header";
 
-test("BottomNavView: 3 live tabs, मेरा केस नहीं, चालू पर aria-current", () => {
+test("BottomNavView: 4 live tabs (मेरा केस भी), चालू पर aria-current", () => {
   const html = renderToStaticMarkup(<BottomNavView current="/bharosa" />);
   expect(html).toContain('aria-label="मुख्य menu"');
   expect(html).toContain('href="/pucho"');
-  expect(html).not.toContain('href="/case"');
+  expect(html).toContain('href="/case"');
   expect(html).toMatch(/href="\/bharosa"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/bharosa"/);
 });
 

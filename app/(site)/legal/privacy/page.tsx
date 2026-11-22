@@ -45,6 +45,14 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title='"मेरा केस" में भरी जानकारी'>
+        <p>
+          “मेरा केस” में भरी तारीख़ें, रकम और शिकायत नंबर सिर्फ़ आपके फ़ोन के browser में (localStorage में) सेव होते हैं। वे
+          हमारे server पर नहीं आते। “सब मिटाएँ” दबाने से, या browser में इस साइट का data मिटाने से, वे हट जाते हैं। फ़ोन साझा हो,
+          तो काम के बाद मिटा दें।
+        </p>
+      </LegalSection>
+
       <LegalSection title='"सुनें" बटन'>
         <p>
           “सुनें” बटन आपके फ़ोन या browser की अपनी आवाज़ वाली सुविधा से पढ़कर सुनाता है। कुछ browser इसके लिए text अपनी कंपनी के

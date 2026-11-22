@@ -62,6 +62,7 @@ await check('निजता पन्ने में "पहले पूछ�
     await page.getByRole("heading", { name: '"पहले पूछो" में चिपकाया message' }).waitFor();
     await page.getByText("आपके फ़ोन के browser में ही जाँचा जाता है", { exact: false }).waitFor();
     await page.getByRole("heading", { name: '"सुनें" बटन' }).waitFor();
+    await page.getByRole("heading", { name: '"मेरा केस" में भरी जानकारी' }).waitFor();
     await page.getByText("“पहले पूछो” internet बंद होने पर भी खुलें", { exact: false }).waitFor();
   }),
 );

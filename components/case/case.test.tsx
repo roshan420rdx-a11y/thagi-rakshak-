@@ -1,0 +1,15 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { expect, test } from "vitest";
+import { MeraCase } from "./mera-case";
+
+test("MeraCase: mount से पहले कुछ नहीं (data सिर्फ़ फ़ोन में, server पर कुछ नहीं)", () => {
+  expect(renderToStaticMarkup(<MeraCase />)).toBe("");
+});
+
+test("/case पन्ना: शीर्षक, बिना JS वाला संदेश और शिकायत के रास्ते का link", async () => {
+  const { default: CasePage } = await import("@/app/(site)/case/page");
+  const html = renderToStaticMarkup(<CasePage />);
+  expect(html).toContain("मेरा केस");
+  expect(html).toContain("<noscript>");
+  expect(html).toContain('href="/shikayat-rasta"');
+});

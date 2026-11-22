@@ -22,6 +22,7 @@ const PAGES = [
   "/haq/failed-txn",
   "/haq/frozen-money",
   "/shikayat-rasta",
+  "/case",
   "/gyan",
   "/gyan/digital-arrest",
   "/gyan/bank",
