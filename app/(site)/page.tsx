@@ -7,7 +7,7 @@ import { HomeCaseCard } from "@/components/case/home-case-card";
 import { InstallButton } from "@/components/site/install-button";
 import { whatsappShareLink } from "@/modules/checker/share";
 import { absoluteUrl, getSiteConfig, whatsappLink } from "@/modules/site";
-import { pageMeta } from "@/modules/site/meta";
+import { pageMeta, siteJsonLd } from "@/modules/site/meta";
 
 export const metadata: Metadata = pageMeta({
   fullTitle: "ठगी रक्षक: डिजिटल ठगी हो गई? अभी क्या करें",
@@ -37,6 +37,7 @@ export default function HomePage() {
   const { whatsappNumber, siteUrl } = getSiteConfig();
   return (
     <div data-wide className="space-y-5 md:space-y-7">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd(siteUrl)).replace(/</g, "\\u003c") }} />
       <section aria-labelledby="home-title" className="rounded-2xl border border-line bg-paper px-4 py-5 md:px-8 md:py-7">
         <h1 id="home-title" className="text-[24px] font-bold leading-snug md:text-[32px]">
           डिजिटल ठगी हो गई, या शक है?

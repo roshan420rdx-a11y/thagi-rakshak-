@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { TurantSlug } from "@/modules/scams";
+import { absoluteUrl } from "./routes";
 
 // हर पन्ने का title, description, canonical और Open Graph (WhatsApp में link भेजने पर दिखने वाला preview) एक ही जगह से।
 // description 160 अक्षर तक (Google इससे ज़्यादा काट देता है); e2e-seo हर पन्ने पर यह जाँचता है।
@@ -38,3 +39,12 @@ export const TURANT_DESCRIPTIONS: Record<TurantSlug, string> = {
   "phone-chori": "फ़ोन चोरी या गुम हो गया? पहले किसी और के फ़ोन से बैंक को बताकर UPI और card रुकवाएँ, फिर नया SIM, पुलिस रिपोर्ट और Sanchar Saathi पर block।",
   "pata-nahi": "पता नहीं कैसे, बस खाते से पैसे कट गए? पहले 30 मिनट में 1930 पर call करें, फिर बैंक को बताएँ। कदम-दर-कदम मुफ़्त मदद।",
 };
+
+// होम का structured data (JSON-LD): search engine साइट का नाम सही दिखाए। सिर्फ़ नाम, पता और logo; कोई और दावा नहीं।
+export function siteJsonLd(siteUrl: string): Record<string, string>[] {
+  const url = absoluteUrl("/", siteUrl);
+  return [
+    { "@context": "https://schema.org", "@type": "WebSite", name: SITE_NAME, url, inLanguage: "hi" },
+    { "@context": "https://schema.org", "@type": "Organization", name: SITE_NAME, url, logo: absoluteUrl("/apple-icon.png", siteUrl) },
+  ];
+}

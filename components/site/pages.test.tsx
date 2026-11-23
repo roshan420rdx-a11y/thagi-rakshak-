@@ -128,3 +128,9 @@ test("/nambar की पर्ची छपे: सारे नंबर print 
   expect(area).toContain("मेरे बैंक का नंबर");
   expect(area).toContain(new URL(getSiteConfig().siteUrl).host);
 });
+
+test("होम में JSON-LD (search engine के लिए साइट का नाम)", () => {
+  const html = renderToStaticMarkup(<HomePage />);
+  expect(html).toContain('<script type="application/ld+json">');
+  expect(html).toContain('"@type":"WebSite"');
+});
