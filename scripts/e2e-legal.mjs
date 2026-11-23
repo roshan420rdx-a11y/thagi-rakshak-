@@ -43,6 +43,9 @@ await check("निजता का सबूत: कोई cookie नहीं,
       "/gyan/digital-arrest",
       "/gyan/bank/hdfc",
       "/pucho",
+      "/shikayat-rasta",
+      "/case",
+      "/arzi",
       "/legal/privacy",
     ];
     for (const path of paths) {
@@ -63,6 +66,7 @@ await check('निजता पन्ने में "पहले पूछ�
     await page.getByText("आपके फ़ोन के browser में ही जाँचा जाता है", { exact: false }).waitFor();
     await page.getByRole("heading", { name: '"सुनें" बटन' }).waitFor();
     await page.getByRole("heading", { name: '"मेरा केस" में भरी जानकारी' }).waitFor();
+    await page.getByRole("heading", { name: "WhatsApp पर बात" }).waitFor();
     await page.getByText("“पहले पूछो” internet बंद होने पर भी खुलें", { exact: false }).waitFor();
   }),
 );
