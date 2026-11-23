@@ -57,6 +57,11 @@
   --color-surface: var(--surface);
 }
 
+/* होम desktop पर चौड़ा (दो कॉलम, 4 tiles एक पंक्ति में); बाकी पन्ने पढ़ने लायक़ 680px */
+main:has(> [data-wide]) {
+  max-width: 1040px;
+}
+
 /* कोई web font नहीं: Android/Windows में हिंदी font पहले से होता है (2G पर भी कोई अतिरिक्त फ़ाइल नहीं) */
 html {
   font-size: 18px;
@@ -93,6 +98,10 @@ body {
     size: A4 portrait;
     margin: 10mm;
   }
+  @page nambar {
+    size: A4 portrait;
+    margin: 10mm;
+  }
   body:has([data-print-area]) *:not([data-print-area]):not([data-print-area] *):not(:has([data-print-area])) {
     display: none !important;
   }
@@ -116,17 +125,36 @@ body {
     background: #fff !important;
     color: #000 !important;
   }
-  /* पोस्टर: रंग भी छपें; dark mode वाले फ़ोन से छापने पर भी हल्के रंग (tokens-sync.test.ts मिलाता है) */
-  [data-print-area="poster"] {
-    page: poster;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+  /* हर छपने वाला हिस्सा: dark mode वाले फ़ोन से छापने पर भी हल्के रंग, वरना काग़ज़ पर सफ़ेद अक्षर (tokens-sync.test.ts मिलाता है) */
+  [data-print-area] {
     --brand: #1D3A6B;
+    --brand-bg: #EEF2F8;
     --danger: #B42318;
     --danger-bg: #FEF3F2;
+    --on-danger: #FFFFFF;
+    --warn: #B54708;
+    --warn-bg: #FFFAEB;
+    --safe: #067647;
+    --safe-bg: #ECFDF3;
+    --on-safe: #FFFFFF;
     --ink: #101828;
     --muted: #475467;
+    --line: #E4E7EC;
     --paper: #FFFFFF;
+    --surface: #F7F6F3;
+    color: var(--ink);
+  }
+  /* पोस्टर और नंबरों की पर्ची: रंग भी छपें */
+  [data-print-area="poster"],
+  [data-print-area="nambar"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  [data-print-area="poster"] {
+    page: poster;
+  }
+  [data-print-area="nambar"] {
+    page: nambar;
   }
 }
 

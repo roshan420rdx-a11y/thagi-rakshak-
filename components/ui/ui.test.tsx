@@ -58,3 +58,12 @@ test("SiteFooter में legal पन्नों के links", () => {
   const html = renderToStaticMarkup(<SiteFooter />);
   for (const href of ["/legal/privacy", "/legal/terms", "/legal/shikayat"]) expect(html).toContain(`href="${href}"`);
 });
+
+test("SiteFooter: तीन हिस्से (मदद, जानकारी, हमारे बारे में), हर link एक ही बार, 'स्वतंत्र, मुफ़्त सेवा'", () => {
+  const html = renderToStaticMarkup(<SiteFooter />);
+  for (const h of ["मदद", "जानकारी", "हमारे बारे में"]) expect(html).toContain(`>${h}</h2>`);
+  const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+  expect(new Set(hrefs).size).toBe(hrefs.length);
+  for (const h of ["/turant", "/pucho", "/shikayat-rasta", "/gyan", "/haq", "/abhyas", "/poster", "/bharosa", "/nambar"]) expect(hrefs).toContain(h);
+  expect(html).toContain("स्वतंत्र, मुफ़्त सेवा");
+});

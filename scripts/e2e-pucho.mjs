@@ -1,6 +1,6 @@
 // "पहले पूछो" की असली browser में जाँच। चलाने से पहले: npm run build && npm start
 // सबसे ज़रूरी दावा (निजता पन्ने में लिखा): जाँच के समय message कहीं नहीं जाता (कोई network request नहीं), न URL में, न storage में।
-import { BASE, PHONE, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, check, assert, withPage, watchRequests, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 const BOX = "संदिग्ध message यहाँ चिपकाएँ";
 const TOKEN = "Zebra7781";
@@ -14,7 +14,7 @@ async function openBox(page) {
 
 async function checkText(page, text) {
   await page.getByLabel(BOX).fill(text);
-  await page.getByRole("button", { name: "जाँचें" }).click();
+  await page.getByRole("button", { name: "जाँचें", exact: true }).click();
 }
 
 await check("ठगी वाला message: 🔴 पक्के निशान, कारण, और /turant/upi", () =>
@@ -150,6 +150,32 @@ await check("320px: नतीजे के साथ भी बगल में 
     await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
     const w = await page.evaluate(() => document.documentElement.scrollWidth);
     assert(w <= 320, `scrollWidth ${w}`);
+  }),
+);
+
+await check("चिपकाएँ: copy किया message एक tap में डिब्बे में और तुरंत जाँच, कोई request नहीं", () =>
+  withPage({ viewport: PHONE, permissions: ["clipboard-read", "clipboard-write"] }, async (page) => {
+    await openBox(page);
+    await page.waitForLoadState("networkidle");
+    await page.evaluate((t) => navigator.clipboard.writeText(t), SCAM);
+    const requests = watchRequests(page, [TOKEN]);
+    await page.getByRole("button", { name: "copy किया message चिपकाएँ और जाँचें" }).click();
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
+    assert((await page.getByLabel(BOX).inputValue()) === SCAM, "डिब्बे में message नहीं आया");
+    await page.waitForTimeout(500);
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+  }),
+);
+
+await check("चिपकाएँ: clipboard ख़ाली हो तो हाथ से copy-paste करने की बात, कोई नतीजा नहीं", () =>
+  withPage({ viewport: PHONE, permissions: ["clipboard-read", "clipboard-write"] }, async (page) => {
+    await openBox(page);
+    await page.evaluate(() => navigator.clipboard.writeText(""));
+    await page.getByRole("button", { name: "copy किया message चिपकाएँ और जाँचें" }).click();
+    await page.getByText("अभी कोई copy किया हुआ message नहीं मिला", { exact: false }).waitFor();
+    assert((await page.getByRole("region", { name: "जाँच का नतीजा" }).count()) === 0, "ख़ाली clipboard पर नतीजा दिखा");
+    await page.getByLabel(BOX).fill("नमस्ते");
+    assert((await page.getByText("अभी कोई copy किया हुआ message नहीं मिला", { exact: false }).count()) === 0, "लिखने पर भी पुरानी बात बची रही");
   }),
 );
 

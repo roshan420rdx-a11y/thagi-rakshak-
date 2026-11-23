@@ -1,7 +1,9 @@
 // होम, menu, /pucho, /bharosa की असली browser में जाँच। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, browser, check, assert, withPage, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, browser, check, assert, withPage, pdfPageCount, finish } from "./e2e-lib.mjs";
 
 const MENU = 'nav[aria-label="मुख्य menu"]';
+const TOP_MENU = 'nav[aria-label="ऊपर का menu"]';
+const DESK = { width: 1366, height: 768 };
 
 await check("होम: दोनों दरवाज़े और फ़ोन पर नीचे का menu", () =>
   withPage({ viewport: PHONE }, async (page) => {
@@ -268,5 +270,95 @@ await check("sitemap, robots, manifest, icon", async () => {
   const ic = await fetch(`${BASE}/icon.svg`);
   assert(ic.status === 200, `icon status ${ic.status}`);
 });
+
+await check("होम: साफ़ शीर्षक और भरोसे की बातें दिखें (पहली screen पर)", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    const h1 = page.getByRole("heading", { level: 1, name: "डिजिटल ठगी हो गई, या शक है?" });
+    assert(await h1.isVisible(), "शीर्षक नहीं दिखा");
+    for (const t of ["मुफ़्त", "बिना login", "आपकी जानकारी आपके फ़ोन में"]) assert(await page.getByText(t, { exact: true }).isVisible(), `${t} नहीं दिखा`);
+  }),
+);
+
+await check("desktop: logo के नीचे पूरी menu पट्टी (7 links), खुला पन्ना aria-current, click पर बदले; फ़ोन पर छिपी", async () => {
+  await withPage({ viewport: DESK }, async (page) => {
+    await page.goto(`${BASE}/gyan/sim-swap`);
+    const nav = page.locator(TOP_MENU);
+    assert(await nav.isVisible(), "desktop पर ऊपर का menu नहीं");
+    assert((await nav.locator("a").count()) === 7, "7 links नहीं");
+    const current = nav.locator('a[aria-current="page"]');
+    assert((await current.count()) === 1 && (await current.getAttribute("href")) === "/gyan", "ज्ञानकोश चालू नहीं दिखा");
+    const logo = await page.locator('header a[href="/"]').first().boundingBox();
+    const bar = await nav.boundingBox();
+    assert(logo && bar && bar.y >= logo.y + logo.height - 1 && bar.width >= 900, "menu logo के नीचे पूरी चौड़ाई में नहीं");
+    await nav.getByRole("link", { name: "ज़रूरी नंबर" }).click();
+    await page.waitForURL(/\/nambar$/);
+    await page.waitForFunction(() => document.querySelector('nav[aria-label="ऊपर का menu"] a[aria-current="page"]')?.getAttribute("href") === "/nambar");
+    assert(!(await page.locator(MENU).isVisible()), "desktop पर फ़ोन वाला नीचे का menu दिखा");
+  });
+  await withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    assert(!(await page.locator(TOP_MENU).isVisible()), "फ़ोन पर ऊपर का menu दिखा");
+  });
+});
+
+await check("keyboard: पहली Tab पर 'मुख्य हिस्से पर जाएँ' दिखे, Enter के बाद अगली Tab पन्ने के अंदर", async () => {
+  for (const path of ["/pucho", "/turant/upi"]) {
+    await withPage({ viewport: DESK }, async (page) => {
+      await page.goto(`${BASE}${path}`);
+      await page.keyboard.press("Tab");
+      const skip = page.getByRole("link", { name: "मुख्य हिस्से पर जाएँ" });
+      assert(await skip.evaluate((el) => el === document.activeElement), `${path}: पहली Tab skip link पर नहीं`);
+      assert(await skip.isVisible(), `${path}: focus पर skip link नहीं दिखा`);
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => location.hash === "#main");
+      await page.keyboard.press("Tab");
+      assert(await page.evaluate(() => !!document.activeElement?.closest("main")), `${path}: Enter के बाद अगली Tab main में नहीं`);
+    });
+  }
+});
+
+await check("नंबरों की पर्ची: print में सिर्फ़ पर्ची (menu, header, footer, बटन नहीं), dark फ़ोन से भी गहरे अक्षर, PDF 1 पन्ना (15% बड़ा भी)", () =>
+  withPage({ viewport: PHONE, colorScheme: "dark" }, async (page) => {
+    await page.goto(`${BASE}/nambar`);
+    const button = page.getByRole("button", { name: "नंबरों की पर्ची छापें / PDF" });
+    await button.waitFor();
+    await page.emulateMedia({ media: "print" });
+    assert(await page.locator('[data-print-area="nambar"]').isVisible(), "print में पर्ची नहीं");
+    for (const [name, loc] of [["menu", page.locator(MENU)], ["header", page.locator("header").first()], ["footer", page.locator("footer").first()], ["बटन", button]])
+      assert(!(await loc.isVisible()), `print में ${name} दिखा`);
+    assert(await page.getByText("मेरे बैंक का नंबर", { exact: false }).isVisible(), "अपने बैंक का नंबर लिखने की जगह नहीं");
+    const color = await page.locator('[data-print-area="nambar"] h1').evaluate((el) => getComputedStyle(el).color);
+    assert(color === "rgb(16, 24, 40)", `dark फ़ोन से छपे शीर्षक का रंग ${color} (काग़ज़ पर गहरा चाहिए)`);
+    await page.emulateMedia({ media: "screen" });
+    const pages = await pdfPageCount(page);
+    assert(pages === 1, `PDF में ${pages} पन्ने`);
+    const bigger = await pdfPageCount(page, 1.15);
+    assert(bigger === 1, `15% बड़ा छापने पर ${bigger} पन्ने`);
+    await page.evaluate(() => {
+      window.__printed = 0;
+      window.print = () => (window.__printed += 1);
+    });
+    await button.click();
+    assert((await page.evaluate(() => window.__printed)) === 1, "बटन से print नहीं चला");
+  }),
+);
+
+await check("320px, सबसे बड़े अक्षर: header में नाम और 'ठगी हो गई' एक-एक लाइन में (अक्षर टूटें नहीं), बगल में scroll नहीं", () =>
+  withPage({ viewport: { width: 320, height: 640 } }, async (page, context) => {
+    await context.addInitScript(() => localStorage.setItem("thagi-rakshak:akshar:v1", "3"));
+    await page.goto(`${BASE}/`);
+    const lines = (loc) =>
+      loc.evaluate((el) => {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+      });
+    assert((await lines(page.locator("header").getByText("ठगी रक्षक", { exact: true }))) === 1, "साइट का नाम टूटा");
+    assert((await lines(page.locator('header a[href="/turant"]'))) === 1, "'ठगी हो गई' बटन टूटा");
+    const w = await page.evaluate(() => document.documentElement.scrollWidth);
+    assert(w <= 320, `scrollWidth ${w}`);
+  }),
+);
 
 await finish();

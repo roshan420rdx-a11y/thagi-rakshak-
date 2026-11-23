@@ -90,7 +90,7 @@ await check("/pucho: बिजली वाले message के नतीजे
   withPage({}, async (page) => {
     await page.goto(`${BASE}/pucho`);
     await page.getByLabel("संदिग्ध message यहाँ चिपकाएँ").fill("आज रात 9:30 बजे आपकी बिजली काट दी जाएगी, तुरंत 98XXXXXX21 पर संपर्क करें");
-    await page.getByRole("button", { name: "जाँचें" }).click();
+    await page.getByRole("button", { name: "जाँचें", exact: true }).click();
     await page.locator('section[aria-label="जाँच का नतीजा"] a[href="/gyan/bijli-bill"]').waitFor();
   }),
 );
@@ -139,6 +139,32 @@ await check("फ़ोन पर नियमों के नंबर ('1.') �
       });
       assert(lines === 1, `नंबर ${lines} लाइनों में टूटा`);
     }
+  }),
+);
+
+await check("खोज: 'अंगूठे' लिखते ही AePS वाला पन्ना, बेतुका शब्द → 'कोई पन्ना नहीं मिला', मिटाने पर पूरी सूची", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/gyan`);
+    const box = page.getByLabel("ज्ञानकोश में खोजें");
+    await box.fill("अंगूठे");
+    await page.getByText(/^\d+ (पन्ना मिला|पन्ने मिले)$/).waitFor();
+    assert((await page.locator('main a[href="/gyan/aeps-angootha"]').count()) === 1, "AePS वाला पन्ना नहीं मिला");
+    assert((await page.locator('main a[href="/gyan/digital-arrest"]').count()) === 0, "बेमेल पन्ना भी दिखा");
+    await box.fill("OTP");
+    await page.getByText(/^\d+ पन्ने मिले$/).waitFor();
+    await box.fill("ज़ज़ज़क्ष");
+    await page.getByText("कोई पन्ना नहीं मिला।").waitFor();
+    assert((await page.locator('main a[href="/pucho"]').count()) >= 1, "कुछ न मिलने पर message जाँचने का रास्ता नहीं");
+    await box.fill("");
+    for (const [slug] of PAGES) assert((await page.locator(`main a[href="/gyan/${slug}"]`).count()) === 1, `मिटाने के बाद ${slug} नहीं`);
+  }),
+);
+
+await check("खोज: JS बंद पर कोई बेकार डिब्बा नहीं, पूरी सूची", () =>
+  withPage({ javaScriptEnabled: false }, async (page) => {
+    await page.goto(`${BASE}/gyan`);
+    assert((await page.locator("main input").count()) === 0, "JS बंद पर खोज का डिब्बा दिखा");
+    for (const [slug] of PAGES) assert((await page.locator(`main a[href="/gyan/${slug}"]`).count()) === 1, `${slug} नहीं`);
   }),
 );
 

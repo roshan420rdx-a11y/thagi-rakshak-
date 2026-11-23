@@ -18,7 +18,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
   return (
     <html lang="hi">
       <body style={{ margin: 0, fontFamily: FONT, fontSize: 18, lineHeight: 1.6, background: "#FFFFFF", color: "#101828" }}>
-        <main style={{ maxWidth: 680, margin: "0 auto", padding: "32px 16px" }}>
+        <main id="main" style={{ maxWidth: 680, margin: "0 auto", padding: "32px 16px" }}>
           <h1 style={{ fontSize: 22 }}>कुछ गड़बड़ हो गई</h1>
           <p>यह हमारी तरफ़ की गलती है, आपकी नहीं। एक बार फिर कोशिश करें।</p>
           <p>

@@ -65,6 +65,23 @@ export function IconShield({ className }: IconProps) {
   );
 }
 
+export function IconClipboard({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <rect x="8" y="2" width="8" height="4" rx="1" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    </svg>
+  );
+}
+
+export function IconCheck({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
 export function IconSpeaker({ className }: IconProps) {
   return (
     <svg {...base} className={className}>

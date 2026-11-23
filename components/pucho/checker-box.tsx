@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { checkMessage, MAX_CHECK_CHARS, type CheckResult } from "@/modules/checker";
+import { PASTE_HINT_HI, readPastedText } from "@/modules/checker/paste";
+import { IconClipboard } from "@/components/ui/icons";
 import { VerdictCard } from "./verdict-card";
 
 // "पहले पूछो" का box। जाँच इसी फ़ोन के browser में होती है: message न server पर जाता है, न URL में, न कहीं सेव होता है।
@@ -10,9 +12,26 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
   const [mounted, setMounted] = useState(false);
   const [text, setText] = useState("");
   const [result, setResult] = useState<CheckResult | null>(null);
+  const [canPaste, setCanPaste] = useState(false);
+  const [pasteHint, setPasteHint] = useState<string | null>(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    setCanPaste(typeof navigator.clipboard?.readText === "function");
+  }, []);
   if (!mounted) return null;
+
+  // एक tap: copy किया message डिब्बे में, और तुरंत जाँच। न मिले तो हाथ से Paste करने का तरीका।
+  async function pasteAndCheck() {
+    const r = await readPastedText(navigator.clipboard);
+    if (!r.ok) {
+      setPasteHint(PASTE_HINT_HI[r.reason]);
+      return;
+    }
+    setPasteHint(null);
+    setText(r.text);
+    setResult(checkMessage(r.text));
+  }
 
   return (
     <div className="space-y-3 rounded-[14px] border border-line bg-paper p-3">
@@ -27,6 +46,21 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
         <label htmlFor="pucho-message" className="block text-[17px] font-bold">
           संदिग्ध message यहाँ चिपकाएँ
         </label>
+        {canPaste ? (
+          <button
+            type="button"
+            onClick={pasteAndCheck}
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[10px] border-2 border-brand bg-brand-bg px-4 font-bold text-brand transition hover:brightness-95 sm:w-auto"
+          >
+            <IconClipboard className="h-5 w-5" />
+            copy किया message चिपकाएँ और जाँचें
+          </button>
+        ) : null}
+        {pasteHint ? (
+          <p role="status" className="rounded-[10px] bg-warn-bg p-3 text-[15px] font-semibold text-warn">
+            {pasteHint}
+          </p>
+        ) : null}
         <textarea
           id="pucho-message"
           name="message"
@@ -36,6 +70,7 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
           onChange={(e) => {
             setText(e.target.value);
             setResult(null);
+            setPasteHint(null);
           }}
           spellCheck={false}
           autoCorrect="off"

@@ -41,3 +41,33 @@ test("/gyan: चार समूहों के शीर्षक, और ह�
   for (const t of ["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR, ऐप, SIM या अंगूठे से ठगी"]) expect(html).toContain(t);
   for (const p of GYAN_PAGES) expect(html).toContain(`href="/gyan/${p.slug}"`);
 });
+
+test("GyanSearch: JS से पहले (और बिना JS) सिर्फ़ पूरी सूची, कोई बेकार खोज-डिब्बा नहीं", async () => {
+  const { GyanSearch } = await import("./gyan-search");
+  const html = renderToStaticMarkup(
+    <GyanSearch index={[]}>
+      <p>पूरी सूची</p>
+    </GyanSearch>,
+  );
+  expect(html).toContain("पूरी सूची");
+  expect(html).not.toContain("<input");
+});
+
+test("GyanResults: गिनती, हर पन्ने का link और सार; कुछ न मिले तो अगला रास्ता", async () => {
+  const { GyanResults } = await import("./gyan-search");
+  const { buildSearchIndex, filterIndex } = await import("@/modules/gyan/search");
+  const hits = filterIndex(buildSearchIndex(GYAN_PAGES), "अंगूठा");
+  const html = renderToStaticMarkup(<GyanResults hits={hits} />);
+  expect(hits.length).toBeGreaterThan(0);
+  expect(html).toMatch(new RegExp(`${hits.length} (पन्ने मिले|पन्ना मिला)`));
+  expect(html).toContain('href="/gyan/aeps-angootha"');
+  const none = renderToStaticMarkup(<GyanResults hits={[]} />);
+  expect(none).toContain("कोई पन्ना नहीं मिला");
+  expect(none).toContain('href="/pucho"');
+});
+
+test("/gyan पर खोज लगी है (index में हर पन्ना)", () => {
+  const html = renderToStaticMarkup(<GyanIndexPage />);
+  expect(html).toContain("ठगी का ज्ञानकोश");
+  for (const p of GYAN_PAGES) expect(html).toContain(`href="/gyan/${p.slug}"`);
+});

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
-import { GYAN_GROUPS, getGyanPage } from "@/modules/gyan";
+import { GyanSearch } from "@/components/gyan/gyan-search";
+import { GYAN_GROUPS, GYAN_PAGES, getGyanPage } from "@/modules/gyan";
+import { buildSearchIndex } from "@/modules/gyan/search";
 import { SCAM_SIGNS } from "@/modules/site";
 
 export const metadata: Metadata = pageMeta({
@@ -32,24 +34,27 @@ export default function GyanIndexPage() {
       >
         ख़ुद को परखें: ठगी या असली? (8 message, 2 मिनट) →
       </Link>
-      {GYAN_GROUPS.map((g) => (
-        <section key={g.titleHi} className="space-y-2">
-          <h2 className="text-[19px] font-bold">{g.titleHi}</h2>
-          <ul className="space-y-3">
-            {g.slugs.map((slug) => {
-              const p = getGyanPage(slug)!;
-              return (
-                <li key={slug}>
-                  <Link href={`/gyan/${slug}`} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline">
-                    <span className="block text-[17px] font-bold text-brand">{p.navTitleHi} →</span>
-                    <span className="block text-[15px]">{p.summaryHi[0]}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ))}
+      {/* plan A2e: लिखते ही पन्ने छँटें; बिना JS के यही पूरी सूची */}
+      <GyanSearch index={buildSearchIndex(GYAN_PAGES)}>
+        {GYAN_GROUPS.map((g) => (
+          <section key={g.titleHi} className="space-y-2">
+            <h2 className="text-[19px] font-bold">{g.titleHi}</h2>
+            <ul className="space-y-3">
+              {g.slugs.map((slug) => {
+                const p = getGyanPage(slug)!;
+                return (
+                  <li key={slug}>
+                    <Link href={`/gyan/${slug}`} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline transition-colors hover:border-brand">
+                      <span className="block text-[17px] font-bold text-brand">{p.navTitleHi} →</span>
+                      <span className="block text-[15px]">{p.summaryHi[0]}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+      </GyanSearch>
       <h2 className="text-[19px] font-bold">काम के रास्ते</h2>
       <ul className="space-y-2">
         {TOOLS.map((t) => (

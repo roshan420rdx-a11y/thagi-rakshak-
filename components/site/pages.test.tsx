@@ -3,6 +3,7 @@ import { expect, test } from "vitest";
 import BharosaPage from "@/app/(site)/bharosa/page";
 import HomePage from "@/app/(site)/page";
 import PuchoPage from "@/app/(site)/pucho/page";
+import { getSiteConfig } from "@/modules/site";
 
 test("होम: दोनों दरवाज़े; WhatsApp नंबर न हो तो बात करने का बटन नहीं (सिर्फ़ बिना नंबर वाला 'साइट भेजें')", () => {
   const html = renderToStaticMarkup(<HomePage />);
@@ -108,4 +109,22 @@ test("/nambar: हर नंबर का एक-tap call बटन, साइ�
   expect(renderToStaticMarkup(<HomePage />)).toContain('href="/nambar"');
   const { SiteFooter } = await import("@/components/ui/site-footer");
   expect(renderToStaticMarkup(<SiteFooter />)).toContain('href="/nambar"');
+});
+
+test("होम: साफ़ दिखने वाला शीर्षक और भरोसे की बातें (मुफ़्त, बिना login, जानकारी फ़ोन में)", () => {
+  const html = renderToStaticMarkup(<HomePage />);
+  expect(html).toMatch(/<h1[^>]*>डिजिटल ठगी हो गई, या शक है\?<\/h1>/);
+  expect(html).not.toContain('class="sr-only">ठगी रक्षक');
+  for (const t of ["मुफ़्त", "बिना login", "आपकी जानकारी आपके फ़ोन में"]) expect(html).toContain(t);
+});
+
+test("/nambar की पर्ची छपे: सारे नंबर print वाले हिस्से में, अपने बैंक का नंबर लिखने की जगह, साइट का पता", async () => {
+  const { default: NambarPage } = await import("@/app/(site)/nambar/page");
+  const { HELPLINES } = await import("@/modules/site/helplines");
+  const html = renderToStaticMarkup(<NambarPage />);
+  const area = html.slice(html.indexOf('data-print-area="nambar"'));
+  expect(html).toContain('data-print-area="nambar"');
+  for (const h of HELPLINES) expect(area).toContain(`href="tel:${h.number}"`);
+  expect(area).toContain("मेरे बैंक का नंबर");
+  expect(area).toContain(new URL(getSiteConfig().siteUrl).host);
 });

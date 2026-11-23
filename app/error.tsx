@@ -8,7 +8,7 @@ import { IconAlert } from "@/components/ui/icons";
 // अंदर की गलती (error.message) user को कभी नहीं दिखाई जाती।
 export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <main className="mx-auto max-w-[680px] space-y-4 px-4 py-8">
+    <main id="main" className="mx-auto max-w-[680px] space-y-4 px-4 py-8">
       <h1 className="text-[22px] font-bold">कुछ गड़बड़ हो गई</h1>
       <p>यह हमारी तरफ़ की गलती है, आपकी नहीं। एक बार फिर कोशिश करें।</p>
       <button

@@ -1,10 +1,6 @@
 import Link from "next/link";
-import { liveNavItems } from "@/modules/site";
+import { isCurrentPath, liveNavItems } from "@/modules/site";
 import { NavIconSvg } from "./nav-icon";
-
-function isCurrent(href: string, current: string): boolean {
-  return href === "/" ? current === "/" : current === href || current.startsWith(`${href}/`);
-}
 
 // फ़ोन का नीचे वाला menu (सिर्फ़ live tabs)। शुद्ध render, ताकि test हो सके; चालू पन्ना बाहर से आता है।
 export function BottomNavView({ current }: { current: string }) {
@@ -14,7 +10,7 @@ export function BottomNavView({ current }: { current: string }) {
       className="fixed inset-x-0 bottom-0 z-10 flex border-t border-line bg-paper md:hidden"
     >
       {liveNavItems().map((item) => {
-        const on = isCurrent(item.href, current);
+        const on = isCurrentPath(item.href, current);
         return (
           <Link
             key={item.href}

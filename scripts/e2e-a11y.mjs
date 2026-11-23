@@ -32,6 +32,7 @@ const PAGES = [
   "/gyan/bank/hdfc",
   "/legal/privacy",
   "/legal/shikayat",
+  "/nambar",
 ];
 
 async function audit(page, label) {
@@ -53,7 +54,7 @@ for (const scheme of ["light", "dark"]) {
   // "पहले पूछो" का नतीजा भी (danger, link समेत)
   await page.goto(`${BASE}/pucho`);
   await page.getByLabel("संदिग्ध message यहाँ चिपकाएँ").fill("मैंने ₹5,000 की request भेजी है, PIN डालकर accept करें। http://sbi-yono-kyc.xyz");
-  await page.getByRole("button", { name: "जाँचें" }).click();
+  await page.getByRole("button", { name: "जाँचें", exact: true }).click();
   await page.getByRole("region", { name: "जाँच का नतीजा" }).waitFor();
   await audit(page, `${scheme} /pucho (नतीजा)`);
   // अभ्यास: नतीजे वाली हालत भी (हरा/पीला डिब्बा, निशान)
@@ -61,7 +62,21 @@ for (const scheme of ["light", "dark"]) {
   await page.getByRole("button", { name: "ठगी है" }).click();
   await page.locator("#abhyas-feedback").waitFor();
   await audit(page, `${scheme} /abhyas (नतीजा)`);
+  // ज्ञानकोश की खोज: नतीजे वाली हालत
+  await page.goto(`${BASE}/gyan`);
+  await page.getByLabel("ज्ञानकोश में खोजें").fill("OTP");
+  await page.getByText(/पन्ने मिले/).waitFor();
+  await audit(page, `${scheme} /gyan (खोज)`);
   await context.close();
+
+  // desktop: ऊपर की menu पट्टी, चौड़ा होम, footer के तीन हिस्से
+  const desk = await browser.newContext({ viewport: { width: 1366, height: 768 }, colorScheme: scheme });
+  const dpage = await desk.newPage();
+  for (const path of ["/", "/gyan/sim-swap", "/nambar", "/turant/upi"]) {
+    await dpage.goto(`${BASE}${path}`);
+    await audit(dpage, `${scheme} desktop ${path}`);
+  }
+  await desk.close();
 }
 
 await browser.close();

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SwRegister } from "@/components/offline/sw-register";
+import { SkipLink } from "@/components/site/skip-link";
 import { SiteFooter } from "@/components/ui/site-footer";
 import { getSiteConfig } from "@/modules/site";
 import { OG_IMAGE, SITE_NAME } from "@/modules/site/meta";
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: TEXT_SIZE_PRESCRIPT }} />
       </head>
       <body>
+        <SkipLink />
         {children}
         <SiteFooter />
         <SwRegister />

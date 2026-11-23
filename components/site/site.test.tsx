@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import { BottomNavView } from "./bottom-nav-view";
+import { HeaderNavView } from "./header-nav";
 import { SiteHeader } from "./site-header";
 
 test("BottomNavView: 4 live tabs (मेरा केस भी), चालू पर aria-current", () => {
@@ -21,4 +22,24 @@ test("SiteHeader: होम link और 'ठगी हो गई' बटन", ()
   expect(html).toContain('href="/"');
   expect(html).toContain('href="/turant"');
   expect(html).toContain("ठगी हो गई");
+});
+
+test("SiteHeader: नाम के साथ छोटी पहचान लाइन, और नीचे वाली menu पट्टी", () => {
+  const html = renderToStaticMarkup(<SiteHeader />);
+  expect(html).toContain("डिजिटल ठगी में मुफ़्त मदद");
+  expect(html).toContain('aria-label="ऊपर का menu"');
+});
+
+test("HeaderNavView: 7 links, खुला पन्ना aria-current", () => {
+  const html = renderToStaticMarkup(<HeaderNavView current="/gyan/sim-swap" />);
+  expect((html.match(/<a /g) ?? []).length).toBe(7);
+  expect(html).toMatch(/href="\/gyan"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/gyan"/);
+  expect((html.match(/aria-current="page"/g) ?? []).length).toBe(1);
+});
+
+test("SkipLink: 'मुख्य हिस्से पर जाएँ' → #main", async () => {
+  const { SkipLink } = await import("./skip-link");
+  const html = renderToStaticMarkup(<SkipLink />);
+  expect(html).toContain('href="#main"');
+  expect(html).toContain("मुख्य हिस्से पर जाएँ");
 });
