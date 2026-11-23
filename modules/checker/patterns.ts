@@ -73,7 +73,7 @@ const YOUR_THING =
   "(?:आपका|आपकी|आपके|\\byour\\b|\\baapk[aie]\\b)\\s*(?:\\S+\\s*){0,2}?(?:कमरा|कमरे|मकान|घर|फ्लैट|\\broom|\\bflat|\\bhouse|सामान|\\bsaman|बाइक|\\bbike|गाडी|\\bcar\\b|कार|सोफा|\\bsofa|फ्रिज|\\bfridge|\\bitem|\\bproduct|स्कूटी|\\bscooty)";
 const TAKE = "किराए|किराये|\\brent|लेना|लेनी|लेने|खरीद|\\bbuy|\\bpurchase|\\bkiray|\\blena\\b|\\blene\\b|\\bkharid";
 const SCAN_ASK =
-  "(?:scan|स्कैन)\\s*(?:करें|करो|करिए|कीजिए|कीजिये|कर\\s*(?:दो|दें|दीजिए|लें|लो)|\\bkar(?:o|e|ein|iye|\\s*do|\\s*lo)?\\b|\\bkijiye)|\\bscan\\s+(?:this|the|my|it)\\b|\\bplease\\s+scan\\b";
+  "(?:scan|स्कैन)\\s*(?:करें|करो|करिए|कीजिए|कीजिये|करने|करवा|\\bkarne|\\bkarwa|कर\\s*(?:दो|दें|दीजिए|लें|लो)|\\bkar(?:o|e|ein|iye|\\s*do|\\s*lo)?\\b|\\bkijiye)|\\bscan\\s+(?:this|the|my|it)\\b|\\bplease\\s+scan\\b";
 const PIN_ASK = `(?:${PIN})\\s*(?:\\S+\\s*){0,1}?(?:डालें|डालो|डालिए|डालिये|डाल\\s*(?:दो|दें|दीजिए)|दर्ज\\s*कर|\\bdaal|\\bdal(?:o|iye|\\s*do)\\b)|\\benter\\s+(?:your\\s+)?(?:upi\\s+)?(?:${PIN})`;
 
 // link खोलकर card/बैंक खाते की जानकारी भरवाना (Income Tax refund, card limit, reward points)। "payment details" अकेला नहीं
@@ -84,6 +84,13 @@ const FILL =
   "\\bupdate|अपडेट|\\bfill|भरें|भरो|भरिए|भरिये|भर\\s*(?:दें|दो|दीजिए)|\\benter\\b|डालें|डालो|डालिए|दर्ज|\\bverify|वेरिफाई|\\bconfirm|\\bsubmit|\\bprovide|\\bbhar(?:o|e|ein|iye)?\\b|\\bdaal";
 const LINK_WORD = "\\blink|लिंक|click\\s*here|यहां\\s*क्लिक|नीचे\\s*दि";
 const DOWNLOAD = "download|डाउनलोड|install|इंस्टॉल|इंस्टाल";
+
+// पीड़ित ख़ुद बताए कि पैसे जा चुके हैं, और उसने नहीं भेजे ("मेरे खाते से पैसे कट गए, मैंने कुछ नहीं किया"): सीधे 1930 और कदम।
+// बैंक का आम "debited for bill" वाला SMS नहीं (उसमें "मैंने नहीं किया" जैसी बात नहीं होती)।
+const LOST_GONE =
+  "(?:पैसे|पैसा|रुपये|रुपए|₹\\s*\\d|(?<![\\d,.])\\d[\\d,]{2,}(?![\\d,])|money|\\bpaise|\\bpaisa)\\s*(?:\\S+\\s+){0,3}?(?:कट\\s*(?:गए|गया|गये)|निकल\\s*(?:गए|गया|गये)|चले\\s*(?:गए|गये)|उड\\s*गए|गायब|\\bkat\\s*gaye|\\bnikal\\s*gaye|\\bchale\\s*gaye|debited|deducted|\\bgone\\b|withdrawn)";
+const NOT_ME =
+  "मैंने\\s*(?:कुछ\\s*)?(?:नहीं|ना)\\s*किया|बिना\\s*(?:मेरी\\s*)?(?:मर्जी|बताए|पूछे|इजाजत|जानकारी)|अपने\\s*आप|पता\\s*नहीं\\s*(?:कैसे|क्यों)|\\bmaine\\s*(?:kuch\\s*)?(?:nahi|nhi)\\s*kiya|without\\s*(?:my\\s*)?(?:permission|knowledge|consent)|\\bi\\s*(?:did\\s*not|didn'?t)\\b|ठगी|\\bfraud";
 
 // बैंक/कंपनी/विभाग बनकर कोई ऐप डलवाना ("बैंक वाले ने बोला ऐप डाउनलोड करो")। "Play Store से" वाली असली सलाह नहीं।
 const POSER =
@@ -98,7 +105,7 @@ const REASSURE =
 
 // card का नंबर, CVV, expiry या ATM PIN माँगना (बैंक वाला बनकर call/message)। "कभी न बताएँ" वाला असली SMS नकार से बाहर।
 const CARD_SECRET =
-  "\\bcvv\\b|सीवीवी|card\\s*(?:ka\\s*|का\\s*)?(?:number|no\\b|नंबर)|कार्ड\\s*(?:का\\s*)?नंबर|atm\\s*pin|एटीएम\\s*पिन|\\bexpiry|एक्सपायरी|पीछे\\s*(?:के\\s*|वाले\\s*|लिखे\\s*)?(?:3|तीन)\\s*अंक|\\bpeeche\\s*(?:ke\\s*|wale\\s*|likhe\\s*)?(?:3|teen)\\s*(?:ank|digit)";
+  "\\bcvv\\b|सीवीवी|card\\s*(?:ka\\s*|का\\s*)?(?:number|no\\b|नंबर)|कार्ड\\s*(?:का\\s*)?नंबर|atm\\s*pin|एटीएम\\s*पिन|\\bexpiry|एक्सपायरी|पीछे\\s*(?:के\\s*|वाले\\s*|लिखे\\s*)?(?:3|तीन)\\s*(?:अंक|नंबर|digit|number)|\\bpeeche\\s*(?:ke\\s*|wale\\s*|likhe\\s*)?(?:3|teen)\\s*(?:ank|digit|number)";
 // "पैसे भेज रहा हूँ, बस request accept कर लो": भेजने वाले को request नहीं भेजनी पड़ती
 const REQUEST_ACCEPT = near("request|रिक्वेस्ट|collect", "accept|approve|स्वीकार|एक्सेप्ट|अप्रूव", 30).source;
 
@@ -112,7 +119,7 @@ const YOU =
 const AUTHORITY =
   "पुलिस|police|\\bcbi\\b|सीबीआई|\\bncb\\b|narcotics|नारकोटिक्स|customs|कस्टम|\\btrai\\b|ट्राई|enforcement\\s*directorate|प्रवर्तन\\s*निदेशालय|crime\\s*branch|क्राइम\\s*ब्रांच|cyber\\s*cell|साइबर\\s*सेल|income\\s*tax\\s*officer|supreme\\s*court|सुप्रीम\\s*कोर्ट|\\bjudge\\b|fedex|फेडेक्स";
 const THREAT =
-  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|पकड़\\s*लिया|पकड़ा\\s*गया|छुड़ाने|disconnect";
+  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|पकड़\\s*लिया|पकड़ा\\s*गया|छुड़ाने|disconnect|गलत\\s*काम|illegal\\s*activit|(?:नंबर|सिम|number|sim)\\s*(?:\\S+\\s*){0,2}?(?:बंद\\s*हो|blocked|band\\s*ho)";
 
 // IVR वाला call ("Press 1 to talk to officer", "1 दबाएँ"): धमकी के साथ हो, तो digital arrest की शुरुआत
 const PRESS = "\\bpress\\s*\\d|\\d\\s*(?:दबाएं|दबाइए|दबाये|दबाएँ)|\\d\\s*(?:dabaye|dabaiye|dabayein|dabaen)\\b";
@@ -292,6 +299,10 @@ const R = {
   callVerb: rx(CALL_VERB),
   linkWord: rx(LINK_WORD),
   download: rx(DOWNLOAD),
+  jobFeeWord: rx("registration|रजिस्ट्रेशन|\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b"),
+  kycFill: rx(`(?:\\bkyc\\b|केवाईसी)${END}{0,80}?(?:${FILL})|(?:${FILL})${END}{0,80}?(?:\\bkyc\\b|केवाईसी)|(?:\\bkyc\\b|केवाईसी)[^\\n]{0,80}?(?:details?|डिटेल|जानकारी)\\s*(?:भर|bhar|fill)`),
+  lostGone: rx(LOST_GONE),
+  notMe: rx(NOT_ME),
   poser: rx(POSER),
   installApp: new RegExp(INSTALL_APP, "i"),
   playStore: rx(PLAY_STORE),
@@ -384,11 +395,23 @@ const isLotteryFee = (t: CheckedText) => (R.prize.test(t.text) || R.winAmount.te
 const isWithdrawFee = (t: CheckedText) => R.withdraw.test(t.text) && R.withdrawFee.test(t.text) && R.gains.test(t.text);
 const isLoanAdvanceFee = (t: CheckedText) =>
   R.loan.test(t.text) && R.loanFee.test(t.text) && R.loanAdvance.test(t.text) && R.loanOffer.test(t.text);
+// रकम लिखी हो, या "fee/registration/शुल्क" साफ़ माँगा हो (बोलकर लिखने में रकम अक्सर नहीं होती)
 const isJobFee = (t: CheckedText) =>
-  (R.jobSelected.test(t.text) || R.jobInformal.test(t.text)) && R.jobFee.test(t.text) && R.amount.test(t.text) && R.jobPay.test(t.stripped);
+  (R.jobSelected.test(t.text) || R.jobInformal.test(t.text)) &&
+  R.jobFee.test(t.text) &&
+  (R.amount.test(t.text) || R.jobFeeWord.test(t.text)) &&
+  R.jobPay.test(t.stripped);
 
 // क्रम: पहले सारे danger, फिर warn (नतीजे में इसी क्रम से दिखते हैं)
 export const CHECKER_RULES: readonly CheckerRule[] = [
+  {
+    id: "money_lost",
+    level: "danger",
+    labelHi: "आपके खाते से बिना आपके किए पैसे गए हैं",
+    explainHi: "यह ठगी हो सकती है, और हर मिनट कीमती है। अभी 1930 पर call करें और अपने बैंक को बताएँ; फिर नीचे 'अभी क्या करें' के कदम देखें।",
+    turant: "pata-nahi",
+    test: (t) => R.lostGone.test(t.text) && R.notMe.test(t.text),
+  },
   {
     id: "otp_request",
     level: "danger",
@@ -458,8 +481,8 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
       "बैंक या कोई असली दफ़्तर SMS/WhatsApp के link से card, CVV या खाते की जानकारी नहीं भरवाता। ऐसे link की साइट नकली होती है, और भरी हुई जानकारी सीधे ठग के पास जाती है।",
     gyan: "kyc-link",
     test: (t) =>
-      (R.link.test(t.text) || R.linkWord.test(t.text)) &&
-      R.detailsFill.test(t.stripped) &&
+      (R.link.test(t.text) || R.linkWord.test(t.stripped)) &&
+      (R.detailsFill.test(t.stripped) || R.kycFill.test(t.stripped)) &&
       !(t.domains.length > 0 && t.domains.every((d) => d.endsWith(".bank.in") || isGovDomain(d))),
   },
   {

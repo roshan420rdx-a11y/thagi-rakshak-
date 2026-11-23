@@ -92,3 +92,12 @@ test("सरकारी काम वाले message में ग़ैर-.
   expect(html).toContain("echallan-parivahan.xyz");
   expect(html).toContain("सरकारी काम का नाम है, पर पता .gov.in पर नहीं");
 });
+
+test("पैसे जा चुके हों (पीड़ित ख़ुद बताए): नतीजे में सबसे ऊपर 1930 मिलाएँ, और 'अभी क्या करें'", () => {
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("मेरे खाते से पैसे कट गए मैंने कुछ नहीं किया")} pageUrl={PAGE} />);
+  expect(html).toContain('href="tel:1930"');
+  expect(html.indexOf('href="tel:1930"')).toBeLessThan(html.indexOf('id="pucho-reasons"'));
+  expect(html).toContain('href="/turant/pata-nahi"');
+  // आम ठगी वाले message पर नहीं (वहाँ 'पैसे जा चुके हैं?' वाला दरवाज़ा ही)
+  expect(renderToStaticMarkup(<VerdictCard result={checkMessage("Wedding_Invitation.apk")} pageUrl={PAGE} />)).not.toContain('href="tel:1930"');
+});

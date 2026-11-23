@@ -1,6 +1,7 @@
 import { isBankLookalike, isGovDomain, type CheckResult } from "@/modules/checker";
 import { CHECK_LIMIT_HI, LEVEL_COPY, verdictShareText, whatsappShareLink } from "@/modules/checker/share";
 import { BigDoor } from "@/components/ui/big-door";
+import { Call1930Strip } from "@/components/ui/call-1930-strip";
 import { IconAlert, IconInfo } from "@/components/ui/icons";
 import { ListenButton } from "@/components/ui/listen-button";
 
@@ -29,6 +30,9 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
         </h2>
         <p className="mt-1 font-semibold">{copy.bodyHi}</p>
       </div>
+
+      {/* पीड़ित ख़ुद बताए कि पैसे जा चुके हैं: कारणों से पहले, सबसे ऊपर 1930 */}
+      {result.hits.some((h) => h.id === "money_lost") ? <Call1930Strip /> : null}
 
       {result.hits.length ? (
         <ul id="pucho-reasons" className="space-y-2" aria-label="क्यों">

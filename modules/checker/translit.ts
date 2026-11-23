@@ -66,6 +66,23 @@ const MAP: readonly (readonly [string, string])[] = [
   ["(?:ऑनलाइन|आनलाइन)", "online"],
   ["(?:रिवॉर्ड|रिवार्ड)", "reward"],
   ["बोनस", "bonus"],
+  ["वर्क\\s*(?:फ्रॉम|फ्राम)\\s*होम", "work from home"],
+  ["पार्ट\\s*टाइम", "part time"],
+  ["रजिस्ट्रेशन", "registration"],
+  ["फीस", "fees"],
+  ["प्रोसेसिंग", "processing"],
+  ["(?:सिलेक्शन|सेलेक्शन|सिलेक्ट|सेलेक्ट)", "selected"],
+  ["(?:ज्वाइनिंग|जॉइनिंग|जोइनिंग)", "joining"],
+  ["ट्रेनिंग", "training"],
+  ["(?:डिपॉजिट|डिपाजिट)", "deposit"],
+  ["एडवांस", "advance"],
+  ["जीएसटी", "gst"],
+  ["प्राइज", "prize"],
+  ["विनर", "winner"],
+  ["(?:इंश्योरेंस|इन्शुरन्स)", "insurance"],
+  ["(?:एक्सीडेंट|एक्सिडेंट)", "accident"],
+  ["(?:हॉस्पिटल|हास्पिटल)", "hospital"],
+  ["ट्राई", "trai"],
 ];
 
 const RULES = MAP.map(([dev, latin]) => [new RegExp(`(?<![${DEV}])(?:${dev})(?![${DEV}])`, "gu"), latin] as const);
