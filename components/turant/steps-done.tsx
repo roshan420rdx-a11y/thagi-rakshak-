@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { DONE_KEY, doneCount, isDone, parseDone, toggleDone, type DoneState } from "@/modules/scams/done";
+import { DONE_KEY, doneCount, isDone, needsCaseNote, parseDone, toggleDone, type DoneState } from "@/modules/scams/done";
 
 // "हो गया ✓" (plan A2f): कदमों की याद इसी फ़ोन में। mount से पहले (और बिना JS के) कुछ नहीं दिखता, कदम पहले जैसे।
 // "सुनें" इन्हें नहीं पढ़ता (data-no-listen)।
@@ -80,19 +81,26 @@ export function StepDoneButton({ stepId, n }: { stepId: string; n: number }) {
   if (!c) return null;
   const done = isDone(c.state, c.slug, stepId);
   return (
-    <button
-      type="button"
-      data-no-listen
-      data-step-done
-      aria-pressed={done}
-      aria-label={`कदम ${n} हो गया`}
-      onClick={() => c.toggle(stepId)}
-      className={`inline-flex min-h-11 items-center gap-1 rounded-[10px] border px-3 font-semibold ${
-        done ? "border-safe bg-safe text-on-safe" : "border-line bg-paper text-safe"
-      }`}
-    >
-      {done ? <span aria-hidden="true">✓</span> : null}
-      हो गया
-    </button>
+    <div data-no-listen className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <button
+        type="button"
+        data-no-listen
+        data-step-done
+        aria-pressed={done}
+        aria-label={`कदम ${n} हो गया`}
+        onClick={() => c.toggle(stepId)}
+        className={`inline-flex min-h-11 items-center gap-1 rounded-[10px] border px-3 font-semibold ${
+          done ? "border-safe bg-safe text-on-safe" : "border-line bg-paper text-safe"
+        }`}
+      >
+        {done ? <span aria-hidden="true">✓</span> : null}
+        हो गया
+      </button>
+      {done && needsCaseNote(stepId) ? (
+        <Link href="/case" className="inline-flex min-h-11 items-center font-semibold text-brand">
+          शिकायत नंबर और तारीख़ &quot;मेरा केस&quot; में लिख लें →
+        </Link>
+      ) : null}
+    </div>
   );
 }

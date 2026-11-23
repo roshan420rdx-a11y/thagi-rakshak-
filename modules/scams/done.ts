@@ -38,3 +38,10 @@ export function toggleDone(s: DoneState, slug: string, stepId: string): DoneStat
 export function doneCount(s: DoneState, slug: string, stepIds: readonly string[]): number {
   return stepIds.filter((id) => isDone(s, slug, id)).length;
 }
+
+// जिन कदमों में शिकायत दर्ज होती है: हो जाने पर उसी जगह "शिकायत नंबर 'मेरा केस' में लिख लें" (नंबर खो न जाए)
+const CASE_STEP_IDS: ReadonlySet<string> = new Set(["call_1930", "tell_bank", "written_complaint", "police_report"]);
+
+export function needsCaseNote(stepId: string): boolean {
+  return CASE_STEP_IDS.has(stepId);
+}

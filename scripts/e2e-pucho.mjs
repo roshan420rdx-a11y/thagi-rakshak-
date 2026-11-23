@@ -225,4 +225,20 @@ await check("Share: service worker न हो तो server message पढ़े
   }),
 );
 
+await check("पहले पूछो: install का मौका मिले तो 'ऐप जोड़ें, फिर Share करके जाँचें' बटन, दबाने पर install पूछे", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await openBox(page);
+    await page.evaluate(() => {
+      const e = new Event("beforeinstallprompt", { cancelable: true });
+      e.prompt = () => {
+        window.__prompted = true;
+        return Promise.resolve();
+      };
+      window.dispatchEvent(e);
+    });
+    await page.getByRole("button", { name: /सीधे Share करके जाँचें/ }).click();
+    assert(await page.evaluate(() => window.__prompted === true), "install नहीं पूछा");
+  }),
+);
+
 await finish();

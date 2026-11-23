@@ -198,6 +198,8 @@ await check("हो गया ✓: दबाने पर कदम हरा �
     await first.click();
     assert((await first.getAttribute("aria-pressed")) === "true", "दबाने पर 'हो गया' नहीं");
     await page.getByText(`${total} में से 1 कदम हो गए`).waitFor();
+    // 1930 वाला कदम हो गया: शिकायत नंबर "मेरा केस" में लिखने का रास्ता उसी जगह
+    assert((await page.locator('#turant-steps ol > li').first().locator('a[href="/case"]').count()) === 1, "'मेरा केस' में लिखने का link नहीं");
     const green = await page.locator("#turant-steps ol > li").first().evaluate((li) => getComputedStyle(li.firstElementChild).backgroundColor);
     assert(green === "rgb(6, 118, 71)", `हो गए कदम का नंबर हरा नहीं: ${green}`);
     await page.getByRole("button", { name: "सुनें" }).click();

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { CheckerBox } from "@/components/pucho/checker-box";
+import { InstallButton } from "@/components/site/install-button";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/notice";
@@ -22,6 +23,8 @@ export default function PuchoPage() {
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">यह message ठगी है? पहले पूछो</h1>
       <CheckerBox pageUrl={pageUrl} />
+      {/* plan A2f: ऐप जुड़ा हो तो WhatsApp/SMS से Share करके सीधे जाँच (browser मौका दे, तभी दिखता है) */}
+      <InstallButton label="ऐप जोड़ें: फिर WhatsApp या SMS से सीधे Share करके जाँचें" />
       <h2 className="text-[20px] font-bold leading-snug">ठगी के {SCAM_SIGNS.length} आम निशान</h2>
       <p>इनमें से एक भी दिखे, तो रुकें। पैसे न भेजें, कोई ऐप न डालें।</p>
       <ol data-signs className="space-y-3">

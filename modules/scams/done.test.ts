@@ -24,3 +24,9 @@ test("doneCount: सिर्फ़ इस पन्ने के आज वा�
   expect(doneCount(s, "upi", ["call_1930", "bank_report", "keep_evidence"])).toBe(2);
   expect(doneCount(s, "card", ["call_1930"])).toBe(0);
 });
+
+test("शिकायत वाले कदम (1930, बैंक, लिखित, पुलिस) हो जाएँ तो 'मेरा केस' में नंबर लिखने की बात; बाकी पर नहीं", async () => {
+  const { needsCaseNote } = await import("./done");
+  for (const id of ["call_1930", "tell_bank", "written_complaint", "police_report"]) expect(needsCaseNote(id), id).toBe(true);
+  for (const id of ["keep_evidence", "block_card", "remove_app"]) expect(needsCaseNote(id), id).toBe(false);
+});

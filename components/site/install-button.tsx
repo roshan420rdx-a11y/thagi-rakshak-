@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // जुड़ने के बाद साइट ऐप की तरह खुलती है, और इमरजेंसी पन्ने internet के बिना भी।
 type InstallEvent = Event & { prompt: () => Promise<void> };
 
-export function InstallButton() {
+export function InstallButton({ label = "फ़ोन की home screen पर जोड़ें (ऐप की तरह, internet के बिना भी)" }: { label?: string }) {
   const [evt, setEvt] = useState<InstallEvent | null>(null);
   const [done, setDone] = useState(false);
 
@@ -38,7 +38,7 @@ export function InstallButton() {
       }}
       className="flex min-h-12 w-full items-center justify-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand"
     >
-      फ़ोन की home screen पर जोड़ें (ऐप की तरह, internet के बिना भी)
+      {label}
     </button>
   );
 }
