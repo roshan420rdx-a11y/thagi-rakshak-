@@ -1,4 +1,5 @@
 import { isBankLookalike, isGovDomain, type CheckResult } from "@/modules/checker";
+import { actionsFor } from "@/modules/checker/actions";
 import { CHECK_LIMIT_HI, LEVEL_COPY, verdictShareText, whatsappShareLink } from "@/modules/checker/share";
 import { BigDoor } from "@/components/ui/big-door";
 import { Call1930Strip } from "@/components/ui/call-1930-strip";
@@ -16,6 +17,7 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
   const copy = LEVEL_COPY[result.level];
   const Icon = result.level === "no_signals" ? IconInfo : IconAlert;
   const govNamed = result.hits.some((h) => h.id === "gov_lookalike");
+  const todo = actionsFor(result.hits);
   const turant = result.level === "danger" ? (result.hits.find((h) => h.level === "danger" && h.turant)?.turant ?? "pata-nahi") : null;
 
   return (
@@ -29,6 +31,16 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
           <span>{copy.titleHi}</span>
         </h2>
         <p className="mt-1 font-semibold">{copy.bodyHi}</p>
+        {todo.length ? (
+          <div className="mt-2 border-t border-current/20 pt-2">
+            <p className="font-bold">अभी यह करें:</p>
+            <ul className="mt-1 list-disc space-y-1 pl-5">
+              {todo.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
 
       {/* पीड़ित ख़ुद बताए कि पैसे जा चुके हैं: कारणों से पहले, सबसे ऊपर 1930 */}

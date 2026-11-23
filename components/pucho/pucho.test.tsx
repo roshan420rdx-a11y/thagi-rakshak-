@@ -101,3 +101,12 @@ test("पैसे जा चुके हों (पीड़ित ख़ु�
   // आम ठगी वाले message पर नहीं (वहाँ 'पैसे जा चुके हैं?' वाला दरवाज़ा ही)
   expect(renderToStaticMarkup(<VerdictCard result={checkMessage("Wedding_Invitation.apk")} pageUrl={PAGE} />)).not.toContain('href="tel:1930"');
 });
+
+test("नतीजे में 'अभी यह करें': उसी ठगी के हिसाब से कदम (AnyDesk पर ऐप हटाना), 'सुनें' वाले हिस्से के अंदर", () => {
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("एनडेस्क ऐप से कोई पैसे माँग रहा है")} pageUrl={PAGE} />);
+  const verdict = html.slice(html.indexOf('id="pucho-verdict"'), html.indexOf('id="pucho-reasons"'));
+  expect(verdict).toContain("अभी यह करें");
+  expect(verdict).toContain("ऐप हटाएँ");
+  // कोई निशान न मिले तो यह हिस्सा नहीं
+  expect(renderToStaticMarkup(<VerdictCard result={checkMessage("कल शाम मिलते हैं")} pageUrl={PAGE} />)).not.toContain("अभी यह करें");
+});
