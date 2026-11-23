@@ -2,12 +2,14 @@
 // हर जाँच "✓ नाम" छापती है; पहली गड़बड़ी पर "✗ नाम: कारण" छापकर exit 1।
 import { BASE, browser, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
 
-await check("upi: कदम, tel:1930, HTML 60KB से छोटा", () =>
+// नाप वही जो तार पर जाता है (gzip): CSS अब HTML के अंदर है (next.config: inlineCss), अलग file का दूसरा round-trip नहीं
+await check("upi: कदम, tel:1930, पन्ना (CSS समेत) तार पर 25KB से छोटा", () =>
   withPage({}, async (page) => {
     const res = await page.goto(`${BASE}/turant/upi`);
     assert(res && res.ok(), `status ${res?.status()}`);
-    const body = await res.body();
-    assert(body.length < 60_000, `HTML ${body.length} bytes`);
+    const { responseBodySize } = await res.request().sizes();
+    assert(responseBodySize > 0 && responseBodySize < 25_000, `तार पर ${responseBodySize} bytes`);
+    assert((await page.locator('link[rel="stylesheet"]').count()) === 0, "CSS अलग file में (दूसरा round-trip)");
     await page.getByText("1930 पर call करें").first().waitFor();
     assert((await page.locator('a[href="tel:1930"]').count()) > 0, "tel:1930 link नहीं मिला");
   }),
@@ -82,8 +84,9 @@ await check("मुख्य /turant: 'पता नहीं?' h2 के नी
   }),
 );
 
-await check("धीमा internet (Slow 3G, 2 सेकंड की देरी): '1930 पर call करें' 4.5 सेकंड के अंदर दिखे", async () => {
-  // गाँव के धीमे network पर भी पहला कदम एक round-trip में: पन्ना server पर बनकर आता है, JS का इंतज़ार नहीं
+await check("धीमा internet (Slow 3G, 2 सेकंड की देरी): '1930 पर call करें' 3.5 सेकंड के अंदर दिखे", async () => {
+  // गाँव के धीमे network पर भी पहला कदम एक round-trip में: पन्ना server पर बनकर आता है (JS का इंतज़ार नहीं),
+  // और CSS उसी HTML में (अलग CSS file के लिए दूसरी 2 सेकंड की देरी नहीं; पहले 4.4 सेकंड, अब लगभग 2.3)
   const context = await browser.newContext({ viewport: { width: 360, height: 740 } });
   const page = await context.newPage();
   try {
@@ -94,7 +97,7 @@ await check("धीमा internet (Slow 3G, 2 सेकंड की देर�
     await page.goto(`${BASE}/turant/upi`, { waitUntil: "commit", timeout: 60000 });
     await page.getByText("1930 पर call करें").first().waitFor({ timeout: 60000 });
     const ms = Date.now() - t0;
-    assert(ms < 4500, `${ms}ms लगे`);
+    assert(ms < 3500, `${ms}ms लगे`);
   } finally {
     await context.close();
   }

@@ -16,7 +16,7 @@ export default function AbhyasPage() {
   const pageUrl = absoluteUrl("/abhyas", getSiteConfig().siteUrl);
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">ठगी पहचानने का अभ्यास</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठगी पहचानने का अभ्यास</h1>
       <p>8 message आएँगे: SMS, WhatsApp, या call पर कही बात। हर एक पर बताइए, ठगी है या असली। जवाब देते ही पता चलेगा क्यों। 2 मिनट लगेंगे, कुछ सेव नहीं होता।</p>
       <noscript>
         <p className="rounded-xl border-2 border-warn bg-warn-bg p-3 font-semibold text-warn">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import { DraftBanner } from "@/components/legal/draft-banner";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = pageMeta({
   title: "सेवा की शर्तें",
@@ -27,7 +28,8 @@ const TERMS = [
 export default function TermsPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">सेवा की शर्तें</h1>
+      <Breadcrumb items={[{ href: "/legal", labelHi: "नियम और नीतियाँ" }, { labelHi: "शर्तें" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">सेवा की शर्तें</h1>
       <DraftBanner />
       <ol className="list-decimal space-y-2 pl-6">
         {TERMS.map((t) => (

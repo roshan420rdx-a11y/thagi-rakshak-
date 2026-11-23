@@ -71,3 +71,26 @@ test("/gyan पर खोज लगी है (index में हर पन्�
   expect(html).toContain("ठगी का ज्ञानकोश");
   for (const p of GYAN_PAGES) expect(html).toContain(`href="/gyan/${p.slug}"`);
 });
+
+test("भीतर के पन्नों पर 'पन्ने का रास्ता': ज्ञानकोश, बैंक, आपका हक़, नियम", async () => {
+  const has = (html: string, parent: string) => {
+    const nav = html.slice(html.indexOf('aria-label="पन्ने का रास्ता"'));
+    expect(html).toContain('aria-label="पन्ने का रास्ता"');
+    expect(nav.slice(0, nav.indexOf("</nav>"))).toContain(`href="${parent}"`);
+  };
+  has(renderToStaticMarkup(await GyanPageRoute({ params: Promise.resolve({ slug: "sim-swap" }) })), "/gyan");
+  const { default: BankIndex } = await import("@/app/(site)/gyan/bank/page");
+  has(renderToStaticMarkup(<BankIndex />), "/gyan");
+  const { default: BankPage } = await import("@/app/(site)/gyan/bank/[slug]/page");
+  has(renderToStaticMarkup(await BankPage({ params: Promise.resolve({ slug: "sbi" }) })), "/gyan/bank");
+  const { default: Frozen } = await import("@/app/(site)/haq/frozen-money/page");
+  has(renderToStaticMarkup(<Frozen />), "/haq");
+  const { ThagiView } = await import("@/components/haq/thagi-view");
+  has(renderToStaticMarkup(<ThagiView params={{}} today="2026-11-23" />), "/haq");
+  const { FailedTxnView } = await import("@/components/haq/failed-txn-view");
+  has(renderToStaticMarkup(<FailedTxnView params={{}} today="2026-11-23" />), "/haq");
+  for (const p of ["privacy", "terms", "shikayat"]) {
+    const { default: L } = await import(`@/app/(site)/legal/${p}/page`);
+    has(renderToStaticMarkup(<L />), "/legal");
+  }
+});

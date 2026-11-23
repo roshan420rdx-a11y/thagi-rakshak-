@@ -8,6 +8,7 @@ import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert } from "@/components/ui/icons";
 import { Notice } from "@/components/ui/notice";
 import { BANKS, getBank, liveChannels, liveSite } from "@/modules/banks";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,7 +37,8 @@ export default async function BankPage({ params }: Props) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">{b.nameHi}: ठगी कैसे बताएँ</h1>
+      <Breadcrumb items={[{ href: "/gyan", labelHi: "ज्ञानकोश" }, { href: "/gyan/bank", labelHi: "अपना बैंक" }, { labelHi: b.nameHi }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">{b.nameHi}: ठगी कैसे बताएँ</h1>
 
       {channels.length > 0 ? (
         <section className="space-y-2 rounded-xl border border-line bg-paper p-3">

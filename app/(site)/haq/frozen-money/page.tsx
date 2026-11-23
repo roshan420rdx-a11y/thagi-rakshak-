@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import { Notice } from "@/components/ui/notice";
 import { StepCard } from "@/components/ui/step-card";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = pageMeta({
   title: "ठग के खाते में पैसा रुका: वापस कैसे माँगें",
@@ -13,7 +14,8 @@ export const metadata: Metadata = pageMeta({
 export default function FrozenMoneyPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">ठग के खाते में पैसा रुका (freeze): वापस कैसे माँगें</h1>
+      <Breadcrumb items={[{ href: "/haq", labelHi: "आपका हक़" }, { labelHi: "ठग के खाते में पैसा रुका" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठग के खाते में पैसा रुका (freeze): वापस कैसे माँगें</h1>
       <Notice tone="warn">यह गाइड समाचारों और सरकारी घोषणाओं पर आधारित है; मूल SOP (गृह मंत्रालय) से जाँच अभी बाकी है।</Notice>
       <ol className="space-y-3">
         <StepCard n={1} title="शिकायत का नंबर सँभालें">

@@ -27,7 +27,7 @@ export default async function TurantPageRoute({ params }: Props) {
   const page = getTurantPage(slug);
   return (
     <>
-      <h1 className="text-[22px] font-bold leading-snug">ये काम अभी करें</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ये काम अभी करें</h1>
       <p className="mb-3 text-[15px] text-muted">{page.titleHi} · जितनी जल्दी, पैसा रुकने का उतना ज़्यादा मौका</p>
       <TurantSteps page={page} slot={asksWhen(slug) ? <KabChips /> : null} />
       <p className="mt-6">

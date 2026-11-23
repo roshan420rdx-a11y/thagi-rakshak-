@@ -20,7 +20,7 @@ export default function PuchoPage() {
   const pageUrl = absoluteUrl("/pucho", getSiteConfig().siteUrl);
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">यह message ठगी है? पहले पूछो</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">यह message ठगी है? पहले पूछो</h1>
       <CheckerBox pageUrl={pageUrl} />
       <h2 className="text-[20px] font-bold leading-snug">ठगी के {SCAM_SIGNS.length} आम निशान</h2>
       <p>इनमें से एक भी दिखे, तो रुकें। पैसे न भेजें, कोई ऐप न डालें।</p>

@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMeta({
 export default function ArziPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">अर्ज़ियाँ: बैंक, पुलिस और RBI के लिए पत्र</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">अर्ज़ियाँ: बैंक, पुलिस और RBI के लिए पत्र</h1>
       <noscript>
         <p className="rounded-xl border-2 border-warn bg-warn-bg p-3 font-semibold text-warn">
           यह सुविधा JavaScript से चलती है। तब तक &quot;शिकायत का पूरा रास्ता&quot; में दिया नमूना email काम में लें।

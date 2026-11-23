@@ -16,7 +16,7 @@ export default function TurantIndex() {
   const types = TURANT_SLUGS.filter((s) => s !== "pata-nahi");
   return (
     <>
-      <h1 className="text-[22px] font-bold leading-snug">घबराइए नहीं। क्या हुआ?</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">घबराइए नहीं। क्या हुआ?</h1>
       {/* प्रकार चुनने से पहले ही: पैसे गए हों तो पहला कदम हर प्रकार में 1930 है (DISHA: 3 सेकंड में अगला कदम) */}
       <div className="mt-3 space-y-2 rounded-xl border-2 border-danger bg-danger-bg p-3">
         <p className="font-bold text-danger">पैसे गए हैं? सबसे पहले 1930 पर call करें, फिर नीचे अपना प्रकार चुनें।</p>

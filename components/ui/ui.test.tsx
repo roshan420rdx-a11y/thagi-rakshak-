@@ -67,3 +67,11 @@ test("SiteFooter: तीन हिस्से (मदद, जानकारी
   for (const h of ["/turant", "/pucho", "/shikayat-rasta", "/gyan", "/haq", "/abhyas", "/poster", "/bharosa", "/nambar"]) expect(hrefs).toContain(h);
   expect(html).toContain("स्वतंत्र, मुफ़्त सेवा");
 });
+
+test("Breadcrumb: 'पन्ने का रास्ता', होम से शुरू, बीच वाले link, आख़िरी पन्ना link नहीं (aria-current)", async () => {
+  const { Breadcrumb } = await import("./breadcrumb");
+  const html = renderToStaticMarkup(<Breadcrumb items={[{ href: "/gyan", labelHi: "ज्ञानकोश" }, { labelHi: "SIM बदलकर ठगी" }]} />);
+  expect(html).toContain('aria-label="पन्ने का रास्ता"');
+  expect([...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1])).toEqual(["/", "/gyan"]);
+  expect(html).toMatch(/aria-current="page"[^>]*>SIM बदलकर ठगी</);
+});

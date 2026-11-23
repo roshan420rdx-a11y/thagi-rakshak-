@@ -6,6 +6,7 @@ import { CaseFill } from "./case-fill";
 import { FormErrors } from "./errors";
 import { Field, INPUT_CLS, Radios } from "./field";
 import { RightsResultCard } from "./rights-result";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 type Params = Record<string, string | string[] | undefined>;
 const v = (p: Params, k: string) => {
@@ -29,7 +30,8 @@ export function ThagiView({ params, today }: { params: Params; today: string }) 
 
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">ठगी में पैसा गया: आपका हक़</h1>
+      <Breadcrumb items={[{ href: "/haq", labelHi: "आपका हक़" }, { labelHi: "ठगी में पैसा गया" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठगी में पैसा गया: आपका हक़</h1>
       <p>RBI के नियमों से हिसाब: पूरा पैसा वापस (ज़ीरो ज़िम्मेदारी), या ₹25,000 तक का मुआवज़ा, और बैंक को कब तक जवाब देना है।</p>
 
       {parsed.ok === false ? <FormErrors errorsHi={parsed.errorsHi} /> : null}
@@ -113,7 +115,7 @@ export function ThagiView({ params, today }: { params: Params; today: string }) 
       </form>
 
       {parsed.ok === true ? (
-        <section id="nateeja" className="space-y-3">
+        <section id="nateeja" className="scroll-mt-3 space-y-3">
           <h2 className="text-[19px] font-bold">आपका हिसाब</h2>
           {notReported ? (
             <Link href="/turant" className="flex min-h-12 items-center rounded-xl bg-danger px-4 font-bold text-on-danger no-underline">

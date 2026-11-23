@@ -4,6 +4,7 @@ import { TAT_ROWS, evaluateFailedTxn, formatHindiDate } from "@/modules/rules-en
 import type { TatChannel } from "@/modules/rules-engine";
 import { FormErrors } from "./errors";
 import { Field, INPUT_CLS } from "./field";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 type Params = Record<string, string | string[] | undefined>;
 const v = (p: Params, k: string) => {
@@ -18,7 +19,8 @@ export function FailedTxnView({ params, today }: { params: Params; today: string
 
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">लेन-देन fail हुआ, पैसा अटका: ₹100 रोज़</h1>
+      <Breadcrumb items={[{ href: "/haq", labelHi: "आपका हक़" }, { labelHi: "लेन-देन fail हुआ" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">लेन-देन fail हुआ, पैसा अटका: ₹100 रोज़</h1>
       <p>पैसा कट गया पर पहुँचा नहीं, तो बैंक को तय दिनों में लौटाना होता है। देर हुई, तो हर दिन ₹100 देना होता है, बिना माँगे।</p>
       {parsed.ok === false ? <FormErrors errorsHi={parsed.errorsHi} /> : null}
       {/* action में #nateeja: भेजने के बाद browser सीधे नतीजे पर जाए; बिना JS के भी */}
@@ -46,7 +48,7 @@ export function FailedTxnView({ params, today }: { params: Params; today: string
         </button>
       </form>
       {res ? (
-        <section id="nateeja" className="space-y-2 rounded-xl border border-line bg-paper p-3">
+        <section id="nateeja" className="scroll-mt-3 space-y-2 rounded-xl border border-line bg-paper p-3">
           <h2 className="text-[19px] font-bold">आपका हिसाब</h2>
           <p>बैंक को {formatHindiDate(res.dueDate)} तक पैसा लौटाना था।</p>
           {res.compensation > 0 ? (

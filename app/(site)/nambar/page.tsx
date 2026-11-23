@@ -20,7 +20,7 @@ export default function NambarPage() {
   return (
     <div className="space-y-4">
       <div data-print-area="nambar" className="space-y-4 print:space-y-[8pt]">
-        <h1 className="text-[22px] font-bold leading-snug print:text-[20pt]">ज़रूरी नंबर और साइटें</h1>
+        <h1 className="text-[22px] font-bold md:text-[28px] leading-snug print:text-[20pt]">ज़रूरी नंबर और साइटें</h1>
         <p className="print:hidden">नंबर दबाएँ, call लग जाएगी। ये सब मुफ़्त हैं।</p>
         <ul className="space-y-2 print:grid print:grid-cols-3 print:gap-[6pt] print:space-y-0">
           {HELPLINES.map((h, i) => (

@@ -5,6 +5,7 @@ import { BankArziLink } from "@/components/banks/arzi-link";
 import { BankTips } from "@/components/banks/bank-tips";
 import { Notice } from "@/components/ui/notice";
 import { BANKS } from "@/modules/banks";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = pageMeta({
   title: "अपने बैंक को ठगी कैसे बताएँ",
@@ -16,7 +17,8 @@ export const metadata: Metadata = pageMeta({
 export default function BankIndexPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">अपने बैंक को ठगी कैसे बताएँ</h1>
+      <Breadcrumb items={[{ href: "/gyan", labelHi: "ज्ञानकोश" }, { labelHi: "अपना बैंक" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">अपने बैंक को ठगी कैसे बताएँ</h1>
       <Notice tone="warn">नंबर Google पर न खोजें। नकली &quot;customer care&quot; नंबर ठगी का बड़ा जाल हैं।</Notice>
       <BankTips />
       <BankArziLink />

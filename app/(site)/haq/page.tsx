@@ -19,7 +19,7 @@ const CARDS = [
 export default function HaqIndexPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">आपका हक़</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">आपका हक़</h1>
       <p>RBI और सरकार के नियमों से जानिए कि आपका कितना हक़ बनता है। मुफ़्त, बिना login।</p>
       <ul className="space-y-3">
         {CARDS.map((c) => (

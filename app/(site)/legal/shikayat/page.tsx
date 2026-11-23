@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DraftBanner } from "@/components/legal/draft-banner";
 import { Notice } from "@/components/ui/notice";
 import { getSiteConfig } from "@/modules/site";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = pageMeta({
   title: "शिकायत अधिकारी",
@@ -16,7 +17,8 @@ export default function ShikayatPage() {
   const { orgName, grievanceName, grievanceEmail } = getSiteConfig();
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">शिकायत अधिकारी</h1>
+      <Breadcrumb items={[{ href: "/legal", labelHi: "नियम और नीतियाँ" }, { labelHi: "शिकायत अधिकारी" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">शिकायत अधिकारी</h1>
       <Notice tone="danger">
         ठगी की शिकायत यहाँ नहीं होती। ठगी हुई है तो तुरंत 1930 पर call करें, या cybercrime.gov.in पर शिकायत करें।{" "}
         <Link href="/turant" className="underline">

@@ -168,4 +168,15 @@ await check("खोज: JS बंद पर कोई बेकार डिब�
   }),
 );
 
+await check("पन्ने का रास्ता: SIM वाले पन्ने से 'ज्ञानकोश' एक tap में, आख़िरी हिस्सा link नहीं", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page) => {
+    await page.goto(`${BASE}/gyan/sim-swap`);
+    const crumbs = page.getByRole("navigation", { name: "पन्ने का रास्ता" });
+    assert((await crumbs.locator('[aria-current="page"]').count()) === 1, "चालू पन्ना नहीं दिखा");
+    assert((await crumbs.locator("a").count()) === 2, "होम और ज्ञानकोश के link नहीं");
+    await crumbs.getByRole("link", { name: "ज्ञानकोश" }).click();
+    await page.getByRole("heading", { level: 1, name: "ठगी का ज्ञानकोश" }).waitFor();
+  }),
+);
+
 await finish();

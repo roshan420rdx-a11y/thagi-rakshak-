@@ -3,6 +3,7 @@ import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { DraftBanner } from "@/components/legal/draft-banner";
 import { LegalSection } from "@/components/legal/section";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const metadata: Metadata = pageMeta({
   title: "निजता (privacy)",
@@ -16,7 +17,8 @@ export const metadata: Metadata = pageMeta({
 export default function PrivacyPage() {
   return (
     <div className="space-y-5">
-      <h1 className="text-[22px] font-bold leading-snug">निजता (privacy): आपकी जानकारी का क्या होता है</h1>
+      <Breadcrumb items={[{ href: "/legal", labelHi: "नियम और नीतियाँ" }, { labelHi: "निजता" }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">निजता (privacy): आपकी जानकारी का क्या होता है</h1>
       <DraftBanner />
 
       <LegalSection title="संक्षेप में">

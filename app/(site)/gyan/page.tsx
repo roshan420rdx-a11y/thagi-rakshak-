@@ -26,7 +26,7 @@ const TOOLS = [
 export default function GyanIndexPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">ठगी का ज्ञानकोश</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठगी का ज्ञानकोश</h1>
       <p>ठगी कैसे होती है, कैसे पहचानें, और हो जाए तो क्या करें। आसान भाषा में।</p>
       <Link
         href="/abhyas"

@@ -20,7 +20,7 @@ export default function PosterPage() {
   const [before, after] = POSTER_HELP[0].split("1930");
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">ठगी से बचाव का पोस्टर</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठगी से बचाव का पोस्टर</h1>
       <p>छापकर दुकान, बैंक, पंचायत भवन या स्कूल में लगाएँ, या PDF बनाकर WhatsApp पर भेजें। मुफ़्त है, जितना चाहें छापें।</p>
 
       <article

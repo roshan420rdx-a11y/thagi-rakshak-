@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main id="main" className="mx-auto max-w-[680px] space-y-4 px-4 py-8">
-      <h1 className="text-[22px] font-bold">यह पन्ना नहीं मिला।</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px]">यह पन्ना नहीं मिला।</h1>
       <p>ठगी हो गई है? इमरजेंसी मदद यहाँ है:</p>
       <BigDoor
         href="/turant"

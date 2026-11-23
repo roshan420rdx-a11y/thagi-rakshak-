@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMeta({
 export default function CasePage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">मेरा केस</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">मेरा केस</h1>
       <p>ठगी के बाद हर जगह की शिकायत, उसका नंबर, और आगे की ज़रूरी तारीख़ें, एक जगह।</p>
       <noscript>
         <p className="rounded-xl border-2 border-warn bg-warn-bg p-3 font-semibold text-warn">

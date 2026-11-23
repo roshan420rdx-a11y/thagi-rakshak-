@@ -4,6 +4,7 @@ import { IconAlert } from "@/components/ui/icons";
 import { ListenButton } from "@/components/ui/listen-button";
 import type { GyanPage } from "@/modules/gyan";
 import { formatHindiDate } from "@/modules/rules-engine";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 const H2 = "text-[19px] font-bold";
 
@@ -11,7 +12,8 @@ const H2 = "text-[19px] font-bold";
 export function GyanArticle({ page: p }: { page: GyanPage }) {
   return (
     <article className="space-y-5">
-      <h1 className="text-[22px] font-bold leading-snug">{p.titleHi}</h1>
+      <Breadcrumb items={[{ href: "/gyan", labelHi: "ज्ञानकोश" }, { labelHi: p.navTitleHi }]} />
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">{p.titleHi}</h1>
       {/* सुनें: सार, निशान और नियम (पूरा पन्ना बहुत लंबा हो जाता) */}
       <ListenButton targetId={["gyan-summary", "gyan-signs", "gyan-rules"]} />
 

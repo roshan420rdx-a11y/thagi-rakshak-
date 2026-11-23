@@ -21,7 +21,7 @@ export default function ShikayatRastaPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-2">
-        <h1 className="text-[22px] font-bold leading-snug">ठगी की शिकायत: पूरा रास्ता</h1>
+        <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">ठगी की शिकायत: पूरा रास्ता</h1>
         <ListenButton targetId="shikayat-steps" />
       </div>
       <p>ठगी के बाद शिकायत कई जगह होती है। इसी क्रम में चलें, और हर जगह मिला शिकायत नंबर सँभालें। सब जगह शिकायत मुफ़्त है।</p>

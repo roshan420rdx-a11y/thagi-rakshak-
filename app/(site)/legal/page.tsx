@@ -19,7 +19,7 @@ const ITEMS = [
 export default function LegalIndexPage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-[22px] font-bold leading-snug">नियम और नीतियाँ</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">नियम और नीतियाँ</h1>
       <DraftBanner />
       <ul className="space-y-3">
         {ITEMS.map((i) => (

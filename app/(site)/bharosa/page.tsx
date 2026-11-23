@@ -27,7 +27,7 @@ export default function BharosaPage() {
   const { whatsappNumber, siteUrl } = getSiteConfig();
   return (
     <div className="space-y-5">
-      <h1 className="text-[22px] font-bold leading-snug">हम पर भरोसा क्यों करें</h1>
+      <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">हम पर भरोसा क्यों करें</h1>
 
       <section className="space-y-2">
         <h2 className="text-[19px] font-bold">हम ये काम कभी नहीं करेंगे</h2>
