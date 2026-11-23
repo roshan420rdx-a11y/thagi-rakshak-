@@ -194,6 +194,15 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
   },
 
   {
+    id: "trai-call",
+    channelHi: "call पर कहा गया",
+    text: "मैं TRAI से बोल रहा हूँ। आपके नाम के SIM से ग़लत काम हुआ है, 2 घंटे में आपका नंबर बंद हो जाएगा। पुलिस से बात करने के लिए 9 दबाएँ।",
+    scam: true,
+    whyHi: "कोई सरकारी विभाग call पर नंबर बंद करने की धमकी देकर \"पुलिस से बात\" नहीं कराता; यह digital arrest की शुरुआत है। call काटें, कुछ न दबाएँ, और ऐसे call की शिकायत Sanchar Saathi के \"चक्षु\" पर करें।",
+    gyan: "digital-arrest",
+  },
+
+  {
     id: "wapsi-fee",
     channelHi: "call पर कहा गया, ठगी के दो दिन बाद",
     text: "मैं cyber cell से advocate बोल रहा हूँ। आपका ठगी वाला पैसा वापस दिला दूँगा, बस ₹5,000 fee पहले जमा करें।",
@@ -231,6 +240,13 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     text: "कल सुबह 10 से 2 बजे तक मरम्मत के कारण बिजली बंद रहेगी। असुविधा के लिए खेद है।",
     scam: false,
     whyHi: "यह सिर्फ़ सूचना है: न नंबर, न link, न पैसे। 'आज रात बिजली कट जाएगी, इस नंबर पर call करें' वाला message ठगी होता है।",
+  },
+  {
+    id: "dukan-asli",
+    channelHi: "WhatsApp, जान-पहचान की दुकान से",
+    text: "आपका सामान तैयार है, शाम को आकर ले जाइए। पैसे दुकान पर ही दे देना।",
+    scam: false,
+    whyHi: "इसमें कोई link, OTP, PIN, ऐप या पहले पैसे भेजने की बात नहीं। फिर भी, जिसे जानते हैं उसी का नंबर हो, यह देख लें।",
   },
   {
     id: "mummy",
