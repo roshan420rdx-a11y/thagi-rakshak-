@@ -22,7 +22,7 @@ export const customerCareFake: GyanPage = {
     "नंबर Google, YouTube comment या social media से मिला",
     "call पर कोई ऐप (जैसे AnyDesk या कोई \"support\" ऐप) डलवाना",
     "refund के लिए UPI PIN डलवाना या QR scan करवाना",
-    "OTP, PIN, password या card का पूरा नंबर माँगना",
+    "OTP, PIN, password, card का पूरा नंबर या CVV माँगना",
     '"₹1 या ₹10 भेजकर verify करें" कहना',
   ],
   examplesHi: [
