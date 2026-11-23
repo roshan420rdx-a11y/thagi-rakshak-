@@ -62,6 +62,15 @@ main:has(> [data-wide]) {
   max-width: 1040px;
 }
 
+/* /turant: "हो गया" दबाए कदम पर हरी border और हरा नंबर (plan A2f) */
+li[data-status]:has([data-step-done][aria-pressed="true"]) {
+  border-color: var(--safe);
+}
+li[data-status]:has([data-step-done][aria-pressed="true"]) > span:first-child {
+  background: var(--safe);
+  color: var(--on-safe);
+}
+
 /* कोई web font नहीं: Android/Windows में हिंदी font पहले से होता है (2G पर भी कोई अतिरिक्त फ़ाइल नहीं) */
 html {
   font-size: 18px;

@@ -189,4 +189,41 @@ await check("dark mode: background dark surface", () =>
   }),
 );
 
+await check("हो गया ✓: दबाने पर कदम हरा और गिनती बढ़े; reload और offline पर भी याद; 'सब फिर से' से साफ़; 'सुनें' बटन नहीं पढ़ता", () =>
+  withPage({ viewport: { width: 360, height: 740 } }, async (page, context) => {
+    await installSpeechStub(context);
+    await page.goto(`${BASE}/turant/upi`);
+    const total = await page.locator("#turant-steps ol > li").count();
+    const first = page.getByRole("button", { name: "कदम 1 हो गया" });
+    await first.click();
+    assert((await first.getAttribute("aria-pressed")) === "true", "दबाने पर 'हो गया' नहीं");
+    await page.getByText(`${total} में से 1 कदम हो गए`).waitFor();
+    const green = await page.locator("#turant-steps ol > li").first().evaluate((li) => getComputedStyle(li.firstElementChild).backgroundColor);
+    assert(green === "rgb(6, 118, 71)", `हो गए कदम का नंबर हरा नहीं: ${green}`);
+    await page.getByRole("button", { name: "सुनें" }).click();
+    const spoken = (await page.evaluate(() => window.__spoken)).map((x) => x.text).join(" ");
+    assert(spoken.includes("1930 पर call करें") && !spoken.includes("हो गया") && !spoken.includes("कदम हो गए"), `सुनें: ${spoken.slice(0, 80)}`);
+    // offline (service worker) के बाद भी याद
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.reload();
+    await page.getByText(`${total} में से 1 कदम हो गए`).waitFor();
+    assert((await page.getByRole("button", { name: "कदम 1 हो गया" }).getAttribute("aria-pressed")) === "true", "offline reload पर याद नहीं");
+    await context.setOffline(false);
+    await page.getByRole("button", { name: "सब फिर से" }).click();
+    await page.getByText(`${total} में से 0 कदम हो गए`).waitFor();
+    assert((await page.evaluate(() => localStorage.getItem("thagi-rakshak:turant-done:v1"))) === null, "साफ़ करने पर भी storage में बचा");
+  }),
+);
+
+await check("हो गया: JS बंद पर कोई बटन नहीं, कदम पहले जैसे", () =>
+  withPage({ javaScriptEnabled: false }, async (page) => {
+    await page.goto(`${BASE}/turant/upi`);
+    assert((await page.locator("[data-step-done]").count()) === 0, "JS बंद पर 'हो गया' बटन");
+    assert((await page.locator("#turant-steps ol > li").count()) > 0, "कदम नहीं");
+  }),
+);
+
 await finish();

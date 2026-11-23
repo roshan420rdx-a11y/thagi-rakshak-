@@ -6,6 +6,19 @@ import { pickHindiVoice } from "./listen-voice";
 
 // 🔊 सुनें: पन्ने के हिस्से हिंदी आवाज़ में पढ़कर सुनाना (एक या कई id, क्रम से)। mount से पहले, या जहाँ browser में
 // हिंदी आवाज़ नहीं, वहाँ कुछ नहीं दिखता।
+// बोलने वाला text: [data-no-listen] वाले हिस्से ("हो गया" जैसे बटन) छोड़कर। innerText ही, ताकि लाइनों पर ठहराव रहे।
+function readableText(el: HTMLElement | null): string {
+  if (!el) return "";
+  const skip = Array.from(el.querySelectorAll<HTMLElement>("[data-no-listen]"));
+  const prev = skip.map((n) => n.style.display);
+  skip.forEach((n) => (n.style.display = "none"));
+  try {
+    return el.innerText;
+  } finally {
+    skip.forEach((n, i) => (n.style.display = prev[i]));
+  }
+}
+
 export function ListenButton({ targetId }: { targetId: string | string[] }) {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [speaking, setSpeaking] = useState(false);
@@ -34,7 +47,7 @@ export function ListenButton({ targetId }: { targetId: string | string[] }) {
     }
     const ids = Array.isArray(targetId) ? targetId : [targetId];
     const text = ids
-      .map((id) => document.getElementById(id)?.innerText ?? "")
+      .map((id) => readableText(document.getElementById(id)))
       .filter(Boolean)
       .join("\n");
     if (!text) return;

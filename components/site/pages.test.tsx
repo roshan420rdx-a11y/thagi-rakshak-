@@ -134,3 +134,10 @@ test("होम में JSON-LD (search engine के लिए साइट �
   expect(html).toContain('<script type="application/ld+json">');
   expect(html).toContain('"@type":"WebSite"');
 });
+
+test("/turant/upi: JS से पहले (और बिना JS) कदम पहले जैसे, कोई 'हो गया' बटन नहीं", async () => {
+  const { default: TurantPageRoute } = await import("@/app/turant/[slug]/page");
+  const html = renderToStaticMarkup(await TurantPageRoute({ params: Promise.resolve({ slug: "upi" }) }));
+  expect(html).toContain("1930 पर call करें");
+  expect(html).not.toContain("हो गया");
+});
