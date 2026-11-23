@@ -185,6 +185,15 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
   },
 
   {
+    id: "card-limit-link",
+    channelHi: "SMS, बैंक जैसे नाम से",
+    text: "बधाई! आपके credit card की limit ₹2 लाख बढ़ गई है। चालू करने के लिए नीचे दिए link पर अपना card number, expiry और CVV भरें: cc-limit-offer.top",
+    scam: true,
+    whyHi: "बैंक कभी SMS के link से card number, expiry या CVV नहीं भरवाता। limit का कोई भी बदलाव बैंक के अपने ऐप में ख़ुद देखें; ऐसी साइट पर भरी जानकारी सीधे ठग के पास जाती है।",
+    gyan: "kyc-link",
+  },
+
+  {
     id: "wapsi-fee",
     channelHi: "call पर कहा गया, ठगी के दो दिन बाद",
     text: "मैं cyber cell से advocate बोल रहा हूँ। आपका ठगी वाला पैसा वापस दिला दूँगा, बस ₹5,000 fee पहले जमा करें।",

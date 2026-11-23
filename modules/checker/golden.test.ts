@@ -11,6 +11,12 @@ import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"|"$/g, "")));
 
 const SCAMS: string[] = [
+  // 2026-11-23: छूटती आम ठगियाँ (army वाला किराएदार, link से card/बैंक की जानकारी, बिजली का ऐप)
+  "मैं army से बोल रहा हूँ, आपका कमरा किराए पर लेना है, advance भेजने के लिए QR scan करें और PIN डालें।",
+  "प्रिय ग्राहक, आपका credit card limit बढ़ाने के लिए नीचे दिया link खोलें और card details भरें।",
+  "Your Income Tax refund of Rs 15,490 has been approved. Update your bank account details here: http://incometax-refund.in.net/claim",
+  "Your Netflix subscription is on hold. Update payment details: netflix-billing-update.com",
+  "Your electricity bill payment failed. Download 'Bijli Seva' app from this link to avoid disconnection: bit.ly/bijli-pay",
   ...fromGyan,
   ...ABHYAS_ITEMS.filter((i) => i.scam).map((i) => i.text), // "ठगी या असली?" अभ्यास के ठगी वाले
   "Hello sir, main Airtel se bol raha hoon, aapka SIM band ho jayega, abhi aapke phone par jo OTP aaya hai wo bata dijiye",
@@ -82,6 +88,9 @@ const SCAMS: string[] = [
 ];
 
 const BENIGN: string[] = [
+  "Never share your card details, CVV or OTP with anyone. -SBI",
+  "आपका सामान खरीदना है, अपना QR भेजिए, payment कर दूँगा।",
+  "बिजली कटौती: कल सुबह 10 से 2 बजे तक power cut रहेगा।",
   ...ABHYAS_ITEMS.filter((i) => !i.scam).map((i) => i.text), // अभ्यास के असली वाले
   "123456 is your OTP for login to SBI YONO. Do not share it with anyone. -SBI",
   "आपका OTP 482913 है। यह 10 मिनट तक मान्य है। इसे किसी के साथ साझा न करें। -PNB",

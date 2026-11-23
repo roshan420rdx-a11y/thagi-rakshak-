@@ -64,6 +64,24 @@ const RECEIVE_PROMISE = `(?:${MONEY_WORD})\\s*(?:\\S+\\s*){0,2}?(?:${WILL_SEND})
 const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
 const PIN = "(?<![a-z])pin(?![\\s-]*code|[a-z])|पिन(?![\\s-]*कोड)|\\bmpin\\b";
 const REQUEST = "request|रिक्वेस्ट|collect|approve|accept|स्वीकार|एक्सेप्ट|अप्रूव";
+// ख़रीदार/किराएदार या "army/फ़ौजी" बनकर ("आपका कमरा किराए पर लेना है"), फिर अपना QR scan करवाना या PIN डलवाना (OLX वाली ठगी)।
+// "अपना QR भेजिए, payment कर दूँगा" (ख़रीदार ख़ुद scan करेगा) असली बात है, इसलिए scan/PIN करने का कहना ज़रूरी।
+const ARMY = "\\barmy\\b|आर्मी|सेना|फौज|\\bfauj|\\bjawan\\b|जवान|\\bcrpf\\b|\\bbsf\\b|\\bcisf\\b|सीआरपीएफ";
+const YOUR_THING =
+  "(?:आपका|आपकी|आपके|\\byour\\b|\\baapk[aie]\\b)\\s*(?:\\S+\\s*){0,2}?(?:कमरा|कमरे|मकान|घर|फ्लैट|\\broom|\\bflat|\\bhouse|सामान|\\bsaman|बाइक|\\bbike|गाडी|\\bcar\\b|कार|सोफा|\\bsofa|फ्रिज|\\bfridge|\\bitem|\\bproduct|स्कूटी|\\bscooty)";
+const TAKE = "किराए|किराये|\\brent|लेना|लेनी|लेने|खरीद|\\bbuy|\\bpurchase|\\bkiray|\\blena\\b|\\blene\\b|\\bkharid";
+const SCAN_ASK =
+  "(?:scan|स्कैन)\\s*(?:करें|करो|करिए|कीजिए|कीजिये|कर\\s*(?:दो|दें|दीजिए|लें|लो)|\\bkar(?:o|e|ein|iye|\\s*do|\\s*lo)?\\b|\\bkijiye)|\\bscan\\s+(?:this|the|my|it)\\b|\\bplease\\s+scan\\b";
+const PIN_ASK = `(?:${PIN})\\s*(?:\\S+\\s*){0,1}?(?:डालें|डालो|डालिए|डालिये|डाल\\s*(?:दो|दें|दीजिए)|दर्ज\\s*कर|\\bdaal|\\bdal(?:o|iye|\\s*do)\\b)|\\benter\\s+(?:your\\s+)?(?:upi\\s+)?(?:${PIN})`;
+
+// link खोलकर card/बैंक खाते की जानकारी भरवाना (Income Tax refund, card limit, reward points)। "payment details" अकेला नहीं
+// (असली कंपनियाँ भी "payment method update करें" भेजती हैं); पता सिर्फ़ .bank.in या सरकारी हो, तो भी नहीं।
+const DETAIL =
+  "(?:card|कार्ड|bank|बैंक|account|अकाउंट|खाते|खाता)\\s*(?:\\S+\\s*){0,1}?(?:details?|डिटेल्स?|जानकारी|information|\\binfo\\b|number|नंबर)|\\bcvv\\b|सीवीवी|\\bexpiry\\b|एक्सपायरी";
+const FILL =
+  "\\bupdate|अपडेट|\\bfill|भरें|भरो|भरिए|भरिये|भर\\s*(?:दें|दो|दीजिए)|\\benter\\b|डालें|डालो|डालिए|दर्ज|\\bverify|वेरिफाई|\\bconfirm|\\bsubmit|\\bprovide|\\bbhar(?:o|e|ein|iye)?\\b|\\bdaal";
+const LINK_WORD = "\\blink|लिंक|click\\s*here|यहां\\s*क्लिक|नीचे\\s*दि";
+const DOWNLOAD = "download|डाउनलोड|install|इंस्टॉल|इंस्टाल";
 
 const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)|बेगुनाह|ज़मानत\\s*(?:के\\s*लिए|राशि)";
 // "safe/सरकारी/RBI account" तभी, जब उसमें पैसे डलवाने की बात हो ("to secure account" वाला WhatsApp message digital arrest नहीं)
@@ -238,6 +256,13 @@ const R = {
   receive: rx(RECEIVE),
   qr: rx(QR),
   pin: rx(PIN),
+  army: rx(ARMY),
+  buyer: near(YOUR_THING, TAKE, 30),
+  scanAsk: rx(SCAN_ASK),
+  pinAsk: rx(PIN_ASK),
+  detailsFill: near(FILL, DETAIL, 40),
+  linkWord: rx(LINK_WORD),
+  download: rx(DOWNLOAD),
   request: rx(REQUEST),
   arrestDirect: rx(ARREST_DIRECT),
   authority: rx(AUTHORITY),
@@ -342,7 +367,9 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "पैसे पाने के लिए कभी QR scan नहीं करना पड़ता। QR scan करके PIN डालने से पैसे आपके खाते से जाते हैं।",
     gyan: "upi-pin-qr",
     turant: "upi",
-    test: (t) => R.qr.test(t.stripped) && (R.receive.test(t.stripped) || R.receivePromise.test(t.stripped)),
+    test: (t) =>
+      (R.qr.test(t.stripped) && (R.receive.test(t.stripped) || R.receivePromise.test(t.stripped))) ||
+      ((R.army.test(t.text) || R.buyer.test(t.text)) && (R.scanAsk.test(t.stripped) || R.pinAsk.test(t.stripped))),
   },
   {
     id: "upi_request_pin",
@@ -367,6 +394,18 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
       ((R.authority.test(t.text) || R.press.test(t.text)) && R.threat.test(t.text) && R.you.test(t.text)),
   },
   {
+    id: "details_link",
+    level: "danger",
+    labelHi: "link खोलकर card या बैंक खाते की जानकारी भरवाना",
+    explainHi:
+      "बैंक या कोई असली दफ़्तर SMS/WhatsApp के link से card, CVV या खाते की जानकारी नहीं भरवाता। ऐसे link की साइट नकली होती है, और भरी हुई जानकारी सीधे ठग के पास जाती है।",
+    gyan: "kyc-link",
+    test: (t) =>
+      (R.link.test(t.text) || R.linkWord.test(t.text)) &&
+      R.detailsFill.test(t.stripped) &&
+      !(t.domains.length > 0 && t.domains.every((d) => d.endsWith(".bank.in") || isGovDomain(d))),
+  },
+  {
     id: "apk_file",
     level: "danger",
     labelHi: ".apk फ़ाइल भेजी गई है",
@@ -386,11 +425,11 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
   {
     id: "electricity_cut",
     level: "danger",
-    labelHi: "बिजली कटने का डर दिखाकर नंबर पर call करवाना",
+    labelHi: "बिजली कटने का डर दिखाकर call करवाना या ऐप डलवाना",
     gyan: "bijli-bill",
     turant: "customer-care-fake",
     explainHi: "यह ठगी का आम तरीका है। बिल सिर्फ़ अपनी बिजली कंपनी के ऐप, वेबसाइट या दफ़्तर से जाँचें, message में दिए नंबर से नहीं।",
-    test: (t) => R.electricity.test(t.text) && R.cut.test(t.text) && R.contact.test(t.text),
+    test: (t) => R.electricity.test(t.text) && R.cut.test(t.text) && (R.contact.test(t.text) || R.download.test(t.text)),
   },
   {
     id: "lottery_fee",
