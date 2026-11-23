@@ -179,4 +179,50 @@ await check("चिपकाएँ: clipboard ख़ाली हो तो ह�
   }),
 );
 
+// Share → "ठगी रक्षक": Android का share POST की तरह आता है। यहाँ वही form POST बनाकर भेजते हैं।
+async function shareLikeAndroid(page, msg) {
+  await page.evaluate((m) => {
+    const f = document.createElement("form");
+    f.method = "post";
+    f.action = "/pucho/share";
+    f.enctype = "multipart/form-data";
+    const t = document.createElement("textarea");
+    t.name = "text";
+    t.value = m;
+    f.append(t);
+    document.body.append(f);
+    f.submit();
+  }, msg);
+}
+
+await check("Share से सीधे जाँच: message फ़ोन के अंदर ही (service worker), सीधे नतीजा; न network पर, न URL में, न बाद में बचा", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await openBox(page);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    const shareResponses = [];
+    page.on("response", (r) => {
+      if (r.url().endsWith("/pucho/share")) shareResponses.push(r);
+    });
+    await shareLikeAndroid(page, SCAM);
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
+    assert((await page.getByLabel(BOX).inputValue()) === SCAM, "डिब्बे में share किया message नहीं");
+    assert(new URL(page.url()).search === "" && !page.url().includes(TOKEN), `URL: ${page.url()}`);
+    assert(shareResponses.length > 0 && shareResponses.every((r) => r.fromServiceWorker()), "share वाला POST network (server) तक गया");
+    const left = await page.evaluate(async () => !!(await (await caches.open("thagi-rakshak-share-v1")).match("/__share-inbox")));
+    assert(!left, "message फ़ोन के डिब्बे में बचा रहा");
+  }),
+);
+
+await check("Share: service worker न हो तो server message पढ़े बिना /pucho पर भेजे, और वहाँ हाथ से चिपकाने की बात", () =>
+  withPage({ viewport: PHONE, serviceWorkers: "block" }, async (page) => {
+    await openBox(page);
+    await shareLikeAndroid(page, SCAM);
+    await page.getByText("share किया message यहाँ नहीं पहुँचा", { exact: false }).waitFor();
+    assert(new URL(page.url()).search === "", `URL: ${page.url()}`);
+    assert((await page.getByLabel(BOX).inputValue()) === "", "डिब्बे में कुछ आ गया");
+  }),
+);
+
 await finish();

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { checkMessage, MAX_CHECK_CHARS, type CheckResult } from "@/modules/checker";
 import { PASTE_HINT_HI, readPastedText } from "@/modules/checker/paste";
+import { SHARE_MISSED_HI, takeSharedText } from "@/modules/checker/share-inbox";
 import { IconClipboard } from "@/components/ui/icons";
 import { VerdictCard } from "./verdict-card";
 
@@ -18,6 +19,16 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
   useEffect(() => {
     setMounted(true);
     setCanPaste(typeof navigator.clipboard?.readText === "function");
+    // Share → "ठगी रक्षक" से आए (plan A2f): message फ़ोन के डिब्बे से लेकर तुरंत जाँच; पता साफ़ (message कभी URL में नहीं था)
+    if (new URLSearchParams(window.location.search).has("shared")) {
+      window.history.replaceState(null, "", window.location.pathname);
+      void takeSharedText(typeof caches === "undefined" ? undefined : caches).then((t) => {
+        if (t) {
+          setText(t);
+          setResult(checkMessage(t));
+        } else setPasteHint(SHARE_MISSED_HI);
+      });
+    }
   }, []);
   if (!mounted) return null;
 
@@ -114,6 +125,10 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
           </p>
           <p className="mt-2">
             लिखना मुश्किल हो, तो keyboard पर 🎤 (mic) दबाकर बोलें, फ़ोन ख़ुद लिख देगा। (यह फ़ोन के keyboard की अपनी सुविधा है।)
+          </p>
+          <p className="mt-2">
+            ठगी रक्षक को home screen पर जोड़ लिया है? तो WhatsApp या SMS में message पर उँगली दबाकर रखें, फिर Share (शेयर) में
+            &quot;ठगी रक्षक&quot; चुनें: message सीधे यहाँ जाँचा जाएगा, कहीं भेजा नहीं जाएगा।
           </p>
         </details>
       </form>

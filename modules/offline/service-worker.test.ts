@@ -50,3 +50,22 @@ test("swVersion: content version + commit के 7 अक्षर", () => {
   expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-23.3-9999999");
   expect(swVersion({})).toBe("turant-2026-11-23.3-local");
 });
+
+test("worker: Share वाला POST (/pucho/share) फ़ोन के अंदर ही, अलग डिब्बे में; activate उस डिब्बे को न मिटाए", async () => {
+  const { SHARE_CACHE, SHARE_PATH } = await import("@/modules/checker/share-inbox");
+  const sw = buildServiceWorker({ version: "v-test", urls: ["/turant"] });
+  expect(sw).toContain(JSON.stringify(SHARE_PATH));
+  expect(sw).toContain(JSON.stringify(SHARE_CACHE));
+  expect(sw).toMatch(/req\.method === "POST"/);
+  expect(sw).toMatch(/formData\(\)/);
+  expect(sw).toMatch(/k !== VERSION && k !== SHARE_CACHE/);
+  expect(() => new Function(sw)).not.toThrow();
+});
+
+test("worker का combineShared और फ़ोन वाला combineShared एक जैसा जवाब दें", async () => {
+  const { combineShared } = await import("@/modules/checker/share-inbox");
+  const sw = buildServiceWorker({ version: "v-test", urls: [] });
+  const fromSw = new Function(`${sw.replace(/self\.addEventListener[\s\S]*$/, "")}; return combineShared;`)() as typeof combineShared;
+  const cases: [unknown, unknown, unknown][] = [["", "OTP बताइए", ""], ["SBI", "KYC update करें", "http://x.top"], [null, "यहाँ खोलें http://x.top", "http://x.top"], [undefined, "  ", undefined]];
+  for (const [a, b, c] of cases) expect(fromSw(a, b, c)).toBe(combineShared(a, b, c));
+});

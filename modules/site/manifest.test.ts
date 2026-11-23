@@ -28,3 +28,12 @@ test("icon.svg मौजूद, brand रंग में", () => {
   expect(svg).toContain("<svg");
   expect(svg).toContain("#1D3A6B");
 });
+
+test("manifest: Share से सीधे 'पहले पूछो' (share_target, POST ताकि message URL में न जाए)", () => {
+  expect(manifest().share_target).toEqual({
+    action: "/pucho/share",
+    method: "POST",
+    enctype: "multipart/form-data",
+    params: { title: "title", text: "text", url: "url" },
+  });
+});
