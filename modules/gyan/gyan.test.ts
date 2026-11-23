@@ -103,3 +103,18 @@ test("खाता किराए वाले पन्ने में freeze
   expect(p.faq.some((f) => f.qHi.includes("कर चुका"))).toBe(true);
   expect(p.faq.some((f) => f.qHi.includes("freeze"))).toBe(true);
 });
+
+test("जुड़े पन्ने: उसी समूह के (ख़ुद नहीं), ज़्यादा से ज़्यादा 3; हर पन्ने के लिए कम से कम 2", async () => {
+  const { GYAN_GROUPS, relatedGyan } = await import("./registry");
+  for (const g of GYAN_GROUPS) {
+    for (const slug of g.slugs) {
+      const rel = relatedGyan(slug);
+      expect(rel.length, slug).toBeGreaterThanOrEqual(2);
+      expect(rel.length, slug).toBeLessThanOrEqual(3);
+      expect(rel.map((p) => p.slug), slug).not.toContain(slug);
+      for (const p of rel) expect(g.slugs as readonly string[], `${slug} → ${p.slug}`).toContain(p.slug);
+    }
+  }
+  // समूह में अपने बाद वाले पहले (हर पन्ने के पड़ोसी अलग-अलग, सबको एक जैसे नहीं)
+  expect(relatedGyan("bijli-bill").map((p) => p.slug)).toEqual(["kyc-link", "sextortion", "loan-app"]);
+});

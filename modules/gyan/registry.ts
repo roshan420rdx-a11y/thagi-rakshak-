@@ -48,6 +48,15 @@ export function getGyanPage(slug: string): GyanPage | undefined {
   return GYAN_PAGES.find((p) => p.slug === slug);
 }
 
+// पन्ने के आख़िर में "इसी तरह की और ठगी": उसी समूह के, अपने बाद वाले पहले (घूमकर), ज़्यादा से ज़्यादा 3
+export function relatedGyan(slug: GyanSlug, max = 3): GyanPage[] {
+  const group = GYAN_GROUPS.find((g) => g.slugs.includes(slug));
+  if (!group) return [];
+  const i = group.slugs.indexOf(slug);
+  const order = [...group.slugs.slice(i + 1), ...group.slugs.slice(0, i)];
+  return order.slice(0, max).map((s) => getGyanPage(s)!);
+}
+
 // किसी /turant पन्ने से जुड़े ज्ञानकोश पन्ने
 export function gyanForTurant(t: TurantSlug): GyanPage[] {
   return GYAN_PAGES.filter((p) => p.turantSlug === t);

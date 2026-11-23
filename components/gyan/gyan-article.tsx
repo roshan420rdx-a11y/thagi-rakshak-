@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert } from "@/components/ui/icons";
 import { ListenButton } from "@/components/ui/listen-button";
-import type { GyanPage } from "@/modules/gyan";
+import { relatedGyan, type GyanPage } from "@/modules/gyan";
 import { formatHindiDate } from "@/modules/rules-engine";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 
@@ -97,6 +97,32 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
           ठगी में पैसे गए हों, तो RBI के नियमों से जानें कि पूरा पैसा वापस या मुआवज़ा बनता है या नहीं।{" "}
           <Link href="/haq/thagi" className="font-semibold text-brand">
             हिसाब देखें →
+          </Link>
+        </p>
+      </section>
+
+      <section aria-labelledby="gyan-aur" className="space-y-2">
+        <h2 id="gyan-aur" className={H2}>
+          इसी तरह की और ठगी
+        </h2>
+        <ul className="grid gap-2 sm:grid-cols-2">
+          {relatedGyan(p.slug).map((r) => (
+            <li key={r.slug}>
+              <Link
+                href={`/gyan/${r.slug}`}
+                className="flex h-full min-h-12 items-center rounded-xl border border-line bg-paper px-3 py-2 font-semibold text-brand no-underline transition-colors hover:border-brand"
+              >
+                {r.navTitleHi} →
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="flex flex-wrap gap-x-4">
+          <Link href="/pucho" className="inline-flex min-h-12 items-center font-semibold text-brand">
+            कोई message या call आई है? पहले पूछो →
+          </Link>
+          <Link href="/gyan" className="inline-flex min-h-12 items-center font-semibold text-brand">
+            सारे तरीके (ज्ञानकोश) →
           </Link>
         </p>
       </section>

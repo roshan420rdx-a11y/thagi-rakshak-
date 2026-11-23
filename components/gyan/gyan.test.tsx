@@ -94,3 +94,12 @@ test("भीतर के पन्नों पर 'पन्ने का र�
     has(renderToStaticMarkup(<L />), "/legal");
   }
 });
+
+test("पन्ने के आख़िर में 'इसी तरह की और ठगी' और 'पहले पूछो'", async () => {
+  const html = renderToStaticMarkup(await GyanPageRoute({ params: Promise.resolve({ slug: "sim-swap" }) }));
+  const part = html.slice(html.indexOf("इसी तरह की और ठगी"));
+  expect(html).toContain("इसी तरह की और ठगी");
+  expect(part).toContain('href="/gyan/upi-pin-qr"');
+  expect(part).not.toContain('href="/gyan/sim-swap"');
+  expect(part).toContain('href="/pucho"');
+});
