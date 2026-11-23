@@ -47,12 +47,12 @@ export const digitalArrest: GyanPage = {
     },
     {
       qHi: "वे फिर call करें तो?",
-      aHi: "बात न करें, नंबर block करें, और परिवार को बता दें। आप उस call की report भी कर सकते हैं।",
+      aHi: "बात न करें, नंबर block करें, और परिवार को बता दें। उस नंबर की शिकायत दूरसंचार विभाग की Sanchar Saathi साइट (sancharsaathi.gov.in) पर \"चक्षु\" में करें। call +91 वाले नंबर से आया हो पर विदेश से लगे, तो वहीं \"Report Incoming International Call With Indian Number\" में भी बता सकते हैं।",
       link: { href: "/turant", labelHi: "पैसे गए हों तो अभी क्या करें →" },
     },
   ],
   turantSlug: "digital-arrest",
   author: "ठगी रक्षक टीम",
   reviewer: null,
-  lastCheckedOn: "2026-11-21",
+  lastCheckedOn: "2026-11-23",
 };
