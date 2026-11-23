@@ -82,27 +82,51 @@ body {
   }
 }
 
-/* अर्ज़ी (/arzi) छापते समय सिर्फ़ पत्र छपे: menu, बटन, बाकी सब छिपे। सिर्फ़ उसी पन्ने पर (:has) */
+/* छापते समय सिर्फ़ [data-print-area] वाला हिस्सा (अर्ज़ी का पत्र, पोस्टर): बाकी सब display:none।
+   पहले visibility:hidden था, पर छिपा हिस्सा जगह घेरता रहा और PDF में 2 ख़ाली पन्ने और आते थे (plan A3g, e2e गिनता है)।
+   जिन डिब्बों के अंदर छपने वाला हिस्सा है, उनकी जगह (padding, border, रंग) भी हटती है। सिर्फ़ उन्हीं पन्नों पर (:has)। */
 @media print {
   @page {
     margin: 16mm;
   }
-  body:has(#arzi-print) * {
-    visibility: hidden !important;
+  @page poster {
+    size: A4 portrait;
+    margin: 10mm;
   }
-  body:has(#arzi-print) #arzi-print,
-  body:has(#arzi-print) #arzi-print * {
-    visibility: visible !important;
+  body:has([data-print-area]) *:not([data-print-area]):not([data-print-area] *):not(:has([data-print-area])) {
+    display: none !important;
   }
-  body:has(#arzi-print) #arzi-print {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+  body:has([data-print-area]),
+  body:has([data-print-area]) *:has([data-print-area]) {
+    margin: 0 !important;
+    padding: 0 !important;
     border: 0 !important;
+    min-height: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    zoom: 1 !important;
+  }
+  body:has([data-print-area]) [data-print-area] {
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  body:has([data-print-area]) [data-print-area="letter"] {
     padding: 0 !important;
     background: #fff !important;
     color: #000 !important;
+  }
+  /* पोस्टर: रंग भी छपें; dark mode वाले फ़ोन से छापने पर भी हल्के रंग (tokens-sync.test.ts मिलाता है) */
+  [data-print-area="poster"] {
+    page: poster;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    --brand: #1D3A6B;
+    --danger: #B42318;
+    --danger-bg: #FEF3F2;
+    --ink: #101828;
+    --muted: #475467;
+    --paper: #FFFFFF;
   }
 }
 

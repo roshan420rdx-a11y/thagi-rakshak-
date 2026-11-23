@@ -211,11 +211,11 @@ await check("सबसे बड़े अक्षर (स्तर 3) पर 3
   });
 });
 
-await check("होम: 'और मदद' के 7 tiles और 'साइट अपने लोगों को भेजें' (बिना नंबर वाला WhatsApp link)", () =>
+await check("होम: 'और मदद' के 8 tiles और 'साइट अपने लोगों को भेजें' (बिना नंबर वाला WhatsApp link)", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/`);
     await page.getByRole("heading", { name: "और मदद" }).waitFor();
-    for (const h of ["/case", "/arzi", "/shikayat-rasta", "/haq", "/gyan/bank", "/gyan", "/abhyas"]) assert((await page.locator(`main a[href="${h}"]`).count()) > 0, `${h} tile नहीं`);
+    for (const h of ["/case", "/arzi", "/shikayat-rasta", "/haq", "/gyan/bank", "/gyan", "/abhyas", "/poster"]) assert((await page.locator(`main a[href="${h}"]`).count()) > 0, `${h} tile नहीं`);
     const share = await page.getByRole("link", { name: /यह साइट अपने लोगों को भेजें/ }).getAttribute("href");
     assert(share?.startsWith("https://wa.me/?text="), `share: ${share}`);
   }),

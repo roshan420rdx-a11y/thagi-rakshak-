@@ -124,7 +124,7 @@ export function ArziBuilder() {
         <h2 id="arzi-preview" className="text-[19px] font-bold">
           पत्र
         </h2>
-        <article id="arzi-print" className="space-y-1 rounded-xl border border-line bg-paper p-4 text-[16px] leading-relaxed text-ink">
+        <article id="arzi-print" data-print-area="letter" className="space-y-1 rounded-xl border border-line bg-paper p-4 text-[16px] leading-relaxed text-ink">
           {lines.map((l, i) => (l ? <p key={i}>{l}</p> : <div key={i} className="h-3" aria-hidden="true" />))}
         </article>
         {kind === "ombudsman" ? (

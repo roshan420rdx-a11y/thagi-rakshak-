@@ -21,3 +21,10 @@ test.each(["light", "dark"] as const)("%s: globals.css के मान tokens.t
     expect.soft(vars[name], `${mode} --${name}`).toBe(value.toUpperCase());
   }
 });
+
+test("print वाला पोस्टर: dark फ़ोन से छपे तो भी हल्के रंग, tokens.ts के light मानों जैसे", () => {
+  const block = css.match(/\[data-print-area="poster"\]\s*\{([^}]*)\}/)?.[1] ?? "";
+  const vars = readVars(block);
+  expect(Object.keys(vars).length).toBeGreaterThanOrEqual(5);
+  for (const [name, value] of Object.entries(vars)) expect(value, `--${name}`).toBe(TOKENS.light[name as TokenName].toUpperCase());
+});

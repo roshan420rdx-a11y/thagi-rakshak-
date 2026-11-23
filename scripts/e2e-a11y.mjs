@@ -16,6 +16,7 @@ const PAGES = [
   "/turant/sextortion",
   "/pucho",
   "/abhyas",
+  "/poster",
   "/bharosa",
   "/haq",
   "/haq/thagi",

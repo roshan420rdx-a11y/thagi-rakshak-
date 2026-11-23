@@ -75,3 +75,14 @@ test("होम, /pucho और /gyan से अभ्यास का link", asy
   const { default: GyanIndex } = await import("@/app/(site)/gyan/page");
   for (const html of [renderToStaticMarkup(<HomePage />), renderToStaticMarkup(<PuchoPage />), renderToStaticMarkup(<GyanIndex />)]) expect(html).toContain('href="/abhyas"');
 });
+
+test("/poster: छपने वाला हिस्सा, 8 बातें, 1930, सरकारी नहीं वाली बात; QR नहीं; होम पर 8वाँ tile", async () => {
+  const { default: PosterPage } = await import("@/app/(site)/poster/page");
+  const html = renderToStaticMarkup(<PosterPage />);
+  expect(html).toContain("data-print-area");
+  expect((html.match(/data-poster-rule/g) ?? []).length).toBe(8);
+  expect(html).toContain("1930");
+  expect(html).toContain("सरकारी संस्था नहीं");
+  expect(html).not.toMatch(/qr\s*code|<canvas/i);
+  expect(renderToStaticMarkup(<HomePage />)).toContain('href="/poster"');
+});

@@ -10,6 +10,7 @@ export function publicRoutes(): string[] {
     ...TURANT_SLUGS.map((s) => `/turant/${s}`),
     "/pucho",
     "/abhyas",
+    "/poster",
     "/haq",
     "/haq/thagi",
     "/haq/failed-txn",

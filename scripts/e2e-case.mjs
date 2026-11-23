@@ -1,6 +1,6 @@
 // "मेरा केस" (फ़ोन वाला) की असली browser में जाँच: सेव होकर reload पर बचे, भरते समय कोई network request नहीं,
 // "सब मिटाएँ" से सच में मिटे, JS बंद पर साफ़ संदेश। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, today, check, assert, withPage, watchRequests, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, today, check, assert, withPage, watchRequests, pdfPageCount, finish } from "./e2e-lib.mjs";
 
 const KEY = "thagi-rakshak:mera-case:v1";
 const minusDays = (n) => {
@@ -113,8 +113,11 @@ await check("अर्ज़ी: 'मेरा केस' की तारीख
     assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
     await page.emulateMedia({ media: "print" });
     assert(await letter.isVisible(), "print में पत्र नहीं");
-    const navHidden = await page.locator('nav[aria-label="मुख्य menu"]').evaluate((n) => getComputedStyle(n).visibility === "hidden");
+    const navHidden = await page.locator('nav[aria-label="मुख्य menu"]').evaluate((n) => getComputedStyle(n).display === "none" || getComputedStyle(n).visibility === "hidden");
     assert(navHidden, "print में menu दिखा");
+    await page.emulateMedia({ media: "screen" });
+    const pages = await pdfPageCount(page);
+    assert(pages === 1, `पत्र की PDF में ${pages} पन्ने (ख़ाली पन्ने नहीं होने चाहिए)`);
   }),
 );
 
