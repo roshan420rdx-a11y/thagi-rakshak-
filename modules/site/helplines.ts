@@ -36,8 +36,11 @@ export const HELPLINES: readonly Helpline[] = [
     number: "14416",
     titleHi: "Tele-MANAS: मन की बात (मुफ़्त)",
     whenHi: "डर, शर्म या बहुत परेशानी हो, और किसी से बात करनी हो।",
-    source: null,
-    unverifiedHi: "Tele-MANAS की अपनी साइट इस environment से नहीं खुली (2026-11-23); मिलान बाकी।",
+    source: {
+      file: "docs/sources/gov/2026-11-23-pib-tele-manas.txt",
+      url: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2321522",
+      quote: "The Ministry encourages individuals experiencing mental health concerns, as well as families and caregivers seeking guidance, to make use of the free and confidential services offered through Tele MANAS at 14416, available 24×7 across the country.",
+    },
   },
   {
     number: "14448",

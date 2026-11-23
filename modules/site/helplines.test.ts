@@ -21,8 +21,8 @@ test("हर नंबर का मूल स्रोत: उद्धरण s
       expect(h.unverifiedHi, h.number).toBeTruthy();
     }
   }
-  // अभी सिर्फ़ Tele-MANAS बिना मिलान के (उसकी साइट इस environment से नहीं खुली)
-  expect(HELPLINES.filter((h) => !h.source).map((h) => h.number)).toEqual(["14416"]);
+  // 2026-11-23: Tele-MANAS भी स्वास्थ्य मंत्रालय की PIB press release से मिला; अब हर नंबर का मूल स्रोत है
+  expect(HELPLINES.filter((h) => !h.source).map((h) => h.number)).toEqual([]);
 });
 
 test("ज़रूरी साइटें: सिर्फ़ जाँचे हुए सरकारी portal", () => {

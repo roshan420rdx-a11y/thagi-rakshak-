@@ -1,0 +1,8 @@
+स्रोत: https://parivahan.gov.in/ (title: "Welcome! | Parivahansewa"; "Ministry of Road Transport & Highways (MoRTH) Government of India.")
+पढ़ा गया: 2026-11-23 (मालिक की अनुमति से)। eChallan की अपनी साइट (echallan.parivahan.gov.in) इस environment से नहीं खुली (उनकी तरफ़ से connection reset)।
+मूल पन्ने के menu में (बिना बदलाव):
+
+<a href="https://echallan.parivahan.gov.in/" class="second-child-menu">eChallan
+<a href="https://echallan.parivahan.gov.in/echallanreport/#/" class="second-child-menu">eChallan Dashboard
+
+यानी परिवहन मंत्रालय का अपना portal चालान के लिए echallan.parivahan.gov.in पर भेजता है। हमारी बात ("चालान की असली साइट का पता .gov.in पर ख़त्म होता है (echallan.parivahan.gov.in)", अभ्यास का challan-link) इससे मिली।

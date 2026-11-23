@@ -29,3 +29,12 @@
 
 ## e-Challan (https://echallan.parivahan.gov.in/) ⏳
 - इस environment से नहीं खुली (उनकी तरफ़ से connection reset)। अभ्यास के "नकली चालान" message में लिखा पता (echallan.parivahan.gov.in) आम जानकारी से है; मिलान बाकी।
+
+## दोबारा मिलान (2026-11-23, मालिक की अनुमति से; environment में mohfw.gov.in, pib.gov.in, parivahan.gov.in जुड़े)
+- **Tele-MANAS 14416 ✅:** `telemanas.mohfw.gov.in` का certificate अधूरा (TLS जाँच बंद करना ठीक नहीं), इसलिए स्वास्थ्य मंत्रालय की PIB press release
+  (PRID 2321522, 9 अक्टूबर 2026) से: "…free and confidential services offered through Tele MANAS at 14416, available 24×7 across the country."
+  → `2026-11-23-pib-tele-manas.txt`। अब /nambar पर "मिलान बाकी" नहीं।
+- **eChallan ✅ (पता):** परिवहन मंत्रालय के portal parivahan.gov.in के menu में "eChallan" → `https://echallan.parivahan.gov.in/` → `2026-11-23-parivahan.txt`।
+  eChallan की अपनी साइट अब भी connection reset देती है।
+- **myAadhaar:** अब भी connection reset; ज़रूरी बात ("Lock/Unlock Biometrics") uidai.gov.in से पहले ही मिल चुकी है।
+- **cybercrime.gov.in (NCRP):** अब भी connection reset; बटन-दर-बटन गाइड के लिए मालिक के screenshot चाहिए (PROGRESS, रुकावटें)।
