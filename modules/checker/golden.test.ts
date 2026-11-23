@@ -125,6 +125,16 @@ const BENIGN: string[] = [
   "ये video सबको भेज दो, बहुत अच्छा है",
   "बेटा, मेरा ATM card दे दो, पेंशन निकालनी है",
   "Agent commission ₹50 per transaction is credited to your account.",
+  // 2026-11-23 के नए निशानों के पास वाली असली बातें (इन पर कोई निशान नहीं)
+  "मैंने तुम्हारे खाते में ₹2,000 भेज दिए हैं, दवाई ले लेना",
+  "Dost, kal 500 rupaye wapas kar dunga jo udhaar liye the",
+  "Interview scheduled for Data Entry Operator on 28 Nov at our office. Bring your resume. No fee is charged.",
+  "मम्मी, मैं hospital में ड्यूटी पर हूँ, शाम 7 बजे तक घर आऊँगा",
+  "Your SIM card replacement request is received at store. Collect new SIM with ID proof.",
+  "PM Kisan: ₹2,000 की किस्त आपके खाते में भेजी गई है।",
+  "भैया, बिजली का बिल जमा कर दिया, रसीद फोटो भेज रहा हूँ",
+  "LIC: Premium of Rs 5,400 due on 28-Nov for policy 1234. Pay via LIC app or branch.",
+  "आज रात 10 बजे से 12 बजे तक UPI सेवा रखरखाव के कारण बंद रहेगी। -बैंक",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
