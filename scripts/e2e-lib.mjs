@@ -45,9 +45,10 @@ export function watchRequests(page, secrets = []) {
 }
 
 // print वाला असली PDF (A4) बनाकर उसके पन्ने गिनना (ख़ाली पन्ने भी गिने जाते हैं)
-export async function pdfPageCount(page) {
+// scale > 1: उतना बड़ा छापकर भी देखना (दूसरे फ़ोन/कंप्यूटर के बड़े अक्षरों वाले font के लिए जगह बची रहे)
+export async function pdfPageCount(page, scale = 1) {
   await page.emulateMedia({ media: "print" });
-  const pdf = await page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true });
+  const pdf = await page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true, scale });
   await page.emulateMedia({ media: "screen" });
   return (pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
 }

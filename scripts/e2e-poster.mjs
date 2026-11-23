@@ -16,7 +16,7 @@ await check("पोस्टर: 8 बातें, 1930, साइट का �
   }),
 );
 
-await check("print में सिर्फ़ पोस्टर (menu, बटन, footer नहीं), और PDF ठीक 1 पन्ना (A4)", () =>
+await check("print में सिर्फ़ पोस्टर (menu, बटन, footer नहीं), और PDF ठीक 1 पन्ना (A4), 15% बड़ा छापने पर भी", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/poster`);
     await page.emulateMedia({ media: "print" });
@@ -33,6 +33,9 @@ await check("print में सिर्फ़ पोस्टर (menu, बट
     await page.emulateMedia({ media: "screen" });
     const pages = await pdfPageCount(page);
     assert(pages === 1, `PDF में ${pages} पन्ने`);
+    // जगह बची रहे: GitHub की machine पर दूसरे font से 2 पन्ने बन गए थे (2026-11-23)
+    const bigger = await pdfPageCount(page, 1.15);
+    assert(bigger === 1, `15% बड़ा छापने पर PDF में ${bigger} पन्ने (पोस्टर में जगह कम)`);
   }),
 );
 
