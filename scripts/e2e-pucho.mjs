@@ -275,6 +275,9 @@ await check("बोलकर लिखें: mic बटन से बोली 
     await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
     assert((await page.getByLabel(BOX).inputValue()) === said, "बोली बात डिब्बे में नहीं");
     assert((await page.evaluate(() => window.__micLang)) === "hi-IN", "भाषा हिंदी नहीं");
+    // असली फ़ोन पर mic तभी चलेगा जब साइट का Permissions-Policy उसे रोके नहीं (2026-11-23 तक "microphone=()" रोक रहा था)
+    const micAllowed = await page.evaluate(() => (document.permissionsPolicy ?? document.featurePolicy)?.allowsFeature("microphone"));
+    assert(micAllowed === true, `Permissions-Policy mic रोक रहा है: ${micAllowed}`);
     await page.getByText("AnyDesk या TeamViewer जैसा ऐप डलवाना").waitFor();
   }),
 );

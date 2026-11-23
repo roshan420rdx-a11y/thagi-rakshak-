@@ -1,6 +1,7 @@
 // हर जवाब के साथ जाने वाले सुरक्षा headers। next.config.ts इन्हें इस्तेमाल करता है, और unit test इन्हें जाँचता है।
 // Next.js अपना छोटा inline script ख़ुद डालता है, इसलिए script-src में 'unsafe-inline' रखना पड़ता है।
 // बाकी सब कसा हुआ है: दूसरी साइट की script/frame/form नहीं, plugin बंद, और production में 'unsafe-eval' बंद।
+// mic सिर्फ़ अपनी साइट के लिए ("पहले पूछो" का "बोलकर लिखें"); camera, location, payment बंद।
 
 export type HeaderKV = { key: string; value: string };
 
@@ -33,7 +34,7 @@ export function buildSecurityHeaders({ production }: { production: boolean }): H
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "X-Frame-Options", value: "DENY" },
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-    { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+    { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=(), payment=(), usb=(), interest-cohort=()" },
     { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
     { key: "Cross-Origin-Resource-Policy", value: "same-site" },
     { key: "X-Permitted-Cross-Domain-Policies", value: "none" },

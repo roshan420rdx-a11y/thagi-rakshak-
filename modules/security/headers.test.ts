@@ -20,7 +20,9 @@ test("HSTS सिर्फ़ production में", () => {
   expect(has(false)).toBe(false);
 });
 
-test("camera, microphone, location, payment बंद", () => {
+test("camera, location, payment बंद; mic सिर्फ़ अपनी साइट के लिए (\"बोलकर लिखें\"), किसी और को नहीं", () => {
   const pp = buildSecurityHeaders({ production: true }).find((h) => h.key === "Permissions-Policy")!.value;
-  for (const f of ["camera=()", "microphone=()", "geolocation=()", "payment=()"]) expect(pp).toContain(f);
+  for (const f of ["camera=()", "microphone=(self)", "geolocation=()", "payment=()"]) expect(pp).toContain(f);
+  expect(pp).not.toContain("microphone=()");
+  expect(pp).not.toContain("microphone=*");
 });
