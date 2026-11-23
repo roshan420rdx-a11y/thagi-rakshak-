@@ -6,6 +6,7 @@ import { PASTE_HINT_HI, readPastedText } from "@/modules/checker/paste";
 import { SHARE_MISSED_HI, takeSharedText } from "@/modules/checker/share-inbox";
 import { IconClipboard } from "@/components/ui/icons";
 import { VerdictCard } from "./verdict-card";
+import { VoiceInput } from "./voice-input";
 
 // "पहले पूछो" का box। जाँच इसी फ़ोन के browser में होती है: message न server पर जाता है, न URL में, न कहीं सेव होता है।
 // mount से पहले कुछ नहीं दिखता, इसलिए बिना JS के पन्ना सिर्फ़ 8 आम निशान दिखाता है।
@@ -55,7 +56,7 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
         }}
       >
         <label htmlFor="pucho-message" className="block text-[17px] font-bold">
-          संदिग्ध message यहाँ चिपकाएँ
+          संदिग्ध message यहाँ चिपकाएँ, लिखें या बोलें
         </label>
         {canPaste ? (
           <button
@@ -67,6 +68,16 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
             copy किया message चिपकाएँ और जाँचें
           </button>
         ) : null}
+        <VoiceInput
+          onText={(said) =>
+            setText((prev) => {
+              const next = `${prev.trim() ? `${prev.trim()} ` : ""}${said}`.slice(0, MAX_CHECK_CHARS);
+              setResult(checkMessage(next));
+              setPasteHint(null);
+              return next;
+            })
+          }
+        />
         {pasteHint ? (
           <p role="status" className="rounded-[10px] bg-warn-bg p-3 text-[15px] font-semibold text-warn">
             {pasteHint}
@@ -109,7 +120,7 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
             </button>
           ) : null}
         </div>
-        <p className="text-[15px] text-muted">आपका message कहीं नहीं भेजा जाता, आपके फ़ोन में ही जाँचा जाता है।</p>
+        <p className="text-[15px] text-muted">आपका लिखा या चिपकाया message कहीं नहीं भेजा जाता, आपके फ़ोन में ही जाँचा जाता है।</p>
         {/* plan A2d: पहली बार फ़ोन चलाने वालों के लिए copy-paste, और call वालों के लिए "अपने शब्दों में" */}
         <details className="rounded-[10px] border border-line bg-surface p-3">
           <summary className="flex min-h-12 cursor-pointer items-center font-semibold text-brand">message copy करना नहीं आता, या call आई थी?</summary>

@@ -241,4 +241,53 @@ await check("पहले पूछो: install का मौका मिले
   }),
 );
 
+// बोलकर लिखें: browser की आवाज़ से text वाली सुविधा (SpeechRecognition) का नकली रूप; वह जो "सुनता" है, window.__heard
+async function installMicStub(context, heard) {
+  await context.addInitScript((h) => {
+    window.__micStarted = 0;
+    class FakeRec {
+      start() {
+        window.__micStarted += 1;
+        window.__micLang = this.lang;
+        setTimeout(() => {
+          this.onresult?.({ results: [[{ transcript: h }]], resultIndex: 0 });
+          this.onend?.();
+        }, 50);
+      }
+      stop() {
+        this.onend?.();
+      }
+      abort() {}
+    }
+    // नए Chromium में बिना prefix वाला SpeechRecognition भी है; दोनों नकली
+    window.SpeechRecognition = FakeRec;
+    window.webkitSpeechRecognition = FakeRec;
+  }, heard);
+}
+
+await check("बोलकर लिखें: mic बटन से बोली बात डिब्बे में (हिंदी), और तुरंत जाँच; आवाज़ वाली बात साफ़ लिखी", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    const said = "एनडेस्क ऐप से कोई व्यक्ति मेरे से पैसे मांग रहा है, ये बोल रहा है कोई जोखिम नहीं है";
+    await installMicStub(context, said);
+    await openBox(page);
+    await page.getByText("आवाज़ से text आपका browser बनाता है", { exact: false }).waitFor();
+    await page.getByRole("button", { name: "बोलकर लिखें" }).click();
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor();
+    assert((await page.getByLabel(BOX).inputValue()) === said, "बोली बात डिब्बे में नहीं");
+    assert((await page.evaluate(() => window.__micLang)) === "hi-IN", "भाषा हिंदी नहीं");
+    await page.getByText("AnyDesk या TeamViewer जैसा ऐप डलवाना").waitFor();
+  }),
+);
+
+await check("बोलकर लिखें: browser में यह सुविधा न हो तो mic बटन नहीं (बाकी सब वैसा ही)", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await context.addInitScript(() => {
+      delete window.webkitSpeechRecognition;
+      delete window.SpeechRecognition;
+    });
+    await openBox(page);
+    assert((await page.getByRole("button", { name: "बोलकर लिखें" }).count()) === 0, "बिना सुविधा के भी mic बटन");
+  }),
+);
+
 await finish();
