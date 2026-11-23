@@ -5,6 +5,10 @@ const ids = (t: string) => checkMessage(t).hits.map((h) => h.id);
 
 // हर नियम: [id, पकड़ने वाले उदाहरण, न-पकड़ने वाले उदाहरण]
 const CASES: [string, string[], string[]][] = [
+  // Roman Hinglish में बताई घटना (2026-11-23)
+  ["investment", ["koi bol raha hai paise double kar dunga koi risk nahi"], []],
+  ["reassurance", ["koi bol raha hai paise double kar dunga koi risk nahi"], ["doctor ne bola koi risk nahi hai, aaram karo"]],
+  ["new_number_money", ["mera beta bol raha hai naye number se paise bhejo hospital me hai", "मेरे नये नंबर पर 5000 भेज दो"], ["naye number pe whatsapp kar dena", "मेरा नया नंबर save कर लो"]],
   // बोलकर लिखा (बिना विराम, देवनागरी में अंग्रेज़ी): 2026-11-23
   ["job_fee", ["वर्क फ्रॉम होम जॉब है रजिस्ट्रेशन फीस जमा करो", "आपका सिलेक्शन हो गया है ज्वाइनिंग के लिए ट्रेनिंग फीस भेजो"], ["नौकरी की तैयारी के लिए किताबें ले आना"]],
   ["digital_arrest", ["ट्राई से बोल रहा हूं आपके नाम के सिम से गलत काम हुआ है आपका नंबर बंद हो जाएगा"], ["सिम कंपनी ने बताया पुराना नंबर बंद होगा, नया ले लो"]],

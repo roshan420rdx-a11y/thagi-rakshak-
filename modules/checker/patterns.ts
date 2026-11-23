@@ -101,7 +101,7 @@ const PLAY_STORE = "play\\s*store|प्ले\\s*स्टोर|app\\s*store|g
 
 // "कोई ख़तरा नहीं", "no risk", "100% safe" कहकर भरोसा दिलाना, पैसे/ऐप/निवेश की बात के साथ
 const REASSURE =
-  "कोई\\s*(?:भी\\s*)?(?:जोखिम|रिस्क|खतरा|risk|टेंशन|tension|दिक्कत|problem|प्रॉब्लम)\\s*(?:नहीं|nahi|nhi)|\\bno\\s*risk|risk[\\s-]*free|\\bzero\\s*risk|100\\s*%\\s*(?:safe|secure|सुरक्षित|सेफ)|guarantee|गारंटी|बिल्कुल\\s*(?:सुरक्षित|सेफ|safe)";
+  "कोई\\s*(?:भी\\s*)?(?:जोखिम|रिस्क|खतरा|risk|टेंशन|tension|दिक्कत|problem|प्रॉब्लम)\\s*(?:नहीं|nahi|nhi)|\\bkoi\\s*(?:bhi\\s*)?(?:risk|khatra|jokhim|tension|problem|dikkat)\\s*(?:nahi|nhi|nahin)\\b|\\bno\\s*risk|risk[\\s-]*free|\\bzero\\s*risk|100\\s*%\\s*(?:safe|secure|सुरक्षित|सेफ)|guarantee|गारंटी|बिल्कुल\\s*(?:सुरक्षित|सेफ|safe)";
 
 // card का नंबर, CVV, expiry या ATM PIN माँगना (बैंक वाला बनकर call/message)। "कभी न बताएँ" वाला असली SMS नकार से बाहर।
 const CARD_SECRET =
@@ -173,7 +173,7 @@ const JOB_SIGN =
   "\\blikes?\\b|लाइक|review|रिव्यू|rating|रेटिंग|subscribe|सब्सक्राइब|\\d\\s*star|five\\s*star|\\bfollow|फ़ॉलो|\\bdaily\\b|per\\s*day|प्रतिदिन|हर\\s*दिन|रोज़|\\broz\\b|commission|कमीशन|prepaid|प्रीपेड|telegram|टेलीग्राम|हर\\s*\\S+\\s*पर\\s*₹|₹\\s*(?<!\\d)\\d+\\s*(?:per|हर|प्रति)";
 
 const MULTIPLY = "double|डबल|दुगन|दोगुन|दुगुन|\\bdoguna|\\bdugna|(?<!\\d)\\d+\\s*x\\b|(?<!\\d)\\d+\\s*गुना";
-const MONEY_GAIN = "पैसे|पैसा|money|amount|रक़म|निवेश|invest|return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ";
+const MONEY_GAIN = "पैसे|पैसा|\\bpaise|\\bpaisa|\\brupa(?:y|ye|ya)\\b|money|amount|रक़म|निवेश|invest|return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ";
 const INVEST_DIRECT =
   "guarantee|गारंटी|assured\\s*return|fixed\\s*return|\\b\\d{2,4}\\s*%\\s*(?:return|रिटर्न|profit|प्रॉफ़िट|मुनाफ़ा|लाभ|daily|monthly|रोज़)|stock\\s*tips|स्टॉक\\s*टिप्स|trading\\s*(?:group|tips)|ट्रेडिंग\\s*ग्रुप|vip\\s*group|वीआईपी\\s*ग्रुप|crypto|क्रिप्टो|bitcoin|बिटकॉइन|ipo\\s*allot|institutional\\s*account|forex|फ़ॉरेक्स|daily\\s*profit|रोज़\\s*का\\s*मुनाफ़ा";
 
@@ -183,7 +183,7 @@ const WITHDRAW_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक�
 const GAINS = "मुनाफ़ा|मुनाफ़े|profit|earning|कमाई|balance|बैलेंस|wallet|वॉलेट|commission|कमीशन|reward|bonus|बोनस";
 
 const NEW_NUMBER =
-  "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number|(?:\\bdost|दोस्त|\\bfriend)\\s*(?:ka|का|'s)\\s*(?:number|नंबर|phone|फ़ोन)|दूसरे\\s*(?:के\\s*)?(?:नंबर|फ़ोन)\\s*से|\\bdusre\\s*(?:ke\\s*)?(?:number|phone)\\s*se";
+  "नया\\s*नंबर|नए\\s*नंबर|नये\\s*नंबर|\\bnaye?\\s*(?:number|no\\b)|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number|(?:\\bdost|दोस्त|\\bfriend)\\s*(?:ka|का|'s)\\s*(?:number|नंबर|phone|फ़ोन)|दूसरे\\s*(?:के\\s*)?(?:नंबर|फ़ोन)\\s*से|\\bdusre\\s*(?:ke\\s*)?(?:number|phone)\\s*se";
 
 const LOAN_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|insurance|बीमा|\\bgst\\b|stamp\\s*duty";
 const LOAN_ADVANCE =
