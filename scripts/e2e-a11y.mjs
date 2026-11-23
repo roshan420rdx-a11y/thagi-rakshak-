@@ -33,6 +33,7 @@ const PAGES = [
   "/legal/privacy",
   "/legal/shikayat",
   "/nambar",
+  "/yah-panna-nahi-hai", // 404 (साइट के header के साथ)
 ];
 
 async function audit(page, label) {

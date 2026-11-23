@@ -24,3 +24,11 @@ test("global-error: अपना html lang=hi, 1930 और /turant, बिना
   expect(html).toContain('href="/turant"');
   expect(html).not.toContain("boom");
 });
+
+test("404 और error पन्ने पर भी साइट का header (नाम, पहचान), ताकि पता रहे किस साइट पर हैं", async () => {
+  const { default: NotFound } = await import("@/app/not-found");
+  for (const html of [renderToStaticMarkup(<NotFound />), renderToStaticMarkup(<ErrorPage error={err} reset={() => {}} />)]) {
+    expect(html).toContain("<header");
+    expect(html).toContain("डिजिटल ठगी में मुफ़्त मदद");
+  }
+});
