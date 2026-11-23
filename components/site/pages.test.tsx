@@ -141,3 +141,10 @@ test("/turant/upi: JS से पहले (और बिना JS) कदम प
   expect(html).toContain("1930 पर call करें");
   expect(html).not.toContain("हो गया");
 });
+
+test("/khoj: शीर्षक, और बिना JS के भी सब कुछ एक जगह (नंबर, कदम, औज़ार, ज्ञानकोश, बैंक)", async () => {
+  const { default: KhojPage } = await import("@/app/(site)/khoj/page");
+  const html = renderToStaticMarkup(<KhojPage />);
+  expect(html).toMatch(/<h1[^>]*>पूरी साइट में खोजें<\/h1>/);
+  for (const h of ["tel:1930", "/turant/upi", "/arzi", "/gyan/sim-swap", "/gyan/bank/sbi"]) expect(html).toContain(`href="${h}"`);
+});

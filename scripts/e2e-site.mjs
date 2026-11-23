@@ -1,5 +1,5 @@
 // होम, menu, /pucho, /bharosa की असली browser में जाँच। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, browser, check, assert, withPage, pdfPageCount, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, browser, check, assert, withPage, pdfPageCount, watchRequests, finish } from "./e2e-lib.mjs";
 
 const MENU = 'nav[aria-label="मुख्य menu"]';
 const TOP_MENU = 'nav[aria-label="ऊपर का menu"]';
@@ -280,12 +280,12 @@ await check("होम: साफ़ शीर्षक और भरोसे �
   }),
 );
 
-await check("desktop: logo के नीचे पूरी menu पट्टी (7 links), खुला पन्ना aria-current, click पर बदले; फ़ोन पर छिपी", async () => {
+await check("desktop: logo के नीचे पूरी menu पट्टी (7 हिस्से + खोजें), खुला पन्ना aria-current, click पर बदले; फ़ोन पर छिपी", async () => {
   await withPage({ viewport: DESK }, async (page) => {
     await page.goto(`${BASE}/gyan/sim-swap`);
     const nav = page.locator(TOP_MENU);
     assert(await nav.isVisible(), "desktop पर ऊपर का menu नहीं");
-    assert((await nav.locator("a").count()) === 7, "7 links नहीं");
+    assert((await nav.locator("a").count()) === 8, "7 हिस्से + खोजें नहीं");
     const current = nav.locator('a[aria-current="page"]');
     assert((await current.count()) === 1 && (await current.getAttribute("href")) === "/gyan", "ज्ञानकोश चालू नहीं दिखा");
     const logo = await page.locator('header a[href="/"]').first().boundingBox();
@@ -360,5 +360,41 @@ await check("320px, सबसे बड़े अक्षर: header में 
     assert(w <= 320, `scrollWidth ${w}`);
   }),
 );
+
+await check("खोज (होम): '1930' पर सबसे ऊपर सीधा call, 'sbi' से बैंक का पन्ना; लिखते समय कोई request नहीं, खोज का शब्द कहीं नहीं जाता", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    const box = page.getByLabel("क्या ढूँढ रहे हैं?");
+    await box.waitFor();
+    await page.waitForLoadState("networkidle");
+    const requests = watchRequests(page, ["zebra9931"]);
+    await box.fill("1930");
+    const first = page.locator('form[role="search"] li a').first();
+    assert((await first.getAttribute("href")) === "tel:1930", `पहला नतीजा: ${await first.getAttribute("href")}`);
+    await box.fill("zebra9931");
+    await page.getByText("कुछ नहीं मिला।", { exact: false }).waitFor();
+    await box.fill("sbi");
+    await page.waitForTimeout(400);
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+    await page.locator('form[role="search"] li a').first().click();
+    await page.waitForURL(/\/gyan\/bank\/sbi$/);
+  }),
+);
+
+await check("खोज: /khoj JS बंद पर भी सब कुछ (नंबर, कदम, बैंक) एक जगह; desktop के menu में 'खोजें'", async () => {
+  await withPage({ javaScriptEnabled: false }, async (page) => {
+    await page.goto(`${BASE}/khoj`);
+    assert((await page.locator("main input").count()) === 0, "JS बंद पर बेकार डिब्बा");
+    for (const h of ["tel:1930", "/turant/upi", "/arzi", "/gyan/bank/sbi"]) assert((await page.locator(`main a[href="${h}"]`).count()) === 1, `${h} नहीं`);
+  });
+  await withPage({ viewport: DESK }, async (page) => {
+    await page.goto(`${BASE}/`);
+    await page.locator(TOP_MENU).getByRole("link", { name: "खोजें" }).click();
+    await page.waitForURL(/\/khoj$/);
+    await page.waitForFunction(() => document.querySelector('nav[aria-label="ऊपर का menu"] a[aria-current="page"]')?.getAttribute("href") === "/khoj");
+    const focused = await page.evaluate(() => document.activeElement?.getAttribute("type"));
+    assert(focused === "search", `खोज का डिब्बा तैयार (focus) नहीं: ${focused}`);
+  });
+});
 
 await finish();

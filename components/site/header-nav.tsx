@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IconSearch } from "@/components/ui/icons";
 import { HEADER_NAV, isCurrentPath } from "@/modules/site";
 
 // desktop: logo वाली पंक्ति के नीचे पूरी चौड़ाई की menu पट्टी; चालू पन्ने के नीचे रेखा। फ़ोन पर छिपी (वहाँ नीचे वाला menu)।
@@ -25,6 +26,18 @@ export function HeaderNavView({ current }: { current: string }) {
             </li>
           );
         })}
+        <li className="ml-auto">
+          <Link
+            href="/khoj"
+            aria-current={isCurrentPath("/khoj", current) ? "page" : undefined}
+            className={`inline-flex min-h-12 items-center gap-1.5 border-b-[3px] px-3 font-semibold no-underline transition-colors ${
+              isCurrentPath("/khoj", current) ? "border-brand text-brand" : "border-transparent text-ink hover:border-line hover:text-brand"
+            }`}
+          >
+            <IconSearch className="h-5 w-5" />
+            खोजें
+          </Link>
+        </li>
       </ul>
     </nav>
   );

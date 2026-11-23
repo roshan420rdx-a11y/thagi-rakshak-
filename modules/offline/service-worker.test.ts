@@ -11,7 +11,8 @@ test("OFFLINE_URLS: /turant, 10 पन्ने, /gyan/bank और /pucho (ज�
   expect(OFFLINE_URLS).toContain("/arzi");
   expect(OFFLINE_URLS).toContain("/abhyas");
   expect(OFFLINE_URLS).toContain("/nambar");
-  expect(OFFLINE_URLS).toHaveLength(19);
+  expect(OFFLINE_URLS).toContain("/khoj"); // खोज भी फ़ोन के अंदर होती है
+  expect(OFFLINE_URLS).toHaveLength(20);
 });
 
 test("worker में version और हर URL", () => {

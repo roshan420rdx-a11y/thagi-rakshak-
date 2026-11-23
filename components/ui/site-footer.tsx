@@ -11,6 +11,7 @@ const COLUMNS = [
       { href: "/shikayat-rasta", labelHi: "शिकायत का रास्ता" },
       { href: "/arzi", labelHi: "अर्ज़ियाँ (बैंक, पुलिस, RBI)" },
       { href: "/nambar", labelHi: "ज़रूरी नंबर: 1930 · 112 · 181 · 14448" },
+      { href: "/khoj", labelHi: "पूरी साइट में खोजें" },
     ],
   },
   {

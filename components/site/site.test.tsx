@@ -30,9 +30,11 @@ test("SiteHeader: नाम के साथ छोटी पहचान ला
   expect(html).toContain('aria-label="ऊपर का menu"');
 });
 
-test("HeaderNavView: 7 links, खुला पन्ना aria-current", () => {
+test("HeaderNavView: 7 हिस्से + दाईं ओर 'खोजें', खुला पन्ना aria-current", () => {
   const html = renderToStaticMarkup(<HeaderNavView current="/gyan/sim-swap" />);
-  expect((html.match(/<a /g) ?? []).length).toBe(7);
+  expect((html.match(/<a /g) ?? []).length).toBe(8);
+  expect(html).toContain('href="/khoj"');
+  expect(renderToStaticMarkup(<HeaderNavView current="/khoj" />)).toMatch(/href="\/khoj"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/khoj"/);
   expect(html).toMatch(/href="\/gyan"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/gyan"/);
   expect((html.match(/aria-current="page"/g) ?? []).length).toBe(1);
 });

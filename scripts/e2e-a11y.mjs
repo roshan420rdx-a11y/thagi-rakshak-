@@ -33,6 +33,7 @@ const PAGES = [
   "/legal/privacy",
   "/legal/shikayat",
   "/nambar",
+  "/khoj",
   "/yah-panna-nahi-hai", // 404 (साइट के header के साथ)
 ];
 
@@ -68,6 +69,11 @@ for (const scheme of ["light", "dark"]) {
   await page.getByLabel("ज्ञानकोश में खोजें").fill("OTP");
   await page.getByText(/पन्ने मिले/).waitFor();
   await audit(page, `${scheme} /gyan (खोज)`);
+  // पूरी साइट की खोज: नतीजे वाली हालत
+  await page.goto(`${BASE}/khoj`);
+  await page.getByLabel("क्या ढूँढ रहे हैं?").fill("1930");
+  await page.locator('form[role="search"] li').first().waitFor();
+  await audit(page, `${scheme} /khoj (नतीजे)`);
   await context.close();
 
   // desktop: ऊपर की menu पट्टी, चौड़ा होम, footer के तीन हिस्से

@@ -12,6 +12,7 @@ export function publicRoutes(): string[] {
     "/abhyas",
     "/poster",
     "/nambar",
+    "/khoj",
     "/haq",
     "/haq/thagi",
     "/haq/failed-txn",

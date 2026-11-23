@@ -8,6 +8,8 @@ import { InstallButton } from "@/components/site/install-button";
 import { whatsappShareLink } from "@/modules/checker/share";
 import { absoluteUrl, getSiteConfig, whatsappLink } from "@/modules/site";
 import { pageMeta, siteJsonLd } from "@/modules/site/meta";
+import { buildSiteIndex } from "@/modules/site/search";
+import { SiteSearch } from "@/components/site/site-search";
 
 export const metadata: Metadata = pageMeta({
   fullTitle: "ठगी रक्षक: डिजिटल ठगी हो गई? अभी क्या करें",
@@ -99,6 +101,8 @@ export default function HomePage() {
           />
         </div>
       </div>
+      {/* plan A2f: "क्या ढूँढ रहे हैं?" (बिना JS के नहीं दिखता; तब footer का "पूरी साइट में खोजें" पूरी सूची देता है) */}
+      <SiteSearch index={buildSiteIndex()} className="rounded-2xl border border-line bg-paper p-4 md:p-5" />
       <section aria-labelledby="aur-madad" className="space-y-2">
         <h2 id="aur-madad" className="text-[19px] font-bold">
           और मदद

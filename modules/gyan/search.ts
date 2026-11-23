@@ -35,6 +35,12 @@ const ALIASES: readonly (readonly string[])[] = [
   ["पुलिस", "police"],
   ["डिजिटल", "digital"],
   ["अरेस्ट", "arrest", "गिरफ़्तार"],
+  ["अर्ज़ी", "arzi", "letter", "पत्र"],
+  ["शिकायत", "complaint", "shikayat"],
+  ["नंबर", "number"],
+  ["हेल्पलाइन", "helpline"],
+  ["फ़ोन", "phone", "mobile", "मोबाइल"],
+  ["चोरी", "chori", "stolen", "theft"],
 ].map((group) => group.map((w) => normalizeText(w)));
 
 const MATRA_END = /[ािीुूेैोौंः]+$/u;
@@ -47,8 +53,18 @@ function variants(word: string): string[] {
   return [...out];
 }
 
+// खोज के शब्द (normalize करके); पूरी साइट वाली खोज (modules/site/search.ts) भी यही इस्तेमाल करती है
+export function queryWords(query: string): string[] {
+  return normalizeText(query).split(/[\s,.!?।]+/u).filter(Boolean);
+}
+
+// शब्द (या उसका रूप/जोड़ीदार) इस text में है?
+export function wordMatches(word: string, hay: string): boolean {
+  return variants(word).some((v) => hay.includes(v));
+}
+
 export function filterIndex(index: readonly SearchEntry[], query: string): SearchEntry[] {
-  const words = normalizeText(query).split(/[\s,.!?।]+/u).filter(Boolean);
+  const words = queryWords(query);
   if (!words.length) return [...index];
-  return index.filter((e) => words.every((w) => variants(w).some((v) => e.hay.includes(v))));
+  return index.filter((e) => words.every((w) => wordMatches(w, e.hay)));
 }
