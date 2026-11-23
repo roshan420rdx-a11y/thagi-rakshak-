@@ -2,7 +2,7 @@
 // text spec और plan A1 (Task 5) की तालिकाओं से जस का तस है। copy बदले तो TURANT_CONTENT_VERSION बढ़ाएँ
 // (service worker इसी से पुराना cache हटाता है)।
 
-export const TURANT_CONTENT_VERSION = "2026-11-23.1";
+export const TURANT_CONTENT_VERSION = "2026-11-23.2";
 
 export const TURANT_SLUGS = [
   "upi",
@@ -98,6 +98,7 @@ const STEPS: Record<StepId, TurantStep> = {
     id: "keep_evidence",
     titleHi: "ये सँभालकर रखें",
     bodyHi: "लेन-देन नंबर (UTR) · ठग का नंबर या UPI ID · SMS, chat और call के screenshot · पैसे कटने का SMS",
+    warningHi: 'ठगी के बाद "पैसा वापस दिला देंगे" कहकर fee माँगने वाले (नकली वकील, पुलिस या agency) भी ठग होते हैं। ऐसी कोई fee न दें।',
     actions: [],
   },
   remove_app: {

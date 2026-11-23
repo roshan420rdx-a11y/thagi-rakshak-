@@ -173,6 +173,13 @@ const ADV_FEE =
   "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक्स|\\bgst\\b|\\bcharges?\\b|चार्ज|processing|प्रोसेसिंग|registration|रजिस्ट्रेशन|clearance|deposit|जमा";
 const IN_PERSON = "शाखा|branch|counter|काउंटर|दफ़्तर\\s*में|office\\s*में";
 
+// ठगी के बाद दूसरी ठगी: "आपका पैसा वापस दिला देंगे, पहले fee" (नकली advocate, cyber cell, recovery agency)।
+// "वापस आ गए", "वापस मिलेगा, कोई fee नहीं" असली बातें हैं: पैसे भेजने को कहना या रकम ज़रूरी।
+const RECOVER =
+  "वापस\\s*(?:दिला|दिलवा|करवा\\s*दें|करवा\\s*देंगे|ला\\s*देंगे|लाकर)|\\brecover|\\brecovery\\b|money\\s*back|\\bwapas\\s*(?:dila|dilwa|karwa)|\\bvapas\\s*(?:dila|dilwa|karwa)";
+const RECOVER_FEE =
+  "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|processing|प्रोसेसिंग|advance|एडवांस|commission|कमीशन|(?<!\\d)\\d{1,2}\\s*%|\\btax|टैक्स";
+
 // किसी अपने की मुसीबत (accident, hospital, पुलिस) बताकर तुरंत पैसे: नक़ली आवाज़ वाले call भी
 const RELATIVE =
   "बेटे|बेटा|बेटी|\\bbete\\b|\\bbeta\\b|\\bbeti\\b|\\bsons?\\b|daughter|पति|पत्नी|husband|wife|भाई|\\bbhai\\b|बहन|\\bbehen\\b|पापा|\\bpapa\\b|मम्मी|\\bmummy\\b|पिता|father|mother|brother|sister|रिश्तेदार|relative|दोस्त|friend";
@@ -271,6 +278,8 @@ const R = {
   jobInformal: rx(JOB_INFORMAL),
   claimFee: near(CLAIM, ADV_FEE, 40),
   inPerson: rx(IN_PERSON),
+  // यहाँ fee अक्सर अगले वाक्य में ("…recover your money. Pay 10% advance fee…"), इसलिए वाक्य के पार 100 अक्षर तक
+  recoverFee: rx(`(?:${RECOVER}).{0,100}?(?:${RECOVER_FEE})|(?:${RECOVER_FEE}).{0,100}?(?:${RECOVER})`),
   relative: rx(RELATIVE),
   emergency: rx(EMERGENCY),
   sendNow: rx(SEND_NOW),
@@ -418,6 +427,14 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "naukri-fee",
     turant: "upi",
     test: isJobFee,
+  },
+  {
+    id: "recovery_fee",
+    level: "danger",
+    labelHi: "ठगी का पैसा वापस दिलाने के नाम पर पैसे माँगना",
+    explainHi: "ठगी के बाद ऐसे लोग आते हैं जो fee लेकर पैसा वापस दिलाने का दावा करते हैं; ये भी ठग होते हैं। असली पुलिस, बैंक या cyber cell इसके लिए पैसे नहीं माँगते। शिकायत 1930, cybercrime.gov.in और अपने बैंक से ही करें।",
+    turant: "upi",
+    test: (t) => R.recoverFee.test(t.stripped) && (R.amount.test(t.text) || R.jobPay.test(t.stripped)),
   },
   {
     id: "advance_fee",

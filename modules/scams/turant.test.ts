@@ -95,4 +95,11 @@ test("लिखित शिकायत वाले कदम पर पहल
   expect(step.actions.map((a) => (a.kind === "link" ? a.href : a.number))).toEqual(["/arzi", "/shikayat-rasta"]);
 });
 
-test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-23.1"));
+test("सबूत वाले कदम पर 'पैसा वापस दिलाने' वाली दूसरी ठगी की चेतावनी", () => {
+  for (const slug of ["upi", "pata-nahi", "investment-task"] as const) {
+    const step = getTurantPage(slug).steps.find((s) => s.id === "keep_evidence")!;
+    expect(step.warningHi, slug).toContain("पैसा वापस दिला");
+  }
+});
+
+test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-23.2"));

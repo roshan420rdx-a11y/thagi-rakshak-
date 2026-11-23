@@ -184,6 +184,14 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     whyHi: "चालान की असली साइट का पता .gov.in पर ख़त्म होता है (echallan.parivahan.gov.in)। message के link से नहीं, वह पता ख़ुद टाइप करके देखें।",
   },
 
+  {
+    id: "wapsi-fee",
+    channelHi: "call पर कहा गया, ठगी के दो दिन बाद",
+    text: "मैं cyber cell से advocate बोल रहा हूँ। आपका ठगी वाला पैसा वापस दिला दूँगा, बस ₹5,000 fee पहले जमा करें।",
+    scam: true,
+    whyHi: "ठगी के बाद 'पैसा वापस दिलाने' वाले भी ठग होते हैं; असली पुलिस, बैंक या cyber cell इसके लिए पैसे नहीं माँगते। शिकायत 1930, cybercrime.gov.in और बैंक से ही करें।",
+  },
+
   // असली
   {
     id: "otp-asli",

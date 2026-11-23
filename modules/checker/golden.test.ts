@@ -69,6 +69,9 @@ const SCAMS: string[] = [
   // सरकारी नाम, पर पता .gov.in नहीं
   "Your vehicle challan of Rs 500 is pending. Pay now at echallan-parivahan.xyz to avoid court action.",
   "PM Kisan की अगली किस्त पाने के लिए e-KYC करें: pmkisan-ekyc.online",
+  // ठगी के बाद दूसरी ठगी: "पैसा वापस दिला देंगे, पहले fee"
+  "We are a fund recovery agency. We can recover your lost money. Pay 10% advance fee of Rs 8,000 to start.",
+  "Aapka paisa wapas dilwa denge, bas 2000 file charge bhejo",
 ];
 
 const BENIGN: string[] = [
@@ -111,6 +114,7 @@ const BENIGN: string[] = [
   "मैं आपको QR भेज रहा हूँ, scan करके ₹250 payment कर दीजिए",
   "Papa ka operation kal hai, hospital ka bill 40,000 aaya hai, maine bhar diya",
   "नया passbook पाने के लिए ₹100 शुल्क शाखा के counter पर जमा करें।",
+  "बैंक ने कहा है कि जाँच के बाद पैसा वापस मिलेगा, कोई fee नहीं लगेगी।",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
@@ -167,6 +171,7 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("call_forward")).toBe("sim-swap");
   expect(gyanOf("job_fee")).toBe("naukri-fee");
   expect(gyanOf("advance_fee")).toBe("lottery-inaam");
+  expect(CHECKER_RULES.find((r) => r.id === "recovery_fee")?.turant).toBe("upi");
   expect(gyanOf("relative_emergency")).toBe("apna-bankar");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
