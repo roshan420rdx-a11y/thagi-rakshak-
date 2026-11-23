@@ -77,6 +77,9 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
             call आई थी? तो जो कहा गया, वही अपने शब्दों में डिब्बे में लिख दें, जैसे &quot;OTP बताने को कहा&quot; या &quot;पुलिस बनकर video call
             पर रुकने को कहा&quot;।
           </p>
+          <p className="mt-2">
+            लिखना मुश्किल हो, तो keyboard पर 🎤 (mic) दबाकर बोलें, फ़ोन ख़ुद लिख देगा। (यह फ़ोन के keyboard की अपनी सुविधा है।)
+          </p>
         </details>
       </form>
       <div aria-live="polite">{result ? <VerdictCard result={result} pageUrl={pageUrl} /> : null}</div>

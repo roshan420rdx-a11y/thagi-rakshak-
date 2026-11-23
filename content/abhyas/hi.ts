@@ -143,6 +143,39 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     gyan: "naukri-fee",
   },
 
+  {
+    id: "beta-accident",
+    channelHi: "call पर कहा गया, अनजान नंबर से",
+    text: "आपके बेटे का accident हो गया है, hospital में भर्ती है। operation के लिए तुरंत ₹50,000 भेजो, बाद में बात करेंगे।",
+    scam: true,
+    whyHi: "डर और जल्दी में पैसे भिजवाना ठगी का तरीका है; आजकल आवाज़ की नक़ल करके भी call आते हैं। पहले उसी इंसान को, या घर के किसी और को, जाने-पहचाने नंबर पर call करें।",
+    gyan: "apna-bankar",
+  },
+  {
+    id: "policy-bonus",
+    channelHi: "SMS, एक mobile नंबर से",
+    text: "आपकी LIC policy का bonus ₹2,40,000 तैयार है। पाने के लिए ₹12,000 GST आज जमा करें।",
+    scam: true,
+    whyHi: "असली bonus सीधे खाते में आता है; उसे पाने के लिए किसी को पहले GST या fee नहीं भेजनी पड़ती। policy की जानकारी उसकी अपनी वेबसाइट या दफ़्तर से लें।",
+    gyan: "lottery-inaam",
+  },
+  {
+    id: "army-olx",
+    channelHi: "WhatsApp, 'Army Officer' नाम वाले खाते से",
+    text: "मैं army में हूँ, आपकी OLX वाली cycle ख़रीदनी है। पहले मैं आपको ₹1 भेजता हूँ, आप QR scan करके confirm करो।",
+    scam: true,
+    whyHi: "पैसे पाने के लिए QR scan नहीं करना पड़ता। 'मैं भेजता हूँ, आप scan करो' कहकर आपसे ही पैसे भिजवाए जाते हैं।",
+    gyan: "upi-pin-qr",
+  },
+  {
+    id: "nakli-alert",
+    channelHi: "SMS, एक mobile नंबर से",
+    text: "आपके खाते से ₹25,000 कट गए हैं। यह आपने नहीं किया तो तुरंत 98XXXXXX21 पर call करें।",
+    scam: true,
+    whyHi: "पहले बैंक के अपने ऐप में ख़ुद देखें कि पैसे सच में कटे हैं या नहीं। call करना हो, तो card के पीछे या ऐप में लिखे नंबर पर करें, message वाले नंबर पर नहीं।",
+    gyan: "customer-care-fake",
+  },
+
   // असली
   {
     id: "otp-asli",
@@ -206,6 +239,20 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     text: "कल शाम 6 बजे मंदिर के पास मिलते हैं, cricket match देखने चलेंगे।",
     scam: false,
     whyHi: "जाने-पहचाने नंबर से आम बात; न पैसे, न link, न कोई जानकारी माँगी।",
+  },
+  {
+    id: "pension",
+    channelHi: "SMS, कोषागार के नाम से",
+    text: "आपकी pension इस महीने 5 तारीख़ को खाते में आएगी।",
+    scam: false,
+    whyHi: "सिर्फ़ सूचना है: न link, न नंबर, न कुछ माँगा गया।",
+  },
+  {
+    id: "refund-asli",
+    channelHi: "SMS, shopping कंपनी के नाम से",
+    text: "आपके order #4521 का ₹1,299 refund शुरू हो गया है, 5-7 दिन में खाते में आएगा।",
+    scam: false,
+    whyHi: "असली refund ख़ुद खाते में आता है; इसमें न QR है, न PIN, न कोई नंबर। कोई refund के लिए QR या PIN माँगे, तो वह ठगी है।",
   },
   {
     id: "gas",
