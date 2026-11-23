@@ -245,6 +245,23 @@ https://thagi-rakshak.onrender.com/shikayat-rasta
 विस्तार से: https://thagi-rakshak.onrender.com/gyan/khata-kiraya
 ```
 
+### `/qr`: ख़रीदार या किराएदार (अक्सर "army वाला") QR scan, PIN या "request accept" करवा रहा है
+```
+यह ठगी है। पैसे पाने के लिए कभी QR scan नहीं करना पड़ता, न PIN डालना पड़ता है, न कोई "request" accept करनी पड़ती है।
+QR scan करके या request accept करके PIN डालते ही पैसे आपके खाते से जाते हैं, आते नहीं।
+जो ख़रीदार या किराएदार ख़ुद को army/CRPF वाला बताए और "पहले 1 रुपया भेजता हूँ" कहे, उससे लेन-देन न करें। पैसे लेने हों, तो सिर्फ़ अपना UPI ID या नंबर दें, और पैसा आया या नहीं, अपने बैंक के ऐप में ख़ुद देखें।
+पैसे कट गए हों: तुरंत 1930 पर call करें और बैंक को बताएँ।
+विस्तार से: https://thagi-rakshak.onrender.com/gyan/upi-pin-qr
+```
+
+### `/cvv`: बैंक वाला बनकर कोई card का नंबर, CVV, expiry या ATM PIN माँग रहा है
+```
+यह ठगी है। बैंक या कोई असली कंपनी कभी card का नंबर, CVV, expiry या ATM PIN नहीं माँगती, न call पर, न SMS के link से।
+call काट दें, और कुछ न बताएँ।
+बता दिया है: तुरंत बैंक के ऐप से, या card के पीछे लिखे नंबर पर call करके, card block करवाएँ। पैसे कटे हों तो 1930 पर call करें।
+अपने बैंक से संपर्क का सही रास्ता: https://thagi-rakshak.onrender.com/gyan/bank
+```
+
 ### `/फ़ोन`: फ़ोन चोरी या गुम हो गया
 ```
 घबराइए नहीं, पहले पैसा बचाएँ:
