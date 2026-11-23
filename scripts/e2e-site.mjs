@@ -57,7 +57,7 @@ await check("/pucho: 8 निशान", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);
     assert((await page.locator("main ol[data-signs] > li").count()) === 8, "8 li नहीं");
-    await page.getByText("OTP, PIN या password माँगना").waitFor();
+    await page.getByText("OTP, PIN, password या card का CVV माँगना").waitFor();
   }),
 );
 

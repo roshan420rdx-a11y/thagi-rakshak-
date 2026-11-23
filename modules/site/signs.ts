@@ -1,9 +1,13 @@
-// ठगी के 8 आम निशान (/pucho, checker के नीचे; बिना JS के भी) और /bharosa की "हम कभी नहीं करेंगे" सूची। text plan A2a से जस का तस।
+// ठगी के 8 आम निशान (/pucho, checker के नीचे; बिना JS के भी) और /bharosa की "हम कभी नहीं करेंगे" सूची। मूल text plan A2a से;
+// 2026-11-23: दूसरे में CVV, तीसरे में "request accept" जोड़ा ("पहले पूछो" के नए निशानों के साथ)।
 
 export const SCAM_SIGNS: readonly { titleHi: string; bodyHi: string }[] = [
   { titleHi: 'जल्दबाज़ी: "आज ही", "अभी नहीं तो खाता बंद"', bodyHi: "ठग सोचने का समय नहीं देते। रुकें और किसी अपने से बात करें।" },
-  { titleHi: "OTP, PIN या password माँगना", bodyHi: "बैंक, पुलिस या कोई कंपनी यह कभी नहीं माँगती।" },
-  { titleHi: "पैसे पाने के लिए PIN डालना या QR scan करना", bodyHi: "पैसा पाने के लिए कभी PIN या QR की ज़रूरत नहीं होती।" },
+  { titleHi: "OTP, PIN, password या card का CVV माँगना", bodyHi: "बैंक, पुलिस या कोई कंपनी यह कभी नहीं माँगती, न card का पूरा नंबर।" },
+  {
+    titleHi: 'पैसे पाने के लिए PIN डालना, QR scan करना या "request" accept करना',
+    bodyHi: "पैसा पाने के लिए कभी PIN, QR या request की ज़रूरत नहीं होती। इनसे पैसे आपके खाते से जाते हैं।",
+  },
   { titleHi: "कोई ऐप या APK फ़ाइल डलवाना", bodyHi: "AnyDesk जैसे ऐप या अनजान APK से वे आपका फ़ोन चला सकते हैं।" },
   { titleHi: "पुलिस, CBI या कोर्ट की धमकी, वह भी video call पर", bodyHi: "असली पुलिस video call पर गिरफ़्तार नहीं करती। call काटें।" },
   {
