@@ -28,9 +28,13 @@ async function meta(path) {
     ogDescription: attr(html, /<meta property="og:description" content="([^"]*)"/),
     ogLocale: attr(html, /<meta property="og:locale" content="([^"]*)"/),
     ogUrl: attr(html, /<meta property="og:url" content="([^"]*)"/),
+    ogImage: attr(html, /<meta property="og:image" content="([^"]*)"/),
+    ogImageWidth: attr(html, /<meta property="og:image:width" content="([^"]*)"/),
+    ogImageAlt: attr(html, /<meta property="og:image:alt" content="([^"]*)"/),
   };
 }
 
+const ogImages = new Set();
 const titles = new Map();
 const descriptions = new Map();
 for (const loc of locs) {
@@ -45,11 +49,24 @@ for (const loc of locs) {
   if (m.ogDescription !== m.description) fail(`${path}: og:description ≠ description`);
   if (m.ogLocale !== "hi_IN") fail(`${path}: og:locale "${m.ogLocale}"`);
   if (!m.ogUrl) fail(`${path}: og:url नहीं`);
+  // WhatsApp preview की तस्वीर: हर पन्ने पर, 1200 चौड़ी, हिंदी alt के साथ
+  if (!m.ogImage) fail(`${path}: og:image नहीं`);
+  else if (m.ogImageWidth !== "1200") fail(`${path}: og:image:width "${m.ogImageWidth}"`);
+  if (!m.ogImageAlt?.includes("1930")) fail(`${path}: og:image:alt "${m.ogImageAlt}"`);
+  ogImages.add(m.ogImage);
   titles.set(m.title, [...(titles.get(m.title) ?? []), path]);
   descriptions.set(m.description, [...(descriptions.get(m.description) ?? []), path]);
 }
 for (const [t, ps] of titles) if (ps.length > 1) fail(`एक ही title "${t}": ${ps.join(", ")}`);
 for (const [, ps] of descriptions) if (ps.length > 1) fail(`एक ही description ${ps.length} पन्नों पर: ${ps.slice(0, 4).join(", ")}…`);
+
+// तस्वीर सच में मिले (png, 300KB से छोटी: WhatsApp बड़ी तस्वीर नहीं दिखाता)
+for (const img of ogImages) {
+  const r = await fetch(img.replace(siteUrl, BASE));
+  const size = (await r.arrayBuffer()).byteLength;
+  if (r.status !== 200 || !r.headers.get("content-type")?.includes("image/png")) fail(`og:image ${img}: ${r.status} ${r.headers.get("content-type")}`);
+  if (size > 300_000) fail(`og:image ${img}: ${size} bytes`);
+}
 
 // हिसाब वाले पते (?txn=…) का canonical साफ़ /haq/thagi, ताकि हर हिसाब Google में अलग पन्ना न बने
 const q = await meta("/haq/thagi?txn=2026-11-01&loss=5000");

@@ -5,13 +5,22 @@ import type { TurantSlug } from "@/modules/scams";
 // description 160 अक्षर तक (Google इससे ज़्यादा काट देता है); e2e-seo हर पन्ने पर यह जाँचता है।
 export const SITE_NAME = "ठगी रक्षक";
 
+// WhatsApp/Facebook preview की तस्वीर (public/og-image.png, 1200×630, 300KB से छोटी; e2e-seo जाँचता है)।
+// हर पन्ने का openGraph अपना होता है, इसलिए तस्वीर यहीं से हर पन्ने में जाती है (वरना पन्ने का openGraph उसे हटा देता)।
+export const OG_IMAGE = {
+  url: "/og-image.png",
+  width: 1200,
+  height: 630,
+  alt: "ठगी रक्षक: डिजिटल ठगी हो गई? पैसे गए हों तो तुरंत 1930 पर call करें",
+} as const;
+
 export function pageMeta({ title, description, path, fullTitle }: { title?: string; description: string; path: string; fullTitle?: string }): Metadata {
   const t = fullTitle ?? `${title} — ${SITE_NAME}`;
   return {
     title: t,
     description,
     alternates: { canonical: path },
-    openGraph: { title: t, description, url: path, siteName: SITE_NAME, locale: "hi_IN", type: "website" },
+    openGraph: { title: t, description, url: path, siteName: SITE_NAME, locale: "hi_IN", type: "website", images: [OG_IMAGE] },
   };
 }
 
