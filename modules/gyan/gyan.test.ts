@@ -8,7 +8,7 @@ import { isTurantSlug } from "@/modules/scams";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
 const ALLOWED_LINKS = ["/haq/thagi", "/gyan/bank", "/haq/frozen-money", "/turant"];
 
-test("12 पन्ने, तय क्रम", () =>
+test("14 पन्ने, तय क्रम", () =>
   expect(GYAN_PAGES.map((p) => p.slug)).toEqual([
     "digital-arrest",
     "customer-care-fake",
@@ -22,6 +22,8 @@ test("12 पन्ने, तय क्रम", () =>
     "kyc-link",
     "apna-bankar",
     "galti-se-paise",
+    "aeps-angootha",
+    "sim-swap",
   ]));
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे के गिनती वाले नियम", (_s, p) => {
@@ -79,7 +81,7 @@ test("digital arrest के FAQ में दबाव/धमकी वाली
 
 test("ज्ञानकोश के समूह: हर पन्ना ठीक एक समूह में, तय क्रम", async () => {
   const { GYAN_GROUPS } = await import("@/modules/gyan");
-  expect(GYAN_GROUPS.map((g) => g.titleHi)).toEqual(["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR या ऐप से ठगी"]);
+  expect(GYAN_GROUPS.map((g) => g.titleHi)).toEqual(["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR, ऐप, SIM या अंगूठे से ठगी"]);
   const all = GYAN_GROUPS.flatMap((g) => g.slugs);
   expect([...all].sort()).toEqual(GYAN_PAGES.map((p) => p.slug).sort());
   expect(new Set(all).size).toBe(all.length);

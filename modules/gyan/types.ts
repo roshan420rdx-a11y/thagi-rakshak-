@@ -13,7 +13,9 @@ export type GyanSlug =
   | "loan-app"
   | "kyc-link"
   | "apna-bankar"
-  | "galti-se-paise";
+  | "galti-se-paise"
+  | "aeps-angootha"
+  | "sim-swap";
 
 export type RbiRef = { file: string; paragraph: string; quote: string };
 

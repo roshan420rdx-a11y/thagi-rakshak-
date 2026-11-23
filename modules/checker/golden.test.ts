@@ -49,6 +49,10 @@ const SCAMS: string[] = [
   "आपके बेटे को पुलिस ने पकड़ लिया है, छुड़ाने के लिए तुरंत ₹50,000 भेजो",
   "India Post: your parcel is on hold due to incomplete address. Update within 24 hours: indiapost-track.top",
   "Hi beta, ye mera naya number hai. Purana wala kharab ho gaya, ise save kar lo.",
+  // तीसरा दौर: AePS, SIM swap, call forwarding
+  "Aapka SIM 4G se 5G me upgrade karna hai, 121 par SIM space 20 digit number SMS kar dijiye",
+  "Aapke aadhaar se ration milna band ho jayega, apne anguthe ka photo whatsapp par bhejo",
+  "Sir aapka parcel return ho raha hai, delivery ke liye **21* ke baad ye number dial karo",
 ];
 
 const BENIGN: string[] = [
@@ -77,6 +81,10 @@ const BENIGN: string[] = [
   "Beta, exam ke baad seedha ghar aa jana",
   "Please accept the delivery today. Address PIN-code 110001",
   "पार्सल लेते समय OTP बताएँ नहीं, बस पिन-कोड 110001 मिलाकर accept करें",
+  "आधार केंद्र पर अंगूठा लगाकर अपना बायोमेट्रिक अपडेट करवाएँ",
+  "Your SIM has been upgraded to 5G. Enjoy faster internet.",
+  "बैलेंस देखने के लिए *123# dial करें",
+  "अपने अंगूठे के निशान की photo किसी को न भेजें",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
@@ -101,9 +109,13 @@ test("ज़्यादातर ठगी वाले message 'पक्क�
 // plan C1: task/निवेश का पहला message (जिसमें अभी कुछ माँगा नहीं गया) "शक है" रहता है; बाकी हर उदाहरण danger
 test("ज्ञानकोश के उदाहरण: danger, सिवाय task/निवेश के पहले message के", () => {
   const EARLY_STAGE = new Set(["task_job", "investment", "urgency", "link"]);
-  for (const msg of fromGyan) {
-    const r = checkMessage(msg);
-    if (r.level !== "danger") expect(r.hits.every((h) => EARLY_STAGE.has(h.id)), msg).toBe(true);
+  for (const p of GYAN_PAGES) {
+    for (const e of p.examplesHi) {
+      const msg = e.replace(/^"|"$/g, "");
+      const r = checkMessage(msg);
+      if (p.slug !== "task-investment") expect(r.level, `${p.slug}: ${msg}`).toBe("danger");
+      else if (r.level !== "danger") expect(r.hits.length > 0 && r.hits.every((h) => EARLY_STAGE.has(h.id)), msg).toBe(true);
+    }
   }
 });
 
@@ -124,6 +136,9 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("new_number")).toBe("apna-bankar");
   expect(gyanOf("new_number_money")).toBe("apna-bankar");
   expect(gyanOf("wrong_transfer")).toBe("galti-se-paise");
+  expect(gyanOf("biometric_ask")).toBe("aeps-angootha");
+  expect(gyanOf("sim_swap")).toBe("sim-swap");
+  expect(gyanOf("call_forward")).toBe("sim-swap");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
 });

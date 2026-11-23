@@ -141,6 +141,22 @@ const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|�
 const URGENT =
   "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
+// AePS: आधार नंबर + अंगूठे के निशान से बिना OTP निकासी। "भेजो/share" साथ हो तभी (आधार केंद्र पर अंगूठा लगाने की सलाह पर नहीं)
+const BIOMETRIC =
+  "अंगूठ|\\bang(?:u|oo)tt?h(?:a|e)\\b|fingerprint|finger\\s*print|फ़िंगर\\s*प्रिंट|बायोमेट्रिक|biometric|thumb\\s*(?:impression|print|scan)";
+const SEND_BIO = "भेज|\\bsend|\\bshare|शेयर|साझा|upload|अपलोड|\\bbhej|\\bforward|फ़ॉरवर्ड";
+
+// SIM swap: "upgrade/eSIM" के बहाने SMS या नए SIM का 20 अंकों का नंबर भिजवाना
+const SIM = "\\bsim\\b|सिम|\\be-?sim\\b|ई-?\\s*सिम";
+const SMS_WORD = "\\bsms|एसएमएस|मैसेज|\\bmessage";
+const SMS_SEND = "भेज|\\bsend|\\bbhej|\\bforward|फ़ॉरवर्ड|\\btype|टाइप";
+const SIM_NUMBER = "(?<!\\d)20\\s*(?:अंक|digit)|(?<!\\d)89\\d{17,18}(?!\\d)";
+const SIM_CHANGE =
+  "upgrade|अपग्रेड|(?<!\\d)[345]\\s*g\\b|activat|एक्टिव|चालू|बंद|\\bblock|ब्लॉक|swap|स्वैप|replace|बदल|deactivat|expire|एक्सपायर|\\bband\\s*ho";
+
+// call forwarding: *401* (Jio) या **21* / **61* / **62* / **67* / **002* / **004* (GSM) जैसे code
+const CALL_FORWARD = "\\*\\s*40[1-9]\\s*\\*|\\*\\*\\s*(?:21|61|62|67|002|004)\\s*\\*|(?<![*\\d])\\*\\s*21\\s*\\*";
+
 const LINK =
   "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
 
@@ -191,6 +207,12 @@ const R = {
   careHook: rx(CARE_HOOK),
   refundHook: rx(REFUND_HOOK),
   mobile: rx(MOBILE),
+  biometricSend: near(BIOMETRIC, SEND_BIO, 50),
+  sim: rx(SIM),
+  simSend: near(SMS_WORD, SMS_SEND, 20),
+  simNumber: rx(SIM_NUMBER),
+  simChange: rx(SIM_CHANGE),
+  callForward: rx(CALL_FORWARD),
   urgent: rx(URGENT),
   link: rx(LINK),
 };
@@ -313,6 +335,33 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "apna-bankar",
     turant: "upi",
     test: (t) => R.newNumber.test(t.text) && R.money.test(t.text),
+  },
+  {
+    id: "biometric_ask",
+    level: "danger",
+    labelHi: "आधार नंबर या अंगूठे का निशान भिजवाना",
+    explainHi: "आधार नंबर और अंगूठे के निशान से AePS वाली मशीन पर बिना OTP आपके खाते से पैसे निकाले जा सकते हैं। ये किसी को न भेजें, और UIDAI की myAadhaar साइट पर अपना biometric lock करें।",
+    gyan: "aeps-angootha",
+    turant: "pata-nahi",
+    test: (t) => R.biometricSend.test(t.stripped),
+  },
+  {
+    id: "sim_swap",
+    level: "danger",
+    labelHi: "'SIM upgrade' या eSIM के नाम पर SMS भिजवाना",
+    explainHi: "ऐसे SMS से आपका नंबर ठग के SIM पर चालू हो सकता है, फिर बैंक के OTP उसी के पास जाते हैं। SIM या eSIM सिर्फ़ अपनी कंपनी के store या अपने ऐप से बदलवाएँ।",
+    gyan: "sim-swap",
+    turant: "pata-nahi",
+    test: (t) => R.sim.test(t.stripped) && (R.simSend.test(t.stripped) || R.simNumber.test(t.stripped)) && R.simChange.test(t.stripped),
+  },
+  {
+    id: "call_forward",
+    level: "danger",
+    labelHi: "*401* जैसा code dial करवाना (call forwarding)",
+    explainHi: "ऐसे code से आपकी calls, और OTP वाली calls भी, ठग के नंबर पर जाने लगती हैं। कर दिया हो, तो फ़ोन की settings में call forwarding बंद करें और अपने बैंक को बताएँ।",
+    gyan: "sim-swap",
+    turant: "pata-nahi",
+    test: (t) => R.callForward.test(t.text),
   },
   {
     id: "kyc_block",

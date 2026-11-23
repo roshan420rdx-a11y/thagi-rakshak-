@@ -37,6 +37,6 @@ test("ज्ञानकोश पन्ने में 'सुनें' क�
 
 test("/gyan: चार समूहों के शीर्षक, और हर पन्ने का link", async () => {
   const html = renderToStaticMarkup(<GyanIndexPage />);
-  for (const t of ["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR या ऐप से ठगी"]) expect(html).toContain(t);
+  for (const t of ["डर दिखाकर ठगी", "लालच देकर ठगी", "अपना या मददगार बनकर ठगी", "PIN, QR, ऐप, SIM या अंगूठे से ठगी"]) expect(html).toContain(t);
   for (const p of GYAN_PAGES) expect(html).toContain(`href="/gyan/${p.slug}"`);
 });
