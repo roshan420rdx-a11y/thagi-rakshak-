@@ -97,3 +97,15 @@ test("404 पन्ना: हिंदी, 1930 मिलाने का link 
   expect(html).toContain('href="tel:1930"');
   expect(html).toContain('href="/turant"');
 });
+
+test("/nambar: हर नंबर का एक-tap call बटन, साइटें, ठग वाली चेतावनी; होम और footer से link", async () => {
+  const { default: NambarPage } = await import("@/app/(site)/nambar/page");
+  const html = renderToStaticMarkup(<NambarPage />);
+  for (const n of ["1930", "112", "181", "14416", "14448", "1947"]) expect(html).toContain(`href="tel:${n}"`);
+  expect(html).toContain('href="https://sancharsaathi.gov.in"');
+  expect(html).toContain('href="/gyan/bank"');
+  expect(html).toContain("वह ठग है");
+  expect(renderToStaticMarkup(<HomePage />)).toContain('href="/nambar"');
+  const { SiteFooter } = await import("@/components/ui/site-footer");
+  expect(renderToStaticMarkup(<SiteFooter />)).toContain('href="/nambar"');
+});

@@ -10,7 +10,8 @@ test("OFFLINE_URLS: /turant, 10 पन्ने, /gyan/bank और /pucho (ज�
   expect(OFFLINE_URLS).toContain("/case");
   expect(OFFLINE_URLS).toContain("/arzi");
   expect(OFFLINE_URLS).toContain("/abhyas");
-  expect(OFFLINE_URLS).toHaveLength(18);
+  expect(OFFLINE_URLS).toContain("/nambar");
+  expect(OFFLINE_URLS).toHaveLength(19);
 });
 
 test("worker में version और हर URL", () => {

@@ -23,6 +23,20 @@ await check("होम: पहली screen पर ही '1930 मिलाए�
   }),
 );
 
+await check("ज़रूरी नंबर: 6 नंबर एक tap में, footer से पहुँच, internet बंद होने पर भी खुले", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.locator('footer a[href="/nambar"]').click();
+    await page.getByRole("heading", { name: "ज़रूरी नंबर और साइटें" }).waitFor();
+    for (const n of ["1930", "112", "181", "14416", "14448", "1947"]) assert((await page.locator(`main a[href="tel:${n}"]`).count()) === 1, `tel:${n} नहीं`);
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.reload();
+    await page.getByRole("heading", { name: "ज़रूरी नंबर और साइटें" }).waitFor();
+  }),
+);
+
 await check("/turant पर नीचे का menu नहीं", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/turant/upi`);

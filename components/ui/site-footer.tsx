@@ -4,6 +4,12 @@ import { TrustBar } from "./trust-bar";
 export function SiteFooter() {
   return (
     <footer className="mx-auto mt-10 max-w-[680px] space-y-2 px-4 pb-24 text-[14px] text-muted md:pb-8">
+      <Link
+        href="/nambar"
+        className="flex min-h-12 items-center justify-center rounded-xl border border-line bg-paper px-4 text-[16px] font-bold text-brand no-underline"
+      >
+        ज़रूरी नंबर: 1930 · 112 · 181 · 14448 →
+      </Link>
       <TrustBar />
       <p>यह सरकारी वेबसाइट नहीं है। हम आपको सरकारी और बैंक के सही रास्तों तक पहुँचाने में मदद करते हैं।</p>
       <p>यहाँ दी गई जानकारी कानूनी सलाह नहीं है।</p>

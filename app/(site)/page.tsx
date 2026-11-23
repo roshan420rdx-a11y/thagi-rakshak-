@@ -44,6 +44,9 @@ export default function HomePage() {
       />
       {/* plan A2d: होम से ही एक tap (पहले /turant से होकर दो tap) */}
       <Call1930Strip />
+      <Link href="/nambar" className="-mt-2 flex min-h-12 items-center justify-end font-semibold text-brand">
+        बाकी ज़रूरी नंबर (पुलिस, महिला, RBI, आधार) →
+      </Link>
       <BigDoor
         href="/pucho"
         title="यह call या message ठगी है?"
