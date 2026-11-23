@@ -42,6 +42,9 @@ export default function PuchoPage() {
         tone="danger"
         icon={<IconAlert className="h-8 w-8" />}
       />
+      <Link href="/abhyas" className="flex min-h-12 items-center font-semibold text-brand">
+        ख़ुद को परखें: ठगी या असली? (अभ्यास, 2 मिनट) →
+      </Link>
       <Link href="/gyan" className="flex min-h-12 items-center font-semibold text-brand">
         ठगी के प्रकार विस्तार से: ज्ञानकोश →
       </Link>

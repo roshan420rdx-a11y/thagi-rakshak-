@@ -15,6 +15,7 @@ const PAGES = [
   "/turant/upi",
   "/turant/sextortion",
   "/pucho",
+  "/abhyas",
   "/bharosa",
   "/haq",
   "/haq/thagi",
@@ -54,6 +55,11 @@ for (const scheme of ["light", "dark"]) {
   await page.getByRole("button", { name: "जाँचें" }).click();
   await page.getByRole("region", { name: "जाँच का नतीजा" }).waitFor();
   await audit(page, `${scheme} /pucho (नतीजा)`);
+  // अभ्यास: नतीजे वाली हालत भी (हरा/पीला डिब्बा, निशान)
+  await page.goto(`${BASE}/abhyas`);
+  await page.getByRole("button", { name: "ठगी है" }).click();
+  await page.locator("#abhyas-feedback").waitFor();
+  await audit(page, `${scheme} /abhyas (नतीजा)`);
   await context.close();
 }
 

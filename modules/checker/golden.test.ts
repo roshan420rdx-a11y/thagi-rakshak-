@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import { checkMessage, CHECKER_RULES } from "@/modules/checker";
 import { MANY_SIGNALS } from "@/modules/checker/patterns";
+import { ABHYAS_ITEMS } from "@/modules/abhyas";
 import { GYAN_PAGES } from "@/modules/gyan";
 import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 
@@ -11,6 +12,7 @@ const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"
 
 const SCAMS: string[] = [
   ...fromGyan,
+  ...ABHYAS_ITEMS.filter((i) => i.scam).map((i) => i.text), // "ठगी या असली?" अभ्यास के ठगी वाले
   "Hello sir, main Airtel se bol raha hoon, aapka SIM band ho jayega, abhi aapke phone par jo OTP aaya hai wo bata dijiye",
   "Dear Consumer, your electricity power will be disconnected tonight at 9.30 pm because your previous month bill was not updated. Please immediately contact our electricity officer 98XXXXXX21",
   "Congratulations! Your number has won Rs 25,00,000 in KBC Lucky Draw. To claim, pay Rs 12,500 GST on WhatsApp",
@@ -56,6 +58,7 @@ const SCAMS: string[] = [
 ];
 
 const BENIGN: string[] = [
+  ...ABHYAS_ITEMS.filter((i) => !i.scam).map((i) => i.text), // अभ्यास के असली वाले
   "123456 is your OTP for login to SBI YONO. Do not share it with anyone. -SBI",
   "आपका OTP 482913 है। यह 10 मिनट तक मान्य है। इसे किसी के साथ साझा न करें। -PNB",
   "Dear Customer, Rs.500.00 debited from A/c XX1234 on 20-11-26 to VPA shop@okaxis. Not you? Call 18001234567 -Bank",

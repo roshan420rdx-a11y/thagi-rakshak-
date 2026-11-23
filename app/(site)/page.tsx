@@ -23,6 +23,7 @@ const TILES = [
   { href: "/haq", title: "आपका हक़", body: "RBI के नियमों से हिसाब" },
   { href: "/gyan/bank", title: "अपना बैंक", body: "बैंक को ठगी कैसे बताएँ" },
   { href: "/gyan", title: "ज्ञानकोश", body: "ठगी कैसे होती है, कैसे बचें" },
+  { href: "/abhyas", title: "ठगी या असली?", body: "8 message पहचानने का अभ्यास" },
 ] as const;
 
 // प्रतिज्ञा footer में हर पन्ने पर है (और छोटे होम पर पहली screen में ही दिखती है), इसलिए यहाँ दोबारा नहीं

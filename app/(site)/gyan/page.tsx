@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
 import { GYAN_GROUPS, getGyanPage } from "@/modules/gyan";
+import { SCAM_SIGNS } from "@/modules/site";
 
 export const metadata: Metadata = pageMeta({
   title: "ठगी का ज्ञानकोश",
@@ -16,7 +17,8 @@ const TOOLS = [
   { href: "/haq/frozen-money", label: "ठग के खाते में पैसा रुका: वापस कैसे माँगें" },
   { href: "/shikayat-rasta", label: "शिकायत का पूरा रास्ता: 1930 से RBI Ombudsman तक" },
   { href: "/gyan/bank", label: "अपने बैंक को ठगी कैसे बताएँ" },
-  { href: "/pucho", label: "message जाँचें और ठगी के 7 आम निशान" },
+  { href: "/pucho", label: `message जाँचें और ठगी के ${SCAM_SIGNS.length} आम निशान` },
+  { href: "/abhyas", label: "ख़ुद को परखें: ठगी या असली? (अभ्यास)" },
 ] as const;
 
 export default function GyanIndexPage() {
@@ -24,6 +26,12 @@ export default function GyanIndexPage() {
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold leading-snug">ठगी का ज्ञानकोश</h1>
       <p>ठगी कैसे होती है, कैसे पहचानें, और हो जाए तो क्या करें। आसान भाषा में।</p>
+      <Link
+        href="/abhyas"
+        className="flex min-h-12 items-center rounded-xl border-2 border-brand bg-brand-bg px-4 py-2 font-bold text-brand no-underline"
+      >
+        ख़ुद को परखें: ठगी या असली? (8 message, 2 मिनट) →
+      </Link>
       {GYAN_GROUPS.map((g) => (
         <section key={g.titleHi} className="space-y-2">
           <h2 className="text-[19px] font-bold">{g.titleHi}</h2>

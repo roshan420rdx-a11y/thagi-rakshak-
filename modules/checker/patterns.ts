@@ -90,8 +90,9 @@ const FEE =
 
 const MEDIA =
   "video|वीडियो|विडियो|photo|फ़ोटो|\\bpics?\\b|तस्वीर|\\bclip|क्लिप|recording|रिकॉर्डिंग|nude|न्यूड|morph|मॉर्फ";
+// सिर्फ़ "YouTube" शब्द धमकी नहीं ("YouTube video like करो" वाला काम भी उसमें आता है); "डाल दूँगा", "upload" जैसे शब्द चाहिए
 const SPREAD =
-  "viral|वायरल|\\bleak|लीक|सबको|सब\\s*को|सबके\\s*पास|everyone|everybody|family|परिवार|घरवालों|रिश्तेदार|relatives|contacts|कॉन्टैक्ट|upload|अपलोड|youtube|यूट्यूब|भेज\\s*दूंगा|भेज\\s*दूंगी|भेज\\s*देंगे|send\\s*(?:it\\s*)?to\\s*(?:all|your)|डाल\\s*दूंगा|फैला";
+  "viral|वायरल|\\bleak|लीक|सबको|सब\\s*को|सबके\\s*पास|everyone|everybody|family|परिवार|घरवालों|रिश्तेदार|relatives|contacts|कॉन्टैक्ट|upload|अपलोड|भेज\\s*दूंगा|भेज\\s*दूंगी|भेज\\s*देंगे|send\\s*(?:it\\s*)?to\\s*(?:all|your)|डाल\\s*दूंगा|फैला";
 const MONEY =
   "पैसे|पैसा|\\bpaise|\\bpaisa|\\bpay\\b|payment|money|रुपये|रुपए|rupees|₹|\\brs\\.?\\s*\\d|transfer|भेजो|\\bbhejo|\\bupi\\b";
 

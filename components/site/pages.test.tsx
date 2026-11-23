@@ -60,3 +60,18 @@ test("होम: 'और मदद' के 6 tiles, साइट भेजने
   expect(html).toContain("और मदद");
   expect(html).toMatch(/href="https:\/\/wa\.me\/\?text=[^"]+"/);
 });
+
+test("/abhyas: शीर्षक, बिना JS वाला संदेश, ज्ञानकोश का link; अभ्यास mount से पहले कुछ नहीं", async () => {
+  const { default: AbhyasPage } = await import("@/app/(site)/abhyas/page");
+  const { AbhyasQuiz } = await import("@/components/abhyas/abhyas-quiz");
+  const html = renderToStaticMarkup(<AbhyasPage />);
+  expect(html).toContain("ठगी पहचानने का अभ्यास");
+  expect(html).toContain("<noscript>");
+  expect(html).toContain('href="/gyan"');
+  expect(renderToStaticMarkup(<AbhyasQuiz pageUrl="https://example.org/abhyas" />)).toBe("");
+});
+
+test("होम, /pucho और /gyan से अभ्यास का link", async () => {
+  const { default: GyanIndex } = await import("@/app/(site)/gyan/page");
+  for (const html of [renderToStaticMarkup(<HomePage />), renderToStaticMarkup(<PuchoPage />), renderToStaticMarkup(<GyanIndex />)]) expect(html).toContain('href="/abhyas"');
+});
