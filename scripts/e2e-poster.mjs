@@ -6,7 +6,8 @@ await check("पोस्टर: 8 बातें, 1930, साइट का �
     await page.goto(`${BASE}/poster`);
     assert((await page.locator("[data-poster-rule]").count()) === 8, "8 बातें नहीं");
     await page.locator("[data-print-area]").getByText("1930", { exact: false }).first().waitFor();
-    assert((await page.locator("[data-print-area]").innerText()).includes("localhost:3000"), "साइट का पता नहीं");
+    // साइट का पता (BASE वाला host; live साइट पर भी यही जाँच चले)
+    assert((await page.locator("[data-print-area]").innerText()).includes(new URL(BASE).host), "साइट का पता नहीं");
     await page.evaluate(() => {
       window.__printed = 0;
       window.print = () => (window.__printed += 1);
