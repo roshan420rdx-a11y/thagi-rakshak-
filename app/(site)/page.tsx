@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BigDoor } from "@/components/ui/big-door";
-import { IconAlert, IconSearch } from "@/components/ui/icons";
+import { IconAlert, IconPhone, IconSearch } from "@/components/ui/icons";
 import Link from "next/link";
 import { HomeCaseCard } from "@/components/case/home-case-card";
 import { InstallButton } from "@/components/site/install-button";
@@ -39,6 +39,17 @@ export default function HomePage() {
         tone="danger"
         icon={<IconAlert className="h-8 w-8" />}
       />
+      {/* plan A2d: पैसे अभी गए हों तो पहला काम हर हाल में 1930; होम से ही एक tap (पहले /turant से होकर दो tap) */}
+      <a
+        href="tel:1930"
+        className="flex min-h-12 items-center gap-3 rounded-xl border-2 border-danger bg-danger-bg px-4 py-2 text-danger no-underline"
+      >
+        <IconPhone className="h-6 w-6 shrink-0" />
+        <span>
+          <span className="block text-[19px] font-bold leading-snug">1930 मिलाएँ</span>
+          <span className="block text-[15px] font-semibold leading-snug">पैसे अभी गए हैं? सबसे पहले यह call करें</span>
+        </span>
+      </a>
       <BigDoor
         href="/pucho"
         title="यह call या message ठगी है?"

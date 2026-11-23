@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Notice } from "@/components/ui/notice";
 import { parseFraudForm } from "@/modules/haq";
 import { evaluateRights } from "@/modules/rules-engine";
+import { CaseFill } from "./case-fill";
 import { FormErrors } from "./errors";
 import { Field, INPUT_CLS, Radios } from "./field";
 import { RightsResultCard } from "./rights-result";
@@ -32,6 +33,7 @@ export function ThagiView({ params, today }: { params: Params; today: string }) 
       <p>RBI के नियमों से हिसाब: पूरा पैसा वापस (ज़ीरो ज़िम्मेदारी), या ₹25,000 तक का मुआवज़ा, और बैंक को कब तक जवाब देना है।</p>
 
       {parsed.ok === false ? <FormErrors errorsHi={parsed.errorsHi} /> : null}
+      {parsed.ok === "empty" ? <CaseFill /> : null}
 
       {/* action में #nateeja: भेजने के बाद browser सीधे नतीजे पर जाए (फ़ोन पर वह लंबे form के नीचे है); बिना JS के भी */}
       <form method="get" action="/haq/thagi#nateeja" className="space-y-4 rounded-xl border border-line bg-paper p-3">

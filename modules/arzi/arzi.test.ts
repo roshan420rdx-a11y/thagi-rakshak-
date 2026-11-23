@@ -21,6 +21,7 @@ function input(): LetterInput {
     utr: "412345678901",
     suspect: "9XXXXXXXX0, abc@ybl",
     what: "एक व्यक्ति ने बैंक कर्मचारी बनकर call किया और OTP ले लिया।",
+    how: "",
   };
 }
 
@@ -48,5 +49,28 @@ test("कोई क़ानूनी धारा, OTP/PIN माँगना �
     expect(findForbidden(t, FORBIDDEN_PHRASES)).toEqual([]);
     const blank = buildLetter(k.id, { ...input(), case: emptyCase(), name: "", bankName: "", utr: "" }, TODAY).join("\n");
     expect(blank).toContain("[");
+  }
+});
+
+test("पैसे कैसे गए: कुछ न चुना हो तो [ ] में दोनों विकल्प (दोनों बातें एक साथ नहीं छपतीं)", () => {
+  const t = buildLetter("bank", input(), TODAY).join("\n");
+  expect(t).toContain("[ठगी से हुआ / मैंने नहीं किया: एक चुनें]");
+  expect(t).not.toContain("जो ठगी से हुआ है / जो मैंने नहीं किया");
+});
+
+test("पैसे कैसे गए: 'मैंने नहीं किया' → बिना अनुमति की बात, तीनों पत्रों में", () => {
+  for (const k of LETTER_KINDS) {
+    const t = buildLetter(k.id, { ...input(), how: "unauthorised" }, TODAY).join("\n");
+    expect(t, k.id).toContain("न मैंने किया, न उसकी अनुमति दी");
+    expect(t, k.id).not.toContain("एक चुनें");
+  }
+});
+
+test("पैसे कैसे गए: 'धोखे से' → ठगों ने धोखे से लेन-देन करवाया, तीनों पत्रों में", () => {
+  for (const k of LETTER_KINDS) {
+    const t = buildLetter(k.id, { ...input(), how: "deceived" }, TODAY).join("\n");
+    expect(t, k.id).toContain("धोखे से");
+    expect(t, k.id).not.toContain("न मैंने किया, न उसकी अनुमति दी");
+    expect(t, k.id).not.toContain("एक चुनें");
   }
 });

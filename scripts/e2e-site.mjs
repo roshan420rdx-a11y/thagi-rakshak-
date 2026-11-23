@@ -12,6 +12,17 @@ await check("होम: दोनों दरवाज़े और फ़ो�
   }),
 );
 
+await check("होम: पहली screen पर ही '1930 मिलाएँ' (बिना scroll के, नीचे के menu के ऊपर)", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    const call = page.locator('main a[href="tel:1930"]');
+    await call.waitFor();
+    const box = await call.boundingBox();
+    const menu = await page.locator(MENU).boundingBox();
+    assert(box && menu && box.y + box.height <= menu.y, `1930 पहली screen पर नहीं (y=${box && Math.round(box.y)})`);
+  }),
+);
+
 await check("/turant पर नीचे का menu नहीं", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/turant/upi`);
@@ -26,10 +37,10 @@ await check("JS बंद: होम पर /turant का दरवाज़ा
   }),
 );
 
-await check("/pucho: 7 निशान", () =>
+await check("/pucho: 8 निशान", () =>
   withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);
-    assert((await page.locator("main ol > li").count()) === 7, "7 li नहीं");
+    assert((await page.locator("main ol[data-signs] > li").count()) === 8, "8 li नहीं");
     await page.getByText("OTP, PIN या password माँगना").waitFor();
   }),
 );

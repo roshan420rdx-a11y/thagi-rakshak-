@@ -10,11 +10,11 @@ import { absoluteUrl, getSiteConfig, SCAM_SIGNS } from "@/modules/site";
 export const metadata: Metadata = pageMeta({
   title: "यह message ठगी है? पहले पूछो",
   description:
-    "संदिग्ध SMS या WhatsApp message चिपकाएँ और ठगी के निशान देखें। जाँच आपके फ़ोन में ही होती है। साथ में ठगी के 7 आम निशान।",
+    "संदिग्ध SMS या WhatsApp message चिपकाएँ और ठगी के निशान देखें। जाँच आपके फ़ोन में ही होती है। साथ में ठगी के 8 आम निशान।",
   path: "/pucho",
 });
 
-// "पहले पूछो" (TR-23a): नियमों वाली जाँच फ़ोन के अंदर (CheckerBox, JS से)। बिना JS के भी 7 आम निशान दिखते हैं।
+// "पहले पूछो" (TR-23a): नियमों वाली जाँच फ़ोन के अंदर (CheckerBox, JS से)। बिना JS के भी 8 आम निशान दिखते हैं।
 // screenshot और AI वाली जाँच TR-24 में।
 export default function PuchoPage() {
   const pageUrl = absoluteUrl("/pucho", getSiteConfig().siteUrl);
@@ -22,9 +22,9 @@ export default function PuchoPage() {
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold leading-snug">यह message ठगी है? पहले पूछो</h1>
       <CheckerBox pageUrl={pageUrl} />
-      <h2 className="text-[20px] font-bold leading-snug">ठगी के 7 आम निशान</h2>
+      <h2 className="text-[20px] font-bold leading-snug">ठगी के {SCAM_SIGNS.length} आम निशान</h2>
       <p>इनमें से एक भी दिखे, तो रुकें। पैसे न भेजें, कोई ऐप न डालें।</p>
-      <ol className="space-y-3">
+      <ol data-signs className="space-y-3">
         {SCAM_SIGNS.map((s, i) => (
           <li key={s.titleHi} className="rounded-xl border border-line bg-paper p-3">
             <h3 className="text-[17px] font-bold leading-snug">

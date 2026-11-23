@@ -12,6 +12,14 @@ test("होम: दोनों दरवाज़े; WhatsApp नंबर �
   expect(html).not.toContain("WhatsApp पर बात करें");
 });
 
+test("होम: पहली screen पर ही 1930 मिलाने का link (पैसे अभी गए हों तो एक tap)", () => {
+  const html = renderToStaticMarkup(<HomePage />);
+  expect(html).toContain('href="tel:1930"');
+  expect(html).toContain("1930 मिलाएँ");
+  expect(html).toContain("पैसे अभी गए हैं? सबसे पहले यह call करें");
+  expect(html.indexOf('href="tel:1930"')).toBeLessThan(html.indexOf('href="/pucho"'));
+});
+
 test("/bharosa: 'वह ठग है' और नकली पेजों का ख़ाली हाल", () => {
   const html = renderToStaticMarkup(<BharosaPage />);
   expect(html).toContain("वह ठग है।");
@@ -26,9 +34,11 @@ test("/bharosa: आपकी जानकारी कहाँ जाती ह
   expect(html).toContain('href="/legal/privacy"');
 });
 
-test("/pucho: 7 निशान और /turant का दरवाज़ा", () => {
+test("/pucho: 8 निशान और /turant का दरवाज़ा", () => {
   const html = renderToStaticMarkup(<PuchoPage />);
-  expect((html.match(/<li/g) ?? []).length).toBe(7);
+  expect((html.match(/<li/g) ?? []).length).toBe(8);
+  expect(html).toContain("<ol data-signs");
+  expect(html).toContain("ठगी के 8 आम निशान");
   expect(html).toContain('href="/turant"');
 });
 

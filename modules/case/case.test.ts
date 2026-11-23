@@ -90,3 +90,16 @@ test("calendar (.ics): हर तारीख़ का पूरे दिन �
   expect(ics.trimEnd().endsWith("END:VCALENDAR")).toBe(true);
   expect((ics.match(/BEGIN:VEVENT/g) ?? []).length).toBe(1);
 });
+
+test("आपका हक़ का form भरने के लिए: तारीख़, रकम, वापस मिला, 1930/NCRP में जो पहले, बैंक", async () => {
+  const { haqFieldsFromCase } = await import("@/modules/case");
+  const c = emptyCase();
+  expect(haqFieldsFromCase(c)).toEqual({ txn: "", loss: "", back: "", r1930: "", rbank: "" });
+  c.txnDate = "2026-11-18";
+  c.amount = 4999.5;
+  c.recovered = 0;
+  c.stages.ncrp.on = "2026-11-19";
+  c.stages.call_1930.on = "2026-11-20";
+  c.stages.bank.on = "2026-11-21";
+  expect(haqFieldsFromCase(c)).toEqual({ txn: "2026-11-18", loss: "4999.5", back: "0", r1930: "2026-11-19", rbank: "2026-11-21" });
+});

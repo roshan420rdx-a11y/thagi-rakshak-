@@ -126,11 +126,20 @@ await check("offline: internet बंद होने पर भी 'पहल�
   }),
 );
 
-await check("JS बंद: box नहीं, 7 आम निशान अब भी", () =>
+await check("'message copy करना नहीं आता?' खोलने पर copy-paste के कदम और call वालों के लिए बात", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await openBox(page);
+    await page.getByText("message copy करना नहीं आता, या call आई थी?").click();
+    await page.getByText("उँगली 1-2 सेकंड दबाकर रखें", { exact: false }).waitFor();
+    await page.getByText("call आई थी? तो जो कहा गया", { exact: false }).waitFor();
+  }),
+);
+
+await check("JS बंद: box नहीं, 8 आम निशान अब भी", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/pucho`);
     assert((await page.locator("textarea").count()) === 0, "बिना JS के textarea दिखा");
-    assert((await page.locator("main ol > li").count()) === 7, "7 निशान नहीं");
+    assert((await page.locator("main ol[data-signs] > li").count()) === 8, "8 निशान नहीं");
   }),
 );
 

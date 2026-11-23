@@ -1,9 +1,11 @@
 import { expect, test } from "vitest";
 import { NEVER_LIST, SCAM_SIGNS } from "@/modules/site";
 
-test("7 निशान, OTP वाला दूसरे नंबर पर", () => {
-  expect(SCAM_SIGNS).toHaveLength(7);
+test("8 निशान, OTP वाला दूसरे नंबर पर, आख़िरी में आधार/अंगूठा/SIM", () => {
+  expect(SCAM_SIGNS).toHaveLength(8);
   expect(SCAM_SIGNS[1].titleHi).toBe("OTP, PIN या password माँगना");
+  expect(SCAM_SIGNS[7].titleHi).toContain("अंगूठे");
+  expect(SCAM_SIGNS[7].titleHi).toContain("SIM");
 });
 
 test("कभी-नहीं सूची: 7, पहले call वाली शामिल", () => {

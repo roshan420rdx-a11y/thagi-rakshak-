@@ -25,6 +25,23 @@ export function assert(cond, msg) {
   if (!cond) throw new Error(msg);
 }
 
+// "कोई request नहीं" वाली जाँचों के लिए। Next.js अपने ही पन्नों के link screen पर आते ही उनका ढाँचा पहले से
+// ले आता है (GET, सिर्फ़ ?_rsc=…, कोई user data नहीं); सिर्फ़ उन्हें छोड़ा जाता है। बाकी हर request गिनी जाती है,
+// और अगर किसी request (prefetch भी) के पते या body में user की लिखी कोई बात हो, तो वह भी।
+export function watchRequests(page, secrets = []) {
+  const seen = [];
+  const origin = new URL(BASE).origin;
+  page.on("request", (r) => {
+    const url = r.url();
+    const u = new URL(url);
+    const keys = [...u.searchParams.keys()];
+    const prefetch = u.origin === origin && r.method() === "GET" && keys.length === 1 && keys[0] === "_rsc";
+    const text = `${decodeURIComponent(url)} ${r.postData() ?? ""}`;
+    if (!prefetch || secrets.some((s) => s && text.includes(s))) seen.push(url);
+  });
+  return seen;
+}
+
 // नया context + page; काम के बाद अपने-आप बंद
 export async function withPage(options, fn) {
   const context = await browser.newContext(options);

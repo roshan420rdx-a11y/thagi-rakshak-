@@ -1,6 +1,6 @@
 // "मेरा केस" (फ़ोन वाला) की असली browser में जाँच: सेव होकर reload पर बचे, भरते समय कोई network request नहीं,
 // "सब मिटाएँ" से सच में मिटे, JS बंद पर साफ़ संदेश। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, today, check, assert, withPage, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, today, check, assert, withPage, watchRequests, finish } from "./e2e-lib.mjs";
 
 const KEY = "thagi-rakshak:mera-case:v1";
 const minusDays = (n) => {
@@ -36,8 +36,7 @@ await check("भरते समय कोई network request नहीं (स�
   withPage({ viewport: PHONE }, async (page) => {
     await open(page);
     await page.waitForLoadState("networkidle");
-    const requests = [];
-    page.on("request", (r) => requests.push(r.url()));
+    const requests = watchRequests(page, ["BANK-778", minusDays(3)]);
     await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(3));
     await page.locator('[data-stage="bank"]').getByLabel("शिकायत नंबर (हो तो)").fill("BANK-778");
     await page.waitForTimeout(800);
@@ -97,8 +96,7 @@ await check("अर्ज़ी: 'मेरा केस' की तारीख
     await page.goto(`${BASE}/arzi`);
     await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
     await page.waitForLoadState("networkidle");
-    const requests = [];
-    page.on("request", (r) => requests.push(r.url()));
+    const requests = watchRequests(page, ["राम कुमार", "abc@ybl", "12500", "12,500"]);
     const letter = page.locator("#arzi-print");
     assert((await letter.innerText()).includes("₹12,500"), "रकम पत्र में नहीं");
     await page.getByLabel("आपका नाम").fill("राम कुमार");
@@ -136,6 +134,61 @@ await check("होम: फ़ोन में केस हो तो 'आप�
     await page.getByText(/अगला कदम: cybercrime\.gov\.in/).waitFor();
   });
 });
+
+await check("'आज' बटन: ठगी और 1930 की तारीख़ एक tap में आज की, सेव भी", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    await page.getByRole("button", { name: "ठगी की तारीख़: आज", exact: false }).click();
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === today, "ठगी की तारीख़ आज नहीं हुई");
+    const s1930 = page.locator('[data-stage="call_1930"]');
+    await s1930.getByRole("button", { name: /आज/ }).click();
+    assert((await s1930.getByLabel("कब की?").inputValue()) === today, "1930 की तारीख़ आज नहीं हुई");
+    await s1930.getByText("✓ हो गया").waitFor();
+    await page.reload();
+    await page.getByRole("heading", { name: "मेरी शिकायतें" }).waitFor();
+    assert((await s1930.getByLabel("कब की?").inputValue()) === today, "reload पर 1930 की तारीख़ नहीं बची");
+  }),
+);
+
+await check("आपका हक़: फ़ोन में केस हो तो 'मेरा केस से भरें' → तारीख़ें और रकम भरें, हिसाब अपने-आप नहीं, कोई request नहीं", async () => {
+  await withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/haq/thagi`);
+    await page.getByRole("heading", { name: "ठगी में पैसा गया: आपका हक़" }).waitFor();
+    await page.waitForLoadState("networkidle");
+    assert((await page.getByRole("button", { name: /मेरा केस.*से भरें/ }).count()) === 0, "बिना केस के भरने का बटन दिखा");
+  });
+  await withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(4));
+    await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("4,999.50");
+    await page.locator('[data-stage="ncrp"]').getByLabel("कब की?").fill(minusDays(3));
+    await page.locator('[data-stage="bank"]').getByLabel("कब की?").fill(minusDays(2));
+    await page.getByText("फ़ोन में सेव हो गया").waitFor();
+    await page.goto(`${BASE}/haq/thagi`);
+    await page.waitForLoadState("networkidle");
+    const requests = watchRequests(page, ["4999", minusDays(4), minusDays(3), minusDays(2)]);
+    await page.getByRole("button", { name: /मेरा केस.*से भरें/ }).click();
+    assert((await page.inputValue("#txn")) === minusDays(4), "ठगी की तारीख़ नहीं भरी");
+    assert((await page.inputValue("#loss")) === "4999.5", `रकम: ${await page.inputValue("#loss")}`);
+    assert((await page.inputValue("#r1930")) === minusDays(3), "1930/NCRP की तारीख़ नहीं भरी");
+    assert((await page.inputValue("#rbank")) === minusDays(2), "बैंक की तारीख़ नहीं भरी");
+    assert((await page.getByRole("heading", { name: "आपका हिसाब" }).count()) === 0, "बिना 'हिसाब देखें' के नतीजा आ गया");
+    assert(await page.locator("#how").evaluate((el) => el === document.activeElement), "अगले सवाल पर focus नहीं");
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+  });
+});
+
+await check("अर्ज़ी: 'पैसे कैसे गए?' चुनने पर पत्र की लाइन बदले; न चुनें तो [ ] वाली ख़ाली जगह", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    const letter = page.locator("#arzi-print");
+    assert((await letter.innerText()).includes("एक चुनें"), "बिना चुने [ ] वाली जगह नहीं");
+    await page.getByText("मैंने न कोई लेन-देन किया", { exact: false }).click();
+    const t = await letter.innerText();
+    assert(t.includes("न मैंने किया, न उसकी अनुमति दी") && !t.includes("एक चुनें"), "चुनने पर पत्र नहीं बदला");
+  }),
+);
 
 await check("offline: internet बंद होने पर भी 'मेरा केस' खुले और भरी जानकारी दिखे", () =>
   withPage({ viewport: PHONE }, async (page, context) => {

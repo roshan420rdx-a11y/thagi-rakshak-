@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CopyBlock } from "@/components/ui/copy-block";
 import { Notice } from "@/components/ui/notice";
-import { LETTER_KINDS, buildLetter, type LetterInput, type LetterKind } from "@/modules/arzi";
+import { HOW_OPTIONS, LETTER_KINDS, buildLetter, type LetterInput, type LetterKind } from "@/modules/arzi";
 import { CASE_KEY, emptyCase, parseCase, type LocalCase } from "@/modules/case";
 import { todayInKolkata } from "@/modules/rules-engine";
 
@@ -12,9 +12,9 @@ import { todayInKolkata } from "@/modules/rules-engine";
 // कहीं सेव नहीं। print में सिर्फ़ पत्र (#arzi-print) छपता है। कोई network नहीं।
 const INPUT = "min-h-12 w-full rounded-[10px] border border-line bg-paper px-3 text-[18px] text-ink";
 type Fields = Omit<LetterInput, "case">;
-const EMPTY: Fields = { name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", what: "" };
+const EMPTY: Fields = { name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", what: "", how: "" };
 
-const FIELDS: { key: keyof Fields; label: string; kinds: LetterKind[]; long?: boolean; mode?: "numeric" | "tel" }[] = [
+const FIELDS: { key: Exclude<keyof Fields, "how">; label: string; kinds: LetterKind[]; long?: boolean; mode?: "numeric" | "tel" }[] = [
   { key: "name", label: "आपका नाम", kinds: ["bank", "police"] },
   { key: "address", label: "आपका पता", kinds: ["bank", "police"] },
   { key: "mobile", label: "आपका mobile नंबर", kinds: ["bank", "police"], mode: "tel" },
@@ -48,7 +48,7 @@ export function ArziBuilder() {
 
   const lines = buildLetter(kind, { ...f, case: c }, today);
   const caseEmpty = !c.txnDate && !c.amount;
-  const set = (key: keyof Fields, value: string) =>
+  const set = (key: Exclude<keyof Fields, "how">, value: string) =>
     setF((old) => ({ ...old, [key]: key === "accountLast4" ? value.replace(/\D/g, "").slice(0, 4) : value.slice(0, key === "what" ? 600 : 120) }));
 
   return (
@@ -74,6 +74,24 @@ export function ArziBuilder() {
               <span className="block font-semibold">{k.labelHi}</span>
               <span className="block text-[14px] text-muted">{k.hintHi}</span>
             </span>
+          </label>
+        ))}
+      </fieldset>
+
+      {/* plan A2d: पत्र सच्चा रहे; न चुनें तो पत्र में [ ] वाली ख़ाली जगह */}
+      <fieldset className="space-y-2">
+        <legend className="mb-1 text-[17px] font-bold">पैसे कैसे गए?</legend>
+        {HOW_OPTIONS.map((o) => (
+          <label key={o.id} className="flex min-h-12 items-center gap-3 rounded-[10px] border border-line bg-paper px-3 py-2">
+            <input
+              type="radio"
+              name="how"
+              value={o.id}
+              checked={f.how === o.id}
+              onChange={() => setF((old) => ({ ...old, how: o.id }))}
+              className="h-5 w-5 shrink-0"
+            />
+            <span>{o.labelHi}</span>
           </label>
         ))}
       </fieldset>
