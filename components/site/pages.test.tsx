@@ -4,11 +4,12 @@ import BharosaPage from "@/app/(site)/bharosa/page";
 import HomePage from "@/app/(site)/page";
 import PuchoPage from "@/app/(site)/pucho/page";
 
-test("होम: दोनों दरवाज़े, नंबर न हो तो WhatsApp नहीं", () => {
+test("होम: दोनों दरवाज़े; WhatsApp नंबर न हो तो बात करने का बटन नहीं (सिर्फ़ बिना नंबर वाला 'साइट भेजें')", () => {
   const html = renderToStaticMarkup(<HomePage />);
   expect(html).toContain('href="/turant"');
   expect(html).toContain('href="/pucho"');
-  expect(html).not.toContain("wa.me");
+  expect(html).not.toMatch(/wa\.me\/\d/);
+  expect(html).not.toContain("WhatsApp पर बात करें");
 });
 
 test("/bharosa: 'वह ठग है' और नकली पेजों का ख़ाली हाल", () => {
@@ -41,4 +42,11 @@ test("/shikayat-rasta: पाँच पड़ाव, 1930, cybercrime.gov.in, cm
 
 test("होम पर 'शिकायत का पूरा रास्ता' का link", () => {
   expect(renderToStaticMarkup(<HomePage />)).toContain('href="/shikayat-rasta"');
+});
+
+test("होम: 'और मदद' के 6 tiles, साइट भेजने का WhatsApp link (बिना नंबर, सिर्फ़ साइट का पता)", () => {
+  const html = renderToStaticMarkup(<HomePage />);
+  for (const h of ["/case", "/arzi", "/shikayat-rasta", "/haq", "/gyan/bank", "/gyan"]) expect(html).toContain(`href="${h}"`);
+  expect(html).toContain("और मदद");
+  expect(html).toMatch(/href="https:\/\/wa\.me\/\?text=[^"]+"/);
 });

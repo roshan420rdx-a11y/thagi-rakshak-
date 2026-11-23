@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { OfflineBanner } from "@/components/offline/offline-banner";
 import { ListenButton } from "@/components/ui/listen-button";
+import { TextSizeButton } from "@/components/ui/text-size-button";
 import Link from "next/link";
 
 // इमरजेंसी पन्नों का ढाँचा: सिर्फ़ "← वापस" और "सुनें"; कोई नीचे वाला menu नहीं, ताकि ध्यान न भटके
@@ -11,7 +12,10 @@ export default function TurantLayout({ children }: { children: ReactNode }) {
         <Link href="/" className="inline-flex min-h-12 items-center font-bold text-danger no-underline">
           ← वापस
         </Link>
-        <ListenButton targetId={["turant-banner", "turant-steps"]} />
+        <div className="flex items-center gap-2">
+          <TextSizeButton />
+          <ListenButton targetId={["turant-banner", "turant-steps"]} />
+        </div>
       </header>
       <OfflineBanner />
       <main className="mx-auto max-w-[680px] px-4 py-4">{children}</main>

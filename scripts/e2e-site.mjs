@@ -171,6 +171,67 @@ await check("offline: /turant/upi के 'लिखित शिकायत' �
   });
 });
 
+await check("अ+: अक्षर बड़े हों, पसंद reload और दूसरे पन्ने पर भी रहे, तीसरी बार के बाद वापस सामान्य", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    const btn = page.getByRole("button", { name: /अ\+/ });
+    await btn.click();
+    assert((await page.evaluate(() => document.documentElement.dataset.akshar)) === "2", "स्तर 2 नहीं लगा");
+    await page.goto(`${BASE}/turant/upi`);
+    // पन्ना दिखने से पहले वाली script: JS के बाकी हिस्से से पहले ही लगे
+    assert((await page.evaluate(() => document.documentElement.dataset.akshar)) === "2", "दूसरे पन्ने पर स्तर नहीं रहा");
+    await page.getByRole("button", { name: /अ\+/ }).click();
+    await page.getByRole("button", { name: /अ\+/ }).click();
+    assert((await page.evaluate(() => document.documentElement.dataset.akshar)) === undefined, "वापस सामान्य नहीं हुआ");
+    assert((await page.evaluate(() => localStorage.getItem("thagi-rakshak:akshar:v1"))) === null, "storage नहीं हटी");
+  }),
+);
+
+await check("सबसे बड़े अक्षर (स्तर 3) पर 320px: sitemap के सारे पन्नों पर बगल में scroll नहीं", async () => {
+  const xml = await (await fetch(`${BASE}/sitemap.xml`)).text();
+  const paths = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+  await withPage({ viewport: { width: 320, height: 640 } }, async (page, context) => {
+    await context.addInitScript(() => localStorage.setItem("thagi-rakshak:akshar:v1", "3"));
+    for (const path of paths) {
+      await page.goto(`${BASE}${path}`);
+      const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+      assert(sw <= cw, `${path}: ${sw} > ${cw}`);
+    }
+  });
+});
+
+await check("होम: 'और मदद' के 6 tiles और 'साइट अपने लोगों को भेजें' (बिना नंबर वाला WhatsApp link)", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    await page.getByRole("heading", { name: "और मदद" }).waitFor();
+    for (const h of ["/case", "/arzi", "/shikayat-rasta", "/haq", "/gyan/bank", "/gyan"]) assert((await page.locator(`main a[href="${h}"]`).count()) > 0, `${h} tile नहीं`);
+    const share = await page.getByRole("link", { name: /यह साइट अपने लोगों को भेजें/ }).getAttribute("href");
+    assert(share?.startsWith("https://wa.me/?text="), `share: ${share}`);
+  }),
+);
+
+await check("install: Chrome के हिसाब से कोई installability error नहीं; मौका मिलने पर बटन, दबाने पर install पूछे", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    const cdp = await context.newCDPSession(page);
+    const { installabilityErrors } = await cdp.send("Page.getInstallabilityErrors");
+    assert(installabilityErrors.length === 0, JSON.stringify(installabilityErrors));
+    await page.evaluate(() => {
+      const e = new Event("beforeinstallprompt", { cancelable: true });
+      e.prompt = () => {
+        window.__prompted = true;
+        return Promise.resolve();
+      };
+      window.dispatchEvent(e);
+    });
+    await page.getByRole("button", { name: /home screen पर जोड़ें/ }).click();
+    assert(await page.evaluate(() => window.__prompted === true), "install नहीं पूछा");
+  }),
+);
+
 await check("sitemap, robots, manifest, icon", async () => {
   const sm = await fetch(`${BASE}/sitemap.xml`);
   const smText = await sm.text();

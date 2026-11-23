@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SwRegister } from "@/components/offline/sw-register";
 import { SiteFooter } from "@/components/ui/site-footer";
 import { getSiteConfig } from "@/modules/site";
+import { TEXT_SIZE_PRESCRIPT } from "@/modules/ui/text-size";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +20,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="hi">
+    // suppressHydrationWarning: पन्ना दिखने से पहले वाली script <html> पर data-akshar लगा सकती है
+    <html lang="hi" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: TEXT_SIZE_PRESCRIPT }} />
+      </head>
       <body>
         {children}
         <SiteFooter />

@@ -105,3 +105,11 @@ body {
     color: #000 !important;
   }
 }
+
+/* "अक्षर बड़े करें" (अ+, modules/ui/text-size.ts): पूरा पन्ना बड़ा; layout वही, बस अक्षर और बटन बड़े */
+html[data-akshar="2"] body {
+  zoom: 1.15;
+}
+html[data-akshar="3"] body {
+  zoom: 1.3;
+}

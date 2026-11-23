@@ -18,8 +18,11 @@ if (paths.length < 40) {
 for (const [label, options] of [
   ["फ़ोन", { viewport: { width: 360, height: 740 } }],
   ["फ़ोन, dark", { viewport: { width: 360, height: 740 }, colorScheme: "dark" }],
+  ["फ़ोन, सबसे बड़े अक्षर", { viewport: { width: 360, height: 740 }, akshar: "3" }],
 ]) {
-  const context = await browser.newContext(options);
+  const { akshar, ...ctxOptions } = options;
+  const context = await browser.newContext(ctxOptions);
+  if (akshar) await context.addInitScript((a) => localStorage.setItem("thagi-rakshak:akshar:v1", a), akshar);
   const page = await context.newPage();
   let problems = [];
   page.on("console", (m) => {
