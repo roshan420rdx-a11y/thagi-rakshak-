@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { TELE_MANAS, TURANT_CONTENT_VERSION, TURANT_SLUGS, getTurantPage, isTurantSlug, type TurantAction } from "@/modules/scams";
 
-test("10 slug, सब अलग", () => {
-  expect(TURANT_SLUGS).toHaveLength(10);
-  expect(new Set(TURANT_SLUGS).size).toBe(10);
+test("11 slug, सब अलग", () => {
+  expect(TURANT_SLUGS).toHaveLength(11);
+  expect(new Set(TURANT_SLUGS).size).toBe(11);
 });
 
 test.each(TURANT_SLUGS)("%s: शीर्षक और कम से कम 3 कदम", (s) => {
@@ -65,10 +65,21 @@ test("बैंक वाले कदम पर Google की चेताव�
   expect(getTurantPage("upi").steps[1].warningHi).toBe("नंबर Google पर न खोजें। नकली \"customer care\" नंबर ठगी का बड़ा जाल हैं।");
 });
 
-test("हर बाहरी link https://cybercrime.gov.in", () => {
+test("हर बाहरी link सिर्फ़ जाँचे हुए सरकारी portal: cybercrime.gov.in या sancharsaathi.gov.in", () => {
   const links = TURANT_SLUGS.flatMap((s) => getTurantPage(s).steps.flatMap((st) => st.actions)).filter((a): a is Extract<TurantAction, { kind: "link" }> => a.kind === "link" && a.external);
   expect(links.length).toBeGreaterThan(0);
-  for (const l of links) expect(l.href).toBe("https://cybercrime.gov.in");
+  for (const l of links) expect(["https://cybercrime.gov.in", "https://sancharsaathi.gov.in"]).toContain(l.href);
+});
+
+test("फ़ोन चोरी/गुम: पहले पैसा बचाना (बैंक, 1930), फिर SIM, पुलिस रिपोर्ट, Sanchar Saathi पर block", () => {
+  const p = getTurantPage("phone-chori");
+  expect(p.titleHi).toBe("फ़ोन चोरी या गुम हो गया");
+  expect(p.steps.map((s) => s.id)).toEqual(["phone_bank", "call_1930", "sim_duplicate", "police_report", "block_handset"]);
+  const block = p.steps.find((s) => s.id === "block_handset")!;
+  expect(block.bodyHi).toContain("पुलिस रिपोर्ट");
+  expect(block.bodyHi).toContain("Request ID");
+  expect(block.actions).toContainEqual({ kind: "link", href: "https://sancharsaathi.gov.in", labelHi: "sancharsaathi.gov.in खोलें", external: true });
+  expect(p.steps.find((s) => s.id === "sim_duplicate")!.bodyHi).toContain("24 घंटे");
 });
 
 test("getTurantPage हर बार नया object (साझा data नहीं बदलता)", () => {
@@ -102,4 +113,4 @@ test("सबूत वाले कदम पर 'पैसा वापस द�
   }
 });
 
-test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-23.2"));
+test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-23.3"));

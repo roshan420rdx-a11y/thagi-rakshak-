@@ -2,7 +2,7 @@
 // text spec और plan A1 (Task 5) की तालिकाओं से जस का तस है। copy बदले तो TURANT_CONTENT_VERSION बढ़ाएँ
 // (service worker इसी से पुराना cache हटाता है)।
 
-export const TURANT_CONTENT_VERSION = "2026-11-23.2";
+export const TURANT_CONTENT_VERSION = "2026-11-23.3";
 
 export const TURANT_SLUGS = [
   "upi",
@@ -14,6 +14,7 @@ export const TURANT_SLUGS = [
   "loan-app",
   "investment-task",
   "customer-care-fake",
+  "phone-chori",
   "pata-nahi",
 ] as const;
 
@@ -33,7 +34,11 @@ export type StepId =
   | "stop_paying"
   | "dont_pay_threat"
   | "warn_contacts"
-  | "report_women_child";
+  | "report_women_child"
+  | "phone_bank"
+  | "sim_duplicate"
+  | "police_report"
+  | "block_handset";
 
 export type TurantStep = {
   id: StepId;
@@ -126,6 +131,36 @@ const STEPS: Record<StepId, TurantStep> = {
     bodyHi: "परिवार और दोस्तों को बता दें कि आपके नाम से आए अजीब संदेश या तस्वीरें नकली हो सकती हैं।",
     actions: [],
   },
+  // फ़ोन चोरी/गुम: Sanchar Saathi के अपने पन्ने से (2026-11-23, docs/sources/gov/README.md)
+  phone_bank: {
+    id: "phone_bank",
+    titleHi: "बैंक को तुरंत बताएँ: UPI, net banking और card रुकवाएँ",
+    urgencyHi: "सबसे पहले",
+    bodyHi:
+      "किसी और के फ़ोन से अपने बैंक को call करें, या शाखा जाएँ, और UPI, net banking और card रुकवाएँ। नंबर अपने card के पीछे या passbook में देखें।",
+    warningHi: GOOGLE_WARNING,
+    actions: [MY_BANK_LINK],
+  },
+  sim_duplicate: {
+    id: "sim_duplicate",
+    titleHi: "SIM बंद करवाएँ, और उसी नंबर का नया (duplicate) SIM लें",
+    bodyHi:
+      "अपनी mobile कंपनी के store या customer care (किसी और के फ़ोन से) से पुराना SIM बंद करवाकर उसी नंबर का नया SIM लें। आगे OTP इसी पर आएगा। नए SIM पर SMS करीब 24 घंटे बाद चालू होते हैं।",
+    actions: [],
+  },
+  police_report: {
+    id: "police_report",
+    titleHi: "पुलिस में रिपोर्ट करें",
+    bodyHi: "पास के थाने में, या राज्य पुलिस की online सुविधा से, फ़ोन चोरी या गुम होने की रिपोर्ट करें, और उसकी copy रखें। फ़ोन block करवाने में यही copy लगती है।",
+    actions: [],
+  },
+  block_handset: {
+    id: "block_handset",
+    titleHi: "Sanchar Saathi पर फ़ोन block करवाएँ",
+    bodyHi:
+      'दूरसंचार विभाग की Sanchar Saathi साइट पर "Block Your Lost/Stolen Mobile Handset" में form भरें: पुलिस रिपोर्ट की copy, पहचान पत्र, और नए SIM वाला नंबर (OTP के लिए) चाहिए; फ़ोन का bill हो तो वह भी। मिली Request ID सँभालें; फ़ोन मिल जाए तो इसी से unblock होगा।',
+    actions: [{ kind: "link", href: "https://sancharsaathi.gov.in", labelHi: "sancharsaathi.gov.in खोलें", external: true }],
+  },
   report_women_child: {
     id: "report_women_child",
     titleHi: "cybercrime.gov.in पर शिकायत करें",
@@ -183,6 +218,12 @@ const PAGES: Record<TurantSlug, PageDef> = {
   "customer-care-fake": {
     titleHi: "नकली customer care या ऐप डलवाया",
     steps: ["remove_app", ...MONEY_GONE],
+    showTeleManas: false,
+  },
+  "phone-chori": {
+    titleHi: "फ़ोन चोरी या गुम हो गया",
+    banner: { tone: "warn", textHi: "फ़ोन में UPI और bank ऐप हैं, इसलिए पहले पैसा बचाएँ: किसी और के फ़ोन से बैंक को call करें।" },
+    steps: ["phone_bank", "call_1930", "sim_duplicate", "police_report", "block_handset"],
     showTeleManas: false,
   },
   "pata-nahi": { titleHi: "पता नहीं, बस पैसे कट गए", steps: MONEY_GONE, showTeleManas: false },

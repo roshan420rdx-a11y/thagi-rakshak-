@@ -10,6 +10,8 @@
 - menu में "Mobile App"
 - हमारी बातें जो इनसे मिलीं: sim-swap पन्ना, "शिकायत का रास्ता" का "पैसे नहीं गए" हिस्सा, "पहले पूछो" का चक्षु वाला link।
 
+- **फ़ोन चोरी/गुम ("How to block lost/stolen mobile handset?"):** "File a report with the police, and keep a copy of the report. Get a duplicate SIM Card for the lost number … you will need to provide this as the primary mobile number (OTP will be sent on this number) … As per TRAI's regulation, SMS facility on re-issued SIMs is enabled after 24 hours of SIM activation. … a copy of police report and an Identity Proof must be provided. You can also provide the mobile purchase invoice. … you will be given a Request ID … for unblocking the IMEI in future." और "Mobile handset which is reported will be blocked for usage in Indian telecom network within 24 hours." → `/turant/phone-chori`।
+
 ## UIDAI (https://uidai.gov.in/en/) ✅ (आंशिक)
 - सेवाओं में: "Lock/Unlock Biometrics — Secure your Aadhaar with Biometric lock"
 - online सेवाओं में "authentication history" और "biometric lock/unlock"
