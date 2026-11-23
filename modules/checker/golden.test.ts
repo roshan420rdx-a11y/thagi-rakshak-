@@ -183,6 +183,7 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("advance_fee")).toBe("lottery-inaam");
   expect(CHECKER_RULES.find((r) => r.id === "recovery_fee")?.turant).toBe("upi");
   expect(gyanOf("relative_emergency")).toBe("apna-bankar");
+  expect(gyanOf("account_rent")).toBe("khata-kiraya");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
 });

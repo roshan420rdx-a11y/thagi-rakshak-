@@ -452,6 +452,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     level: "danger",
     labelHi: "आपके खाते में किसी और का पैसा मँगवाना, या खाता किराए पर माँगना",
     explainHi: "किसी और का पैसा अपने खाते में न आने दें, और खाता, ATM card, UPI या SIM किसी को न दें, चाहे दोस्त कहे या commission मिले। ऐसे खाते ठगी का पैसा घुमाने में इस्तेमाल होते हैं; खाता freeze हो सकता है, और पुलिस केस भी।",
+    gyan: "khata-kiraya",
     test: (t) => R.muleAsk.test(t.text) || R.muleRent.test(t.text) || (R.muleCommission.test(t.text) && R.muleForward.test(t.text)),
   },
   {

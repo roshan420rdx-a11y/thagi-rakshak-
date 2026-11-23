@@ -17,9 +17,10 @@ const PAGES = [
   ["aeps-angootha", "pata-nahi"],
   ["sim-swap", "pata-nahi"],
   ["naukri-fee", "upi"],
+  ["khata-kiraya", null], // पैसे जाने वाला /turant लागू नहीं
 ];
 
-await check("/gyan: सारे 15 पन्नों के links", () =>
+await check("/gyan: सारे 16 पन्नों के links", () =>
   withPage({}, async (page) => {
     await page.goto(`${BASE}/gyan`);
     for (const [slug] of PAGES) assert((await page.locator(`main a[href="/gyan/${slug}"]`).count()) === 1, `${slug} link नहीं`);
@@ -31,7 +32,8 @@ await check("हर पन्ना: h1, 'हो गया है?' का स�
     for (const [slug, turant] of PAGES) {
       await page.goto(`${BASE}/gyan/${slug}`);
       assert((await page.locator("main h1").count()) === 1, `${slug}: h1 नहीं`);
-      assert((await page.locator(`main a[href="/turant/${turant}"]`).count()) > 0, `${slug}: /turant/${turant} link नहीं`);
+      if (turant) assert((await page.locator(`main a[href="/turant/${turant}"]`).count()) > 0, `${slug}: /turant/${turant} link नहीं`);
+      else assert((await page.locator('main a[href^="/turant/"]').count()) === 0, `${slug}: /turant link नहीं होना चाहिए`);
       assert((await page.locator("[data-sign]").count()) === 5, `${slug}: 5 निशान नहीं`);
     }
   }),
@@ -47,7 +49,7 @@ await check("JS बंद: FAQ का सवाल दबाने पर जव
   }),
 );
 
-await check("320px: ज्ञानकोश के 16 पन्नों पर बगल में scroll नहीं", () =>
+await check("320px: ज्ञानकोश के 17 पन्नों पर बगल में scroll नहीं", () =>
   withPage({ viewport: { width: 320, height: 640 } }, async (page) => {
     for (const path of ["/gyan", ...PAGES.map(([s]) => `/gyan/${s}`)]) {
       await page.goto(`${BASE}${path}`);

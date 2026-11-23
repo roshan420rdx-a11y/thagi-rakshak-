@@ -22,7 +22,9 @@ export function GyanArticle({ page: p }: { page: GyanPage }) {
         ))}
       </section>
 
-      <BigDoor href={`/turant/${p.turantSlug}`} title="हो गया है?" subtitle="अभी क्या करें, देखें" tone="danger" icon={<IconAlert className="h-8 w-8" />} />
+      {p.turantSlug ? (
+        <BigDoor href={`/turant/${p.turantSlug}`} title="हो गया है?" subtitle="अभी क्या करें, देखें" tone="danger" icon={<IconAlert className="h-8 w-8" />} />
+      ) : null}
 
       <section className="space-y-2">
         <h2 className={H2}>यह ठगी कैसे होती है</h2>

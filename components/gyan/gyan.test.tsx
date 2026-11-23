@@ -8,7 +8,8 @@ import { GYAN_PAGES } from "@/modules/gyan";
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("/gyan/%s: ढाँचा, सही /turant link, ईमानदार meta लाइन", async (slug, p) => {
   const html = renderToStaticMarkup(await GyanPageRoute({ params: Promise.resolve({ slug }) }));
-  expect(html).toContain(`href="/turant/${p.turantSlug}"`);
+  if (p.turantSlug) expect(html).toContain(`href="/turant/${p.turantSlug}"`);
+  else expect(html).not.toContain('href="/turant/');
   expect((html.match(/data-sign=/g) ?? []).length).toBe(5);
   expect((html.match(/<details/g) ?? []).length).toBe(p.faq.length);
   expect(html).toContain("30 सेकंड में");

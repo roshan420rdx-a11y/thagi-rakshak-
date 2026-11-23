@@ -16,7 +16,8 @@ export type GyanSlug =
   | "galti-se-paise"
   | "aeps-angootha"
   | "sim-swap"
-  | "naukri-fee";
+  | "naukri-fee"
+  | "khata-kiraya";
 
 export type RbiRef = { file: string; paragraph: string; quote: string };
 
@@ -38,7 +39,7 @@ export type GyanPage = {
   examplesHi: string[]; // ठग के message (बिना असली नंबर या नाम)
   rulesHi: string[]; // बचने के 3 नियम
   faq: GyanFaq[];
-  turantSlug: TurantSlug; // "हो गया है?" का पन्ना
+  turantSlug: TurantSlug | null; // "हो गया है?" का पन्ना; null = पैसे जाने वाले कदम लागू नहीं (जैसे खाता किराए पर), तब FAQ में रास्ता
   author: string;
   reviewer: { nameHi: string; roleHi: string } | null; // विशेषज्ञ (वकील/बैंक अधिकारी); न हो तो null, गढ़कर नहीं
   lastCheckedOn: string;

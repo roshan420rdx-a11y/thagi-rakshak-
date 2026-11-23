@@ -8,7 +8,7 @@ import { isTurantSlug } from "@/modules/scams";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
 const ALLOWED_LINKS = ["/haq/thagi", "/gyan/bank", "/haq/frozen-money", "/turant"];
 
-test("15 पन्ने, तय क्रम", () =>
+test("16 पन्ने, तय क्रम", () =>
   expect(GYAN_PAGES.map((p) => p.slug)).toEqual([
     "digital-arrest",
     "customer-care-fake",
@@ -25,6 +25,7 @@ test("15 पन्ने, तय क्रम", () =>
     "aeps-angootha",
     "sim-swap",
     "naukri-fee",
+    "khata-kiraya",
   ]));
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे के गिनती वाले नियम", (_s, p) => {
@@ -35,7 +36,7 @@ test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे क�
   expect(p.rulesHi).toHaveLength(3);
   expect(p.faq.length).toBeGreaterThanOrEqual(2);
   expect(p.descriptionHi.length).toBeLessThanOrEqual(160);
-  expect(isTurantSlug(p.turantSlug)).toBe(true);
+  if (p.turantSlug !== null) expect(isTurantSlug(p.turantSlug)).toBe(true);
   expect(isValidIsoDate(p.lastCheckedOn)).toBe(true);
   expect(p.reviewer).toBeNull(); // अभी कोई विशेषज्ञ नहीं जाँचता; गढ़कर नहीं लिखना
 });
@@ -59,6 +60,8 @@ test("हो गया है? का सही /turant पन्ना", () => 
   expect(getGyanPage("apna-bankar")?.turantSlug).toBe("upi");
   expect(getGyanPage("galti-se-paise")?.turantSlug).toBe("upi");
   expect(getGyanPage("naukri-fee")?.turantSlug).toBe("upi");
+  // खाता किराए पर: पैसे जाने वाला /turant लागू नहीं (उलटे, ख़तरा खाते वाले पर); "हो गया है?" की जगह FAQ
+  expect(getGyanPage("khata-kiraya")?.turantSlug).toBeNull();
 });
 
 test("gyanForTurant: customer-care-fake → customer care, APK और बिजली बिल", () =>
@@ -93,4 +96,10 @@ test("नौकरी वाले पन्ने में सरकारी 
   const text = JSON.stringify(getGyanPage("naukri-fee"));
   expect(text).toContain("application fee");
   expect(text).toContain("emigrate.gov.in");
+});
+
+test("खाता किराए वाले पन्ने में freeze और 'कर चुका हूँ' वाले सवाल", () => {
+  const p = getGyanPage("khata-kiraya")!;
+  expect(p.faq.some((f) => f.qHi.includes("कर चुका"))).toBe(true);
+  expect(p.faq.some((f) => f.qHi.includes("freeze"))).toBe(true);
 });

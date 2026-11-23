@@ -5,6 +5,7 @@ import { bijliBill } from "@/content/gyan/hi/bijli-bill";
 import { customerCareFake } from "@/content/gyan/hi/customer-care-fake";
 import { digitalArrest } from "@/content/gyan/hi/digital-arrest";
 import { galtiSePaise } from "@/content/gyan/hi/galti-se-paise";
+import { khataKiraya } from "@/content/gyan/hi/khata-kiraya";
 import { kycLink } from "@/content/gyan/hi/kyc-link";
 import { loanApp } from "@/content/gyan/hi/loan-app";
 import { naukriFee } from "@/content/gyan/hi/naukri-fee";
@@ -32,12 +33,13 @@ export const GYAN_PAGES: readonly GyanPage[] = [
   aepsAngootha,
   simSwap,
   naukriFee,
+  khataKiraya,
 ];
 
-// /gyan पर समूह: 15 पन्नों की लंबी सूची की जगह, ठगी के तरीके के हिसाब से (हर पन्ना ठीक एक समूह में; test पक्का करता है)
+// /gyan पर समूह: 16 पन्नों की लंबी सूची की जगह, ठगी के तरीके के हिसाब से (हर पन्ना ठीक एक समूह में; test पक्का करता है)
 export const GYAN_GROUPS: readonly { titleHi: string; slugs: readonly GyanSlug[] }[] = [
   { titleHi: "डर दिखाकर ठगी", slugs: ["digital-arrest", "bijli-bill", "kyc-link", "sextortion", "loan-app"] },
-  { titleHi: "लालच देकर ठगी", slugs: ["task-investment", "naukri-fee", "lottery-inaam"] },
+  { titleHi: "लालच देकर ठगी", slugs: ["task-investment", "naukri-fee", "lottery-inaam", "khata-kiraya"] },
   { titleHi: "अपना या मददगार बनकर ठगी", slugs: ["customer-care-fake", "apna-bankar", "galti-se-paise"] },
   { titleHi: "PIN, QR, ऐप, SIM या अंगूठे से ठगी", slugs: ["upi-pin-qr", "apk-file", "aeps-angootha", "sim-swap"] },
 ];
