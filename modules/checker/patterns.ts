@@ -132,7 +132,7 @@ const LOAN_SEND = "भेज|\\bsend|\\bbhej|बता|\\btell|\\bcall|कॉल
 const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
 const BLOCK =
-  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट|रुक\\s*(?:गई|गया|गयी|जाएगी|जाएगा)|रुकी\\s*(?:है|हुई)|रोक\\s*(?:दी|दिया)|withheld|(?:खाता|खाते|account|\\ba/c)\\s*बंद(?!\\s*(?:नहीं|नही))|\\bkhata\\s*band\\b";
+  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|बंद\\s*होने\\s*वाल|band\\s*hone\\s*wal|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट|रुक\\s*(?:गई|गया|गयी|जाएगी|जाएगा)|रुकी\\s*(?:है|हुई)|रोक\\s*(?:दी|दिया)|withheld|(?:खाता|खाते|account|\\ba/c)\\s*बंद(?!\\s*(?:नहीं|नही))|\\bkhata\\s*band\\b";
 // असली बैंक message में "block" धमकी नहीं होता: "SMS BLOCK 1234 to …" (बैंक का निर्देश), "to block your card",
 // "blocked as requested"। kyc_block इन्हें हटाकर ही "block" देखता है।
 const BLOCK_NOT_THREAT =
@@ -246,7 +246,13 @@ const CALL_FORWARD = "\\*\\s*40[1-9]\\s*\\*|\\*\\*\\s*(?:21|61|62|67|002|004)\\s
 
 // सरकारी कामों के नाम (इनकी असली साइटें .gov.in / .nic.in पर); बिजली कंपनियाँ इसमें नहीं (उनकी साइटें अलग-अलग)
 const GOV_NAME =
-  "income\\s*tax|आयकर|\\bitr\\b|tax\\s*refund|challan|चालान|parivahan|परिवहन|traffic\\s*police|ट्रैफ़िक\\s*पुलिस|\\buidai\\b|\\baadhaa?r\\b|आधार|\\bpan\\s*card|पैन\\s*कार्ड|\\bepfo\\b|पीएफ|pm[\\s-]*kisan|पीएम\\s*किसान|किसान\\s*सम्मान|ration\\s*card|राशन\\s*कार्ड|passport|पासपोर्ट|digilocker|डिजीलॉकर|सरकारी\\s*योजना|government\\s*scheme";
+  "income\\s*tax|आयकर|\\bitr\\b|tax\\s*refund|challan|चालान|parivahan|परिवहन|traffic\\s*police|ट्रैफ़िक\\s*पुलिस|\\buidai\\b|\\baadhaa?r\\b|आधार|\\bpan\\s*card|पैन\\s*कार्ड|\\bepfo\\b|\\bpf\\b|पीएफ|pm[\\s-]*kisan|पीएम\\s*किसान|किसान\\s*सम्मान|ration\\s*card|राशन\\s*कार्ड|passport|पासपोर्ट|digilocker|डिजीलॉकर|सरकारी\\s*योजना|government\\s*scheme";
+
+// सरकारी काम के नाम पर किसी के mobile नंबर पर call/WhatsApp, पैसे या रुकावट की बात के साथ ("PF का पैसा निकालने के लिए
+// इस नंबर पर call करें")। विभागों के अपने नंबर toll-free/छोटे होते हैं (1947, 1800-…), mobile नहीं।
+const GOV_HOOK =
+  "पैसा|पैसे|किस्त|\\bkist|refund|रिफंड|निकाल|withdraw|claim|क्लेम|bonus|बोनस|subsidy|सब्सिडी|रुक|अटक|बंद|block|ब्लॉक|update|अपडेट|\\bkyc\\b|केवाईसी";
+const CALL_VERB = "\\bcall\\b|कॉल|संपर्क|सम्पर्क|contact|whatsapp|व्हाट्सएप|बात\\s*कर";
 
 const LINK =
   "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
@@ -261,6 +267,8 @@ const R = {
   scanAsk: rx(SCAN_ASK),
   pinAsk: rx(PIN_ASK),
   detailsFill: near(FILL, DETAIL, 40),
+  govHook: rx(GOV_HOOK),
+  callVerb: rx(CALL_VERB),
   linkWord: rx(LINK_WORD),
   download: rx(DOWNLOAD),
   request: rx(REQUEST),
@@ -646,6 +654,13 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "सरकारी काम का नाम, पर पता .gov.in का नहीं",
     explainHi: "आयकर, चालान, आधार, PF या किसान योजना जैसे सरकारी कामों की साइटें आम तौर पर .gov.in या .nic.in पर होती हैं। ऐसा link न खोलें; विभाग की साइट का पता ख़ुद टाइप करें।",
     test: (t) => R.govName.test(t.text) && t.domains.some((d) => !isGovDomain(d)),
+  },
+  {
+    id: "gov_number",
+    level: "warn",
+    labelHi: "सरकारी काम के नाम पर किसी mobile नंबर पर call करवाना",
+    explainHi: "PF, आयकर, आधार या किसान योजना का काम किसी के mobile नंबर पर call करके नहीं होता। विभाग का असली नंबर (जैसे आधार 1947) उसकी .gov.in साइट से ख़ुद देखें।",
+    test: (t) => R.govName.test(t.text) && R.govHook.test(t.text) && R.callVerb.test(t.text) && R.mobile.test(t.text),
   },
   {
     id: "link",

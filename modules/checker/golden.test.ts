@@ -11,6 +11,8 @@ import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"|"$/g, "")));
 
 const SCAMS: string[] = [
+  "आपका PF का पैसा निकालने के लिए इस नंबर पर call करें, officer आपकी मदद करेंगे: 9123456789",
+  "आपका गैस connection बंद होने वाला है, KYC update के लिए इस नंबर पर call करें 9876501234",
   // 2026-11-23: छूटती आम ठगियाँ (army वाला किराएदार, link से card/बैंक की जानकारी, बिजली का ऐप)
   "मैं army से बोल रहा हूँ, आपका कमरा किराए पर लेना है, advance भेजने के लिए QR scan करें और PIN डालें।",
   "प्रिय ग्राहक, आपका credit card limit बढ़ाने के लिए नीचे दिया link खोलें और card details भरें।",
