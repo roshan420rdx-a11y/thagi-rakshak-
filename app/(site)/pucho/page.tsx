@@ -11,7 +11,7 @@ import { absoluteUrl, getSiteConfig, SCAM_SIGNS } from "@/modules/site";
 export const metadata: Metadata = pageMeta({
   title: "यह message ठगी है? पहले पूछो",
   description:
-    "संदिग्ध SMS या WhatsApp message चिपकाएँ और ठगी के निशान देखें। जाँच आपके फ़ोन में ही होती है। साथ में ठगी के 8 आम निशान।",
+    "संदिग्ध SMS या WhatsApp message चिपकाएँ, या call की बात लिखें या बोलें, और ठगी के निशान देखें। लिखा message आपके फ़ोन में ही जाँचा जाता है।",
   path: "/pucho",
 });
 
@@ -22,6 +22,7 @@ export default function PuchoPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">यह message ठगी है? पहले पूछो</h1>
+      <p>SMS या WhatsApp का message चिपकाएँ, या call पर जो कहा गया वह अपने शब्दों में लिखें या बोलें। हिंदी, Hinglish या English, किसी में भी।</p>
       <CheckerBox pageUrl={pageUrl} />
       {/* plan A2f: ऐप जुड़ा हो तो WhatsApp/SMS से Share करके सीधे जाँच (browser मौका दे, तभी दिखता है) */}
       <InstallButton label="ऐप जोड़ें: फिर WhatsApp या SMS से सीधे Share करके जाँचें" />
