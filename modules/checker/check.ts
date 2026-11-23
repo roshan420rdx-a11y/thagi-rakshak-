@@ -1,6 +1,7 @@
 import { extractDomains } from "./links";
 import { normalizeText } from "./normalize";
 import { CHECKER_RULES, MANY_SIGNALS, MANY_SIGNALS_MIN, stripNegations, type RuleLevel } from "./patterns";
+import { latinize } from "./translit";
 
 // "पहले पूछो" की जाँच: शुद्ध function, फ़ोन (browser) में ही चलता है। कोई network, AI या storage नहीं।
 // नतीजा कभी "सुरक्षित" नहीं कहता: सबसे अच्छा नतीजा "आम निशान नहीं मिले" है।
@@ -18,7 +19,10 @@ export function checkMessage(input: string): CheckResult {
   if (!text.trim()) return { level: "no_signals", hits: [], domains: [] };
   const domains = extractDomains(text);
   const checked = { text, stripped: stripNegations(text), domains };
-  const hits: Hit[] = CHECKER_RULES.filter((r) => r.test(checked)).map(toHit);
+  // हिंदी में लिखे अंग्रेज़ी शब्द ("एनी डेस्क", "ओटीपी") अंग्रेज़ी रूप में भी: नियम दोनों में से किसी एक पर मिले तो निशान
+  const latin = latinize(text);
+  const checkedLatin = latin === text ? null : { text: latin, stripped: stripNegations(latin), domains };
+  const hits: Hit[] = CHECKER_RULES.filter((r) => r.test(checked) || (checkedLatin !== null && r.test(checkedLatin))).map(toHit);
   hits.sort((a, b) => rank(a.level) - rank(b.level));
   if (!hits.some((h) => h.level === "danger") && hits.length >= MANY_SIGNALS_MIN) hits.unshift({ ...MANY_SIGNALS });
   const level: Level = hits.some((h) => h.level === "danger") ? "danger" : hits.length ? "warn" : "no_signals";

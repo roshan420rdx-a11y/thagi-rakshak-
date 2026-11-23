@@ -5,6 +5,13 @@ const ids = (t: string) => checkMessage(t).hits.map((h) => h.id);
 
 // हर नियम: [id, पकड़ने वाले उदाहरण, न-पकड़ने वाले उदाहरण]
 const CASES: [string, string[], string[]][] = [
+  // 2026-11-23 (मालिक ने ख़ुद आज़माया): हिंदी में लिखे अंग्रेज़ी नाम, और अपने शब्दों में बताई घटना ("मुझसे माँगा", "बोल रहा है")
+  ["remote_app", ["एनडेस्क ऐप से कोई व्यक्ति मेरे से पैसे मांग रहा है, ये बोल रहा है कोई जोखिम नहीं है", "एनी डेस्क इंस्टॉल करने को बोला", "कोई बोल रहा है क्विक सपोर्ट ऐप डालो", "उसने रस्टडेस्क डाउनलोड करवाया"], ["मेरी डेस्क पर फ़ाइल रख दो"]],
+  ["otp_request", ["एक आदमी मुझसे ओटीपी माँग रहा है", "मुझसे OTP मांगा बैंक वाला बनकर", "he is asking for my OTP"], ["OTP किसी को न बताएँ, बैंक कभी OTP नहीं माँगता।"]],
+  ["app_install_ask", ["बैंक वाले ने फोन करके बोला आपका खाता बंद हो जाएगा, ऐप डाउनलोड करो", "customer care ne bola refund ke liye ek app download karo", "बिजली विभाग वाला बोल रहा है ये ऐप इंस्टॉल करो"], ["Play Store से अपने बैंक का ऐप डाउनलोड करें।", "भाई ने नया गेम ऐप डाउनलोड किया है।", "बैंक का ऐप अपडेट कर लिया।"]],
+  ["digital_arrest", ["पुलिस वाला बोल रहा है वीडियो कॉल पर रहो वरना गिरफ्तार कर लेंगे", "CBI वाले ने मुझे बोला मेरे नाम से ड्रग्स वाला पार्सल पकड़ा गया"], []],
+  ["upi_request_pin", ["एक लड़का बोल रहा है तुम्हारे खाते में पैसे डालेगा, बस यूपीआई पिन डाल दो"], []],
+  ["reassurance", ["एनडेस्क ऐप से कोई व्यक्ति मेरे से पैसे मांग रहा है, ये बोल रहा है कोई जोखिम नहीं है", "किसी ने बोला पैसे डबल कर दूंगा, कोई रिस्क नहीं है", "100% safe investment, no risk at all, send money today"], ["डॉक्टर ने कहा कोई खतरा नहीं है, आराम करो।", "चिंता मत करो, मैं शाम को आ जाऊँगा।"]],
   // card number / CVV / ATM PIN माँगना (बैंक वाला बनकर call)
   ["card_secret_ask", ["Hello madam, main SBI bank se bol raha hu, aapka ATM card block ho gaya hai, card number aur CVV batayiye", "आपका card चालू रखने के लिए card के पीछे लिखे 3 अंक बताइए।", "Please share your card number and expiry date to stop the blocking."], ["Never share your card number, CVV or OTP with anyone. -SBI", "CVV और ATM PIN कभी किसी को न बताएँ।", "card number aur CVV kisi ko mat batana", "आपका नया debit card डाक से भेजा गया है।"]],
   // "पैसे भेज रहा हूँ, बस request accept कर लो" (PIN का नाम लिए बिना)

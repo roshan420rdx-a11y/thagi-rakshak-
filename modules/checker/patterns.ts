@@ -41,7 +41,7 @@ const NEGATIONS: RegExp[] = [
     "\\b(?:do\\s*not|don'?t|dont|never|not\\s+to|nobody\\s+will|no\\s+one\\s+will)\\s+(?:(?:ever|it|this|your|the|you|to|with|anyone|any\\s*one|for)\\s+){0,3}(?:share|disclose|tell|give|send|forward|reveal|ask|enter|type|receive|scan|click|open|install|download)\\w*" +
       `${END}{0,40}`,
   ),
-  rx("(?<![\\u0900-\\u097f])(?:न|ना|मत|नहीं|कभी\\s*न)\\s+(?:बता|बोल|भेज|शेयर|साझा|दें|दे|डाल|लिख)\\S*"),
+  rx("(?<![\\u0900-\\u097f])(?:न|ना|मत|नहीं|कभी\\s*न)\\s+(?:बता|बोल|भेज|शेयर|साझा|दें|दे|डाल|लिख|मांग)\\S*"),
   rx("(?:शेयर|साझा|share)\\s*(?:न|मत|नहीं|na|mat|nahi|nhi)\\s+(?:कर|kar)\\S*"),
   // "बताएँ नहीं" (उल्टा क्रम); पर "बताओ नहीं तो…" धमकी है, उसे नकार न मानें
   rx("(?:बता|बोल|भेज|शेयर|साझा|दें|दे)\\S*\\s+(?:नहीं|मत)(?![\\u0900-\\u097f])(?!\\s*(?:तो|to\\b))"),
@@ -53,14 +53,15 @@ export function stripNegations(text: string): string {
 }
 
 const OTP = "\\botp\\b|ओटीपी|one\\s*time\\s*password|verification\\s*code|वेरिफिकेशन\\s*कोड|\\d\\s*(?:digit|अंक|ank|anko|ankon)\\S*\\s*(?:का\\s*|ka\\s*)?(?:code|कोड)";
-const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
+const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|\\bask(?:ed|ing|s)?\\b|मांग|\\bmaang|\\bmang(?:a|e|ta|te|na|ne)?\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
 const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
 // "मैं आपको 1 रुपया भेजता हूँ, QR scan करो" (OLX वाला 'army officer'): पैसे भेजने का वादा = पैसे पाने का झाँसा।
 // पैसे वाला शब्द पहले चाहिए ("QR भेज रहा हूँ, scan करके payment करो" दुकानदार की असली बात है)
 const MONEY_WORD =
   "पैसे|पैसा|\\brupa(?:y|ya|ye)\\b|\\brupees?\\b|रुपया|रुपये|रुपए|₹\\s*\\d[\\d,]*|\\brs\\.?\\s*\\d[\\d,]*|(?<![\\d.])\\d{1,3}(?:,\\d{2,3})+(?![\\d.])";
-const WILL_SEND = "भेजता|भेज\\s*रहा|भेज\\s*रही|भेजूंगा|भेजूंगी|\\bbhejta|\\bbhej\\s*raha|\\bbhej\\s*rahi|\\bbhejunga|\\bbhejungi";
+const WILL_SEND =
+  "भेजता|भेज\\s*रहा|भेज\\s*रही|भेजूंगा|भेजूंगी|डालेगा|डालेगी|डालूंगा|डालूंगी|डाल\\s*रहा|डाल\\s*रही|डाल\\s*दूंगा|\\bbhejta|\\bbhej\\s*raha|\\bbhej\\s*rahi|\\bbhejunga|\\bbhejungi|\\bdaa?lega|\\bdaa?lunga";
 const RECEIVE_PROMISE = `(?:${MONEY_WORD})\\s*(?:\\S+\\s*){0,2}?(?:${WILL_SEND})|\\bsend(?:ing)?\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)|\\bi\\s+(?:will|am\\s+going\\s+to)\\s+send\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)`;
 const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
 const PIN = "(?<![a-z])pin(?![\\s-]*code|[a-z])|पिन(?![\\s-]*कोड)|\\bmpin\\b";
@@ -84,6 +85,17 @@ const FILL =
 const LINK_WORD = "\\blink|लिंक|click\\s*here|यहां\\s*क्लिक|नीचे\\s*दि";
 const DOWNLOAD = "download|डाउनलोड|install|इंस्टॉल|इंस्टाल";
 
+// बैंक/कंपनी/विभाग बनकर कोई ऐप डलवाना ("बैंक वाले ने बोला ऐप डाउनलोड करो")। "Play Store से" वाली असली सलाह नहीं।
+const POSER =
+  "\\bbank|बैंक|customer\\s*care|कस्टमर|\\bsupport|सपोर्ट|company|कंपनी|officer|अधिकारी|पुलिस|police|बिजली|electricity|\\bkyc\\b|केवाईसी|refund|रिफंड|विभाग|department|courier|कूरियर|delivery|डिलीवरी";
+const APP_WORD = "\\bapps?\\b|ऐप|एप|application|एप्लीकेशन";
+const INSTALL_APP = `(?:${near("download|install|डलवा|\\bdalwa", APP_WORD, 25).source})|(?:${APP_WORD})\\s*(?:\\S+\\s*){0,1}?(?:डाल|\\bdaa?l(?:o|do|iye)?\\b)`;
+const PLAY_STORE = "play\\s*store|प्ले\\s*स्टोर|app\\s*store|google\\s*play";
+
+// "कोई ख़तरा नहीं", "no risk", "100% safe" कहकर भरोसा दिलाना, पैसे/ऐप/निवेश की बात के साथ
+const REASSURE =
+  "कोई\\s*(?:भी\\s*)?(?:जोखिम|रिस्क|खतरा|risk|टेंशन|tension|दिक्कत|problem|प्रॉब्लम)\\s*(?:नहीं|nahi|nhi)|\\bno\\s*risk|risk[\\s-]*free|\\bzero\\s*risk|100\\s*%\\s*(?:safe|secure|सुरक्षित|सेफ)|guarantee|गारंटी|बिल्कुल\\s*(?:सुरक्षित|सेफ|safe)";
+
 // card का नंबर, CVV, expiry या ATM PIN माँगना (बैंक वाला बनकर call/message)। "कभी न बताएँ" वाला असली SMS नकार से बाहर।
 const CARD_SECRET =
   "\\bcvv\\b|सीवीवी|card\\s*(?:ka\\s*|का\\s*)?(?:number|no\\b|नंबर)|कार्ड\\s*(?:का\\s*)?नंबर|atm\\s*pin|एटीएम\\s*पिन|\\bexpiry|एक्सपायरी|पीछे\\s*(?:के\\s*|वाले\\s*|लिखे\\s*)?(?:3|तीन)\\s*अंक|\\bpeeche\\s*(?:ke\\s*|wale\\s*|likhe\\s*)?(?:3|teen)\\s*(?:ank|digit)";
@@ -95,7 +107,8 @@ const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस�
 const SAFE_ACCOUNT = "सरकारी\\s*खात|safe\\s*account|secure\\s*account|सुरक्षित\\s*खात|government\\s*account|rbi\\s*(?:के\\s*)?(?:खात|account)";
 const MOVE_MONEY = "transfer|ट्रांसफ़र|भेज|जमा|\\bmove\\b|shift|\\bbhej|\\bjama|deposit";
 // ठग का message हमेशा पढ़ने वाले से बात करता है ("आपके नाम से…"); ख़बर वाले text पर danger न लगे
-const YOU = "आप|तुम|तेरा|तेरे|तेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b";
+const YOU =
+  "आप|तुम|तेरा|तेरे|तेरी|मुझ|मेरे|मेरा|मेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b|\\bme\\b|\\bmy\\b|\\bmujh|\\bmere\\b|\\bmera\\b|\\bmeri\\b";
 const AUTHORITY =
   "पुलिस|police|\\bcbi\\b|सीबीआई|\\bncb\\b|narcotics|नारकोटिक्स|customs|कस्टम|\\btrai\\b|ट्राई|enforcement\\s*directorate|प्रवर्तन\\s*निदेशालय|crime\\s*branch|क्राइम\\s*ब्रांच|cyber\\s*cell|साइबर\\s*सेल|income\\s*tax\\s*officer|supreme\\s*court|सुप्रीम\\s*कोर्ट|\\bjudge\\b|fedex|फेडेक्स";
 const THREAT =
@@ -279,6 +292,12 @@ const R = {
   callVerb: rx(CALL_VERB),
   linkWord: rx(LINK_WORD),
   download: rx(DOWNLOAD),
+  poser: rx(POSER),
+  installApp: new RegExp(INSTALL_APP, "i"),
+  playStore: rx(PLAY_STORE),
+  reassure: rx(REASSURE),
+  videoArrest: near("video\\s*call|वीडियो\\s*कॉल|skype|स्काइप", "arrest|अरेस्ट|गिरफ्तार|warrant|वारंट|custody|हिरासत|jail|जेल", 60),
+  appWord: rx(APP_WORD),
   cardSecret: near(CARD_SECRET, ASK, 40),
   requestAccept: new RegExp(REQUEST_ACCEPT, "i"),
   request: rx(REQUEST),
@@ -428,7 +447,8 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) =>
       R.arrestDirect.test(t.text) ||
       R.safeAccount.test(t.text) ||
-      ((R.authority.test(t.text) || R.press.test(t.text)) && R.threat.test(t.text) && R.you.test(t.text)),
+      ((R.authority.test(t.text) || R.press.test(t.text)) && R.threat.test(t.text) && R.you.test(t.text)) ||
+      (R.authority.test(t.text) && R.videoArrest.test(t.text)),
   },
   {
     id: "details_link",
@@ -441,6 +461,17 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
       (R.link.test(t.text) || R.linkWord.test(t.text)) &&
       R.detailsFill.test(t.stripped) &&
       !(t.domains.length > 0 && t.domains.every((d) => d.endsWith(".bank.in") || isGovDomain(d))),
+  },
+  {
+    id: "app_install_ask",
+    level: "danger",
+    labelHi: "बैंक या कंपनी बनकर कोई ऐप डलवाना",
+    explainHi:
+      "बैंक, बिजली विभाग या customer care कभी call या message पर कोई ऐप डलवाकर काम नहीं करते। ऐसे ऐप से फ़ोन और खाता ठग के हाथ जा सकता है। ऐप सिर्फ़ Play Store से, ख़ुद खोजकर लें।",
+    gyan: "apk-file",
+    turant: "customer-care-fake",
+    // AnyDesk जैसा नाम हो तो remote_app ही काफ़ी (वही ज़्यादा साफ़ बताता है)
+    test: (t) => R.poser.test(t.text) && R.installApp.test(t.stripped) && !R.playStore.test(t.text) && !R.remote.test(t.text),
   },
   {
     id: "apk_file",
@@ -690,6 +721,14 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "सरकारी काम के नाम पर किसी mobile नंबर पर call करवाना",
     explainHi: "PF, आयकर, आधार या किसान योजना का काम किसी के mobile नंबर पर call करके नहीं होता। विभाग का असली नंबर (जैसे आधार 1947) उसकी .gov.in साइट से ख़ुद देखें।",
     test: (t) => R.govName.test(t.text) && R.govHook.test(t.text) && R.callVerb.test(t.text) && R.mobile.test(t.text),
+  },
+  {
+    id: "reassurance",
+    level: "warn",
+    labelHi: "'कोई ख़तरा नहीं' कहकर भरोसा दिलाना",
+    explainHi:
+      "ठग अक्सर 'कोई ख़तरा नहीं', 'बिल्कुल safe' जैसी बातें कहकर जल्दी फ़ैसला करवाते हैं। असली बैंक या कंपनी ऐसे भरोसे से दबाव नहीं डालती; ऐसी बात सुनते ही और सावधान हो जाएँ।",
+    test: (t) => R.reassure.test(t.text) && (R.money.test(t.text) || R.appWord.test(t.text) || R.remote.test(t.text) || R.investDirect.test(t.text)),
   },
   {
     id: "link",

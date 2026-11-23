@@ -11,6 +11,13 @@ import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"|"$/g, "")));
 
 const SCAMS: string[] = [
+  // अपने शब्दों में बताई घटना (बोलकर लिखने पर ऐसे ही वाक्य आते हैं)
+  "एनडेस्क ऐप से कोई व्यक्ति मेरे से पैसे मांग रहा है, ये बोल रहा है कोई जोखिम नहीं है",
+  "एक आदमी मुझसे ओटीपी माँग रहा है",
+  "बैंक वाले ने फोन करके बोला आपका खाता बंद हो जाएगा, ऐप डाउनलोड करो",
+  "पुलिस वाला बोल रहा है वीडियो कॉल पर रहो वरना गिरफ्तार कर लेंगे",
+  "एक लड़का बोल रहा है तुम्हारे खाते में पैसे डालेगा, बस यूपीआई पिन डाल दो",
+  "कस्टमर केयर वाले ने बोला रिफंड के लिए क्यूआर स्कैन करो",
   "Hello madam, main SBI bank se bol raha hu, aapka ATM card block ho gaya hai, card number aur CVV batayiye",
   "बेटा, मैं तुम्हारे पापा का दोस्त हूँ, उन्होंने कहा है तुम्हारे account में 10,000 भेज रहा हूँ, बस मेरा भेजा request accept कर लो।",
   "Sir aapke account me 49,999 ka loan approve hua hai, bas 2,999 processing fee bhejiye",
@@ -94,6 +101,9 @@ const SCAMS: string[] = [
 ];
 
 const BENIGN: string[] = [
+  "डॉक्टर ने कहा कोई खतरा नहीं है, आराम करो।",
+  "Play Store से अपने बैंक का ऐप डाउनलोड करें।",
+  "पापा ने बोला शाम को सब्ज़ी ले आना, पैसे मेज़ पर रखे हैं।",
   "Rs 1500 credited to your a/c XX1234 by UPI from RAMESH. Avl bal Rs 8,200 -PNB",
   "Facebook पर मेरी friend request accept कर लो।",
   "Dear customer, your loan EMI of Rs 4,500 is due on 5th. Please maintain sufficient balance. -HDFC Bank",
