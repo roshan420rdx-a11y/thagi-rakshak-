@@ -105,6 +105,10 @@ const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
 const BLOCK =
   "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट";
+// असली बैंक message में "block" धमकी नहीं होता: "SMS BLOCK 1234 to …" (बैंक का निर्देश), "to block your card",
+// "blocked as requested"। kyc_block इन्हें हटाकर ही "block" देखता है।
+const BLOCK_NOT_THREAT =
+  "\\bsms\\s+block\\b|\\bto\\s+block\\b|blocked\\s+as\\s+(?:per\\s+(?:your\\s+)?)?request(?:ed)?|ब्लॉक\\s+करने\\s+के\\s+लिए|ब्लॉक\\s+करवाने";
 const ACTION = "update|अपडेट|click|क्लिक|\\blink|लिंक|verify|वेरीफ़ाई|वेरिफ़ाई|सत्यापित|\\bcall\\b|कॉल|download|डाउनलोड";
 
 const JOB =
@@ -141,6 +145,17 @@ const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|�
 
 const URGENT =
   "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
+
+// "यह आपने नहीं किया तो…" वाला हिस्सा: असली alert की जल्दी (तुरंत बताएँ) धमकी नहीं, इसलिए urgency इसे हटाकर देखी जाती है।
+// पर उसी हिस्से में mobile नंबर हो, तो नकली alert का निशान (ठग अपने नंबर पर call करवाते हैं)।
+const NOT_YOU_CORE =
+  "if\\s+(?:this\\s+(?:was|is)\\s+)?not\\s+(?:done\\s+by\\s+)?you|\\bnot\\s+you\\b|if\\s+you\\s+(?:have\\s+not|did\\s+not|didn'?t)|आपने\\s+नहीं\\s+किया|अगर\\s+आपने\\s+नहीं|\\baapne\\s+nahi\\s+kiya";
+const DEBITED =
+  "debited|deducted|withdrawn|transferred|spent|कट\\s*गए|कटे|काटे|निकाले\\s*गए|निकल\\s*गए|डेबिट|\\bkat\\s*gaye|\\bdebit";
+// बैंक का "SMS BLOCK 1234 to 92230…" (SMS भेजने का अपना नंबर) call करवाना नहीं; नकली alert "call करें" कहता है
+const SMS_BLOCK_TO = "\\bsms\\s+block\\s+\\S+\\s+to\\s+\\+?\\d[\\d\\s-]{6,}";
+// UPI ID का हिस्सा वाला नंबर (9876543210@ybl) नहीं गिना जाता
+const ALERT_NUMBER = `(?<![\\d@.])(?:\\+?91[\\s-]?)?[6-9]\\d{4}[\\s-]?\\d{5}(?![\\d@])|${MASKED_NUMBER}`;
 
 // AePS: आधार नंबर + अंगूठे के निशान से बिना OTP निकासी। "भेजो/share" साथ हो तभी (आधार केंद्र पर अंगूठा लगाने की सलाह पर नहीं)
 const BIOMETRIC =
@@ -208,6 +223,11 @@ const R = {
   careHook: rx(CARE_HOOK),
   refundHook: rx(REFUND_HOOK),
   mobile: rx(MOBILE),
+  blockNotThreat: new RegExp(normalizePattern(BLOCK_NOT_THREAT), "gi"),
+  notYouClause: new RegExp(normalizePattern(`(?:${NOT_YOU_CORE})${END}*`), "gi"),
+  fakeAlert: rx(`(?:${NOT_YOU_CORE})[^\\n]{0,80}?(?:${ALERT_NUMBER})`),
+  debited: rx(DEBITED),
+  smsBlockTo: new RegExp(normalizePattern(SMS_BLOCK_TO), "gi"),
   biometricSend: near(BIOMETRIC, SEND_BIO, 50),
   sim: rx(SIM),
   simSend: near(SMS_WORD, SMS_SEND, 20),
@@ -370,7 +390,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "KYC या खाता बंद होने का डर",
     gyan: "kyc-link",
     explainHi: "बैंक का नाम लेकर SMS के link या call से KYC करवाना ठगी का आम तरीका है। KYC अपने बैंक की शाखा या उसके अपने ऐप में ही करें।",
-    test: (t) => R.block.test(t.text) && (R.kyc.test(t.text) || (R.account.test(t.text) && R.action.test(t.text))),
+    test: (t) => R.block.test(t.text.replace(R.blockNotThreat, " ")) && (R.kyc.test(t.text) || (R.account.test(t.text) && R.action.test(t.text))),
   },
   {
     id: "task_job",
@@ -400,6 +420,14 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) => R.wrong.test(t.text) && R.sent.test(t.text) && R.back.test(t.text),
   },
   {
+    id: "fake_alert_number",
+    level: "warn",
+    labelHi: "पैसे कटने का message, और call के लिए mobile नंबर",
+    explainHi: "ठग पैसे कटने का नकली SMS भेजकर अपने नंबर पर call करवाते हैं। पहले बैंक के ऐप में ख़ुद देखें कि पैसे सच में कटे हैं या नहीं। call करना हो, तो card के पीछे या बैंक के ऐप में लिखे नंबर पर करें।",
+    gyan: "customer-care-fake",
+    test: (t) => R.debited.test(t.text) && R.fakeAlert.test(t.text.replace(R.smsBlockTo, " ")),
+  },
+  {
     id: "customer_care",
     level: "warn",
     labelHi: "customer care के नाम पर mobile नंबर",
@@ -423,7 +451,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     level: "warn",
     labelHi: "जल्दबाज़ी करवाना",
     explainHi: "ठग सोचने का समय नहीं देते। रुकें, किसी अपने से पूछें, फिर कुछ करें।",
-    test: (t) => R.urgent.test(t.text),
+    test: (t) => R.urgent.test(t.text.replace(R.notYouClause, " ")),
   },
   {
     id: "bank_lookalike",

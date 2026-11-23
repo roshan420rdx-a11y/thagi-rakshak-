@@ -20,6 +20,7 @@ const CASES: [string, string[], string[]][] = [
   ["biometric_ask", ["योजना का पैसा पाने के लिए अपना आधार नंबर और अंगूठे का निशान WhatsApp पर भेजें", "Send your Aadhaar number and fingerprint photo to verify"], ["आधार केंद्र पर जाकर अंगूठा लगाकर eKYC करवाएँ"]],
   ["sim_swap", ["आपका SIM 5G में upgrade होगा, अभी यह SMS भेजें: SIMUPG 20 अंकों का नंबर", "Your eSIM activation is pending, please send SMS with your 20 digit SIM number"], ["Jio: 5G अब आपके इलाके में उपलब्ध है"]],
   ["call_forward", ["delivery के लिए अभी *401* के बाद यह नंबर dial करें: 98XXXXXX12", "Please dial **21*9876543210# to reschedule your parcel", "dial *401*98XXXXXX12 now"], ["बैलेंस देखने के लिए *123# dial करें", "Dial *121*1# for offers"]],
+  ["fake_alert_number", ["Dear customer, Rs 10,000 debited from your account. If not you, call 9876543210 immediately to block your card.", "आपके खाते से ₹25,000 कट गए हैं। यह आपने नहीं किया तो तुरंत 98XXXXXX21 पर call करें।"], ["Dear Customer, Rs.500.00 debited from A/c XX1234 on 20-11-26 to VPA shop@okaxis. Not you? Call 18001234567 -Bank"]],
   ["new_number_money", ["पापा, मेरा फ़ोन ख़राब हो गया, यह मेरा नया नंबर है। अभी ₹15,000 भेज दो", "Hi Mom, this is my new number, please send money urgently"], ["पापा, मेरा फ़ोन नंबर बदल गया है, नया नंबर सेव कर लो"]],
   ["new_number", ["Hi Mummy, ye mera new number hai, purana kharab ho gaya", "पापा, मेरा नंबर बदल गया है"], ["गाड़ी की नंबर प्लेट बदलवानी है"]],
   ["kyc_block", ["Your account will be blocked today, update KYC by clicking the link", "आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें"], ["KYC के लिए शाखा में आधार लाएँ"]],
@@ -91,4 +92,19 @@ test.each([
 
 test("'बताओ नहीं तो…' वाली धमकी में OTP माँगना अब भी पकड़ा जाए", () => {
   expect(checkMessage("OTP बताओ नहीं तो खाता बंद हो जाएगा").hits.map((h) => h.id)).toContain("otp_request");
+});
+
+// असली बैंक/कंपनी वाले message पर ग़लत निशान नहीं (भरोसा टूटता है): "SMS BLOCK" वाला निर्देश, "आपके कहने पर block हुआ",
+// और "यह आपने नहीं किया तो तुरंत बताएँ" वाली असली जल्दी
+test.each([
+  "Your A/c XX1234 is debited for Rs.500.00 on 23-11-26. If not done by you, call 18001234567 or SMS BLOCK 1234 to 567676 -Bank",
+  "Dear Customer, your debit card ending 1234 has been blocked as requested. For help call 18001234567.",
+  "आपके खाते से ₹1,500 ATM से निकाले गए। यह आपने नहीं किया तो तुरंत 1800-XXX-XXXX पर संपर्क करें।",
+  "Rs 10,000 has been transferred to Ramesh via IMPS. If not you, report fraud in the app immediately.",
+  "Dear Customer, Your A/c XX1234 is debited for Rs.500.00 by UPI. If not done by you, call 18001234567 or SMS BLOCK 1234 to 9223008333 -Bank",
+])("असली alert पर कोई निशान नहीं: %s", (m) => expect(ids(m)).toEqual([]));
+
+test("पर ख़तरे वाली बातें अब भी: खाता बंद करने की धमकी, और धमकी वाली जल्दी", () => {
+  expect(ids("Your account will be blocked today. Call 9876543210 to unblock")).toContain("kyc_block");
+  expect(ids("आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें")).toEqual(expect.arrayContaining(["kyc_block", "urgency"]));
 });

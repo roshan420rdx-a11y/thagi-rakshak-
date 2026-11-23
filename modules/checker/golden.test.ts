@@ -55,6 +55,8 @@ const SCAMS: string[] = [
   "Aapka SIM 4G se 5G me upgrade karna hai, 121 par SIM space 20 digit number SMS kar dijiye",
   "Aapke aadhaar se ration milna band ho jayega, apne anguthe ka photo whatsapp par bhejo",
   "Sir aapka parcel return ho raha hai, delivery ke liye **21* ke baad ye number dial karo",
+  // नकली "पैसे कटे" alert, ठग के नंबर के साथ
+  "Dear customer, Rs 10,000 debited from your account. If not you, call 9876543210 immediately.",
 ];
 
 const BENIGN: string[] = [
@@ -88,6 +90,11 @@ const BENIGN: string[] = [
   "Your SIM has been upgraded to 5G. Enjoy faster internet.",
   "बैलेंस देखने के लिए *123# dial करें",
   "अपने अंगूठे के निशान की photo किसी को न भेजें",
+  // असली alert: "SMS BLOCK" निर्देश, "as requested", "आपने नहीं किया तो तुरंत बताएँ", UPI ID में नंबर
+  "Your A/c XX1234 is debited for Rs.500.00 on 23-11-26. If not done by you, call 18001234567 or SMS BLOCK 1234 to 567676 -Bank",
+  "Dear Customer, your debit card ending 1234 has been blocked as requested. For help call 18001234567.",
+  "आपके खाते से ₹1,500 ATM से निकाले गए। यह आपने नहीं किया तो तुरंत 1800-XXX-XXXX पर संपर्क करें।",
+  "Rs 500 transferred to 9876543210@ybl. If not you, call 18001234567 -Bank",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
