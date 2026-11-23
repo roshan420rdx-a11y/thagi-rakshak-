@@ -5,6 +5,8 @@ const ids = (t: string) => checkMessage(t).hits.map((h) => h.id);
 
 // हर नियम: [id, पकड़ने वाले उदाहरण, न-पकड़ने वाले उदाहरण]
 const CASES: [string, string[], string[]][] = [
+  // delivery पर दरवाज़े वाला OTP असली तरीका है; पर "order cancel/refund के लिए OTP" ठगी
+  ["otp_request", ["Delivery boy bol raha hai aapka order cancel karne ke liye OTP bata dijiye", "Your refund is pending. Share the OTP with our delivery executive to receive refund in your bank account.", "he asked me for the OTP on call"], ["Your Amazon order will be delivered today. The delivery agent may ask for an OTP at the doorstep.", "Share OTP 4421 with the delivery agent to receive your order. -Amazon", "डिलीवरी के समय यह OTP डिलीवरी वाले को बताएँ: 5521"]],
   // Roman Hinglish में बताई घटना (2026-11-23)
   ["investment", ["koi bol raha hai paise double kar dunga koi risk nahi"], []],
   ["reassurance", ["koi bol raha hai paise double kar dunga koi risk nahi"], ["doctor ne bola koi risk nahi hai, aaram karo"]],

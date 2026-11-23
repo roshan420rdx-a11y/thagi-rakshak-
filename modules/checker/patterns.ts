@@ -53,7 +53,7 @@ export function stripNegations(text: string): string {
 }
 
 const OTP = "\\botp\\b|ओटीपी|one\\s*time\\s*password|verification\\s*code|वेरिफिकेशन\\s*कोड|\\d\\s*(?:digit|अंक|ank|anko|ankon)\\S*\\s*(?:का\\s*|ka\\s*)?(?:code|कोड)";
-const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|\\bask(?:ed|ing|s)?\\b|मांग|\\bmaang|\\bmang(?:a|e|ta|te|na|ne)?\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
+const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|\\bask(?:ed|ing|s)?\\s+(?:me\\b|my\\b|for\\s+(?:my|your)\\b)|\\bask(?:ed|ing)\\s+(?:me\\s+)?for\\s+(?:the|an?)\\b|मांग|\\bmaang|\\bmang(?:a|e|ta|te|na|ne)?\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
 const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
 // "मैं आपको 1 रुपया भेजता हूँ, QR scan करो" (OLX वाला 'army officer'): पैसे भेजने का वादा = पैसे पाने का झाँसा।
@@ -85,6 +85,12 @@ const FILL =
 const LINK_WORD = "\\blink|लिंक|click\\s*here|यहां\\s*क्लिक|नीचे\\s*दि";
 const DOWNLOAD = "download|डाउनलोड|install|इंस्टॉल|इंस्टाल";
 
+// delivery पर दरवाज़े वाला OTP असली तरीका है ("Share OTP with the delivery agent to receive your order")। पर उसके साथ
+// refund, cancel, बैंक, KYC, call या पता बदलने की बात हो, तो वही ठगी ("order cancel करने के लिए OTP बताइए")।
+const DELIVERY = "deliver|डिलीवरी|doorstep";
+const OTP_RISK_CTX =
+  "refund|रिफंड|cancel|कैंसल|\\bbank|बैंक|\\bkyc\\b|केवाईसी|account|खाता|खाते|\\bcard|कार्ड|\\bupi\\b|wallet|reward|cashback|prize|lottery|block|ब्लॉक|police|पुलिस|reschedul|address|पता\\s*(?:बदल|अपडेट)|\\bcall\\b|कॉल|whatsapp|link|लिंक";
+
 // पीड़ित ख़ुद बताए कि पैसे जा चुके हैं, और उसने नहीं भेजे ("मेरे खाते से पैसे कट गए, मैंने कुछ नहीं किया"): सीधे 1930 और कदम।
 // बैंक का आम "debited for bill" वाला SMS नहीं (उसमें "मैंने नहीं किया" जैसी बात नहीं होती)।
 const LOST_GONE =
@@ -96,7 +102,9 @@ const NOT_ME =
 const POSER =
   "\\bbank|बैंक|customer\\s*care|कस्टमर|\\bsupport|सपोर्ट|company|कंपनी|officer|अधिकारी|पुलिस|police|बिजली|electricity|\\bkyc\\b|केवाईसी|refund|रिफंड|विभाग|department|courier|कूरियर|delivery|डिलीवरी";
 const APP_WORD = "\\bapps?\\b|ऐप|एप|application|एप्लीकेशन";
-const INSTALL_APP = `(?:${near("download|install|डलवा|\\bdalwa", APP_WORD, 25).source})|(?:${APP_WORD})\\s*(?:\\S+\\s*){0,1}?(?:डाल|\\bdaa?l(?:o|do|iye)?\\b)`;
+const INSTALL_ASK =
+  "(?:download|install|डाउनलोड|इंस्टॉल|इंस्टाल)\\s*(?:करो|करें|करे|कीजिए|कीजिये|करिए|करिये|करने|करवा|कर\\s*(?:दो|दें|लो|लें|लीजिए)|\\bkar(?:o|ein|e|iye|na|ne|wa|\\s*do|\\s*lo)\\b|\\bnow\\b|\\bthis\\b|\\bthe\\b|\\bour\\b|\\bit\\b)|\\b(?:please|kindly)\\s+(?:download|install)|डलवा|\\bdalwa";
+const INSTALL_APP = `(?:${near(INSTALL_ASK, APP_WORD, 25).source})|(?:${APP_WORD})\\s*(?:\\S+\\s*){0,1}?(?:डालो|डालें|डालिए|डालिये|डाल\\s*(?:दो|दें|दीजिए)|डालने|\\bdaa?l(?:o|do|iye|na|ne)\\b|\\bdal\\s*do\\b)`;
 const PLAY_STORE = "play\\s*store|प्ले\\s*स्टोर|app\\s*store|google\\s*play";
 
 // "कोई ख़तरा नहीं", "no risk", "100% safe" कहकर भरोसा दिलाना, पैसे/ऐप/निवेश की बात के साथ
@@ -114,12 +122,15 @@ const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस�
 const SAFE_ACCOUNT = "सरकारी\\s*खात|safe\\s*account|secure\\s*account|सुरक्षित\\s*खात|government\\s*account|rbi\\s*(?:के\\s*)?(?:खात|account)";
 const MOVE_MONEY = "transfer|ट्रांसफ़र|भेज|जमा|\\bmove\\b|shift|\\bbhej|\\bjama|deposit";
 // ठग का message हमेशा पढ़ने वाले से बात करता है ("आपके नाम से…"); ख़बर वाले text पर danger न लगे
-const YOU =
-  "आप|तुम|तेरा|तेरे|तेरी|मुझ|मेरे|मेरा|मेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b|\\bme\\b|\\bmy\\b|\\bmujh|\\bmere\\b|\\bmera\\b|\\bmeri\\b";
+const YOU_SECOND = "आप|तुम|तेरा|तेरे|तेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b";
+const YOU = `${YOU_SECOND}|मुझ|मेरे|मेरा|मेरी|\\bme\\b|\\bmy\\b|\\bmujh|\\bmere\\b|\\bmera\\b|\\bmeri\\b`;
 const AUTHORITY =
   "पुलिस|police|\\bcbi\\b|सीबीआई|\\bncb\\b|narcotics|नारकोटिक्स|customs|कस्टम|\\btrai\\b|ट्राई|enforcement\\s*directorate|प्रवर्तन\\s*निदेशालय|crime\\s*branch|क्राइम\\s*ब्रांच|cyber\\s*cell|साइबर\\s*सेल|income\\s*tax\\s*officer|supreme\\s*court|सुप्रीम\\s*कोर्ट|\\bjudge\\b|fedex|फेडेक्स";
+// धमकी के शब्द। हल्के (video call, पार्सल, "पकड़ा गया") आम बातचीत में भी आते हैं ("भाई पुलिस में है, video call पर बात
+// हुई"), इसलिए वे सिर्फ़ तब गिने जाते हैं जब बात पढ़ने वाले से हो (आप/तुम); पीड़ित की अपनी बात (मुझे/मेरे) में पक्की धमकी चाहिए।
+const THREAT_WEAK = "parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|पकड़\\s*लिया|पकड़ा\\s*गया";
 const THREAT =
-  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|पकड़\\s*लिया|पकड़ा\\s*गया|छुड़ाने|disconnect|गलत\\s*काम|illegal\\s*activit|(?:नंबर|सिम|number|sim)\\s*(?:\\S+\\s*){0,2}?(?:बंद\\s*हो|blocked|band\\s*ho)";
+  "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|छुड़ाने|disconnect|गलत\\s*काम|illegal\\s*activit|(?:नंबर|सिम|number|sim)\\s*(?:\\S+\\s*){0,2}?(?:बंद\\s*हो|blocked|band\\s*ho)";
 
 // IVR वाला call ("Press 1 to talk to officer", "1 दबाएँ"): धमकी के साथ हो, तो digital arrest की शुरुआत
 const PRESS = "\\bpress\\s*\\d|\\d\\s*(?:दबाएं|दबाइए|दबाये|दबाएँ)|\\d\\s*(?:dabaye|dabaiye|dabayein|dabaen)\\b";
@@ -299,6 +310,8 @@ const R = {
   callVerb: rx(CALL_VERB),
   linkWord: rx(LINK_WORD),
   download: rx(DOWNLOAD),
+  delivery: rx(DELIVERY),
+  otpRiskCtx: rx(OTP_RISK_CTX),
   jobFeeWord: rx("registration|रजिस्ट्रेशन|\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b"),
   kycFill: rx(`(?:\\bkyc\\b|केवाईसी)${END}{0,80}?(?:${FILL})|(?:${FILL})${END}{0,80}?(?:\\bkyc\\b|केवाईसी)|(?:\\bkyc\\b|केवाईसी)[^\\n]{0,80}?(?:details?|डिटेल|जानकारी)\\s*(?:भर|bhar|fill)`),
   lostGone: rx(LOST_GONE),
@@ -307,6 +320,8 @@ const R = {
   installApp: new RegExp(INSTALL_APP, "i"),
   playStore: rx(PLAY_STORE),
   reassure: rx(REASSURE),
+  threatWeak: rx(THREAT_WEAK),
+  youSecond: rx(YOU_SECOND),
   videoArrest: near("video\\s*call|वीडियो\\s*कॉल|skype|स्काइप", "arrest|अरेस्ट|गिरफ्तार|warrant|वारंट|custody|हिरासत|jail|जेल", 60),
   appWord: rx(APP_WORD),
   cardSecret: near(CARD_SECRET, ASK, 40),
@@ -418,7 +433,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "OTP माँगा जा रहा है",
     explainHi: "बैंक, पुलिस या कोई असली कंपनी कभी OTP नहीं माँगती। OTP बताते ही खाते से पैसे जा सकते हैं।",
     gyan: "customer-care-fake",
-    test: (t) => R.otp.test(t.stripped),
+    test: (t) => R.otp.test(t.stripped) && !(R.delivery.test(t.text) && !R.otpRiskCtx.test(t.text)),
   },
   {
     id: "receive_pin_qr",
@@ -470,7 +485,8 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) =>
       R.arrestDirect.test(t.text) ||
       R.safeAccount.test(t.text) ||
-      ((R.authority.test(t.text) || R.press.test(t.text)) && R.threat.test(t.text) && R.you.test(t.text)) ||
+      ((R.authority.test(t.text) || R.press.test(t.text)) &&
+        ((R.threat.test(t.text) && R.you.test(t.text)) || (R.threatWeak.test(t.text) && R.youSecond.test(t.text)))) ||
       (R.authority.test(t.text) && R.videoArrest.test(t.text)),
   },
   {

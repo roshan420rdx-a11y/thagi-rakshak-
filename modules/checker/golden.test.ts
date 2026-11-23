@@ -106,6 +106,22 @@ const SCAMS: string[] = [
 ];
 
 const BENIGN: string[] = [
+  "Your Amazon order will be delivered today. The delivery agent may ask for an OTP at the doorstep.",
+  "Police verification for your passport is scheduled tomorrow at 11 am.",
+  "मैं थाने गया था, पुलिस ने FIR लिख ली है, अब बैंक जाना है",
+  "Download the attendance app from Play Store, HR said.",
+  "Your job application has been received. We will contact you for an interview.",
+  "राशन की दुकान पर कल से गेहूँ मिलेगा, अंगूठा लगाकर लेना है",
+  "Dear Customer, Rs.2,500.00 credited to A/c XX4321 on 23-11-26 by NEFT. Avl Bal Rs.12,340.50 -SBI",
+  // 2026-11-23: आम बातें जिनमें पुलिस/वीडियो कॉल/बैंक/ऐप जैसे शब्द हैं (ग़लत "ठगी" न दिखे)
+  "मेरे भाई पुलिस में हैं, कल वीडियो कॉल पर बात हुई",
+  "मैंने बैंक का ऐप डाउनलोड कर लिया है, अब बैलेंस दिख रहा है",
+  "पुलिस ने मेरे मोहल्ले में चोर को पकड़ा",
+  "दीदी ने वीडियो कॉल पर बच्चे को दिखाया",
+  "डॉक्टर ने वीडियो कॉल पर दवा बताई",
+  "मैंने दुकानदार का क्यूआर स्कैन करके पैसे दिए",
+  "बैंक वाले भैया ने बोला पासबुक अपडेट करवा लो",
+  "मैंने बैंक जाकर केवाईसी का फॉर्म भरा",
   "मम्मी ने बोला शाम को दूध ले आना",
   "बिजली बिल के पैसे खाते से कट गए।",
   "डॉक्टर ने कहा कोई खतरा नहीं है, आराम करो।",
