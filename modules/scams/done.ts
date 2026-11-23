@@ -45,3 +45,13 @@ const CASE_STEP_IDS: ReadonlySet<string> = new Set(["call_1930", "tell_bank", "w
 export function needsCaseNote(stepId: string): boolean {
   return CASE_STEP_IDS.has(stepId);
 }
+
+// होम पर "बाकी कदम": सिर्फ़ अधूरे प्रकार (कुछ कदम हुए, सब नहीं), आज वाले कदमों से गिनती
+export type ProgressPage = { slug: string; titleHi: string; stepIds: readonly string[] };
+export type Pending = { slug: string; titleHi: string; done: number; total: number };
+
+export function pendingProgress(s: DoneState, pages: readonly ProgressPage[]): Pending[] {
+  return pages
+    .map((p) => ({ slug: p.slug, titleHi: p.titleHi, done: doneCount(s, p.slug, p.stepIds), total: p.stepIds.length }))
+    .filter((x) => x.done > 0 && x.done < x.total);
+}

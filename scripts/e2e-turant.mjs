@@ -214,6 +214,10 @@ await check("हो गया ✓: दबाने पर कदम हरा �
     await page.getByText(`${total} में से 1 कदम हो गए`).waitFor();
     assert((await page.getByRole("button", { name: "कदम 1 हो गया" }).getAttribute("aria-pressed")) === "true", "offline reload पर याद नहीं");
     await context.setOffline(false);
+    // होम पर "आपके बाकी कदम", वहीं से वापस
+    await page.goto(`${BASE}/`);
+    await page.getByRole("link", { name: `UPI से पैसे गए: ${total} में से 1 कदम हो गए, बाकी देखें →` }).click();
+    await page.waitForURL(/\/turant\/upi$/);
     await page.getByRole("button", { name: "सब फिर से" }).click();
     await page.getByText(`${total} में से 0 कदम हो गए`).waitFor();
     assert((await page.evaluate(() => localStorage.getItem("thagi-rakshak:turant-done:v1"))) === null, "साफ़ करने पर भी storage में बचा");

@@ -30,3 +30,15 @@ test("शिकायत वाले कदम (1930, बैंक, लिख�
   for (const id of ["call_1930", "tell_bank", "written_complaint", "police_report"]) expect(needsCaseNote(id), id).toBe(true);
   for (const id of ["keep_evidence", "block_card", "remove_app"]) expect(needsCaseNote(id), id).toBe(false);
 });
+
+test("pendingProgress: सिर्फ़ अधूरे प्रकार (कुछ हुए, सब नहीं), आज वाले कदमों से गिनती", async () => {
+  const { pendingProgress } = await import("./done");
+  const pages = [
+    { slug: "upi", titleHi: "UPI से पैसे गए", stepIds: ["a", "b", "c", "d"] },
+    { slug: "card", titleHi: "Card से पैसे कटे", stepIds: ["a", "b"] },
+    { slug: "wallet", titleHi: "Wallet", stepIds: ["a"] },
+  ];
+  const state = { upi: ["a", "purana"], card: ["a", "b"], netbanking: ["x"] };
+  expect(pendingProgress(state, pages)).toEqual([{ slug: "upi", titleHi: "UPI से पैसे गए", done: 1, total: 4 }]);
+  expect(pendingProgress({}, pages)).toEqual([]);
+});

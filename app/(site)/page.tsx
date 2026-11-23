@@ -4,6 +4,8 @@ import { Call1930Strip } from "@/components/ui/call-1930-strip";
 import { IconAlert, IconCheck, IconPhone, IconSearch } from "@/components/ui/icons";
 import Link from "next/link";
 import { HomeCaseCard } from "@/components/case/home-case-card";
+import { HomeProgress } from "@/components/turant/home-progress";
+import { TURANT_SLUGS, getTurantPage } from "@/modules/scams";
 import { InstallButton } from "@/components/site/install-button";
 import { whatsappShareLink } from "@/modules/checker/share";
 import { absoluteUrl, getSiteConfig, whatsappLink } from "@/modules/site";
@@ -63,6 +65,7 @@ export default function HomePage() {
         </ul>
       </section>
       <HomeCaseCard />
+      <HomeProgress pages={TURANT_SLUGS.map((s) => ({ slug: s, titleHi: getTurantPage(s).titleHi, stepIds: getTurantPage(s).steps.map((x) => x.id) }))} />
       <div className="grid gap-3 md:grid-cols-2 md:gap-4">
         <div className="md:col-start-1 md:row-start-1">
           <BigDoor
