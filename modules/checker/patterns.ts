@@ -56,12 +56,19 @@ const OTP = "\\botp\\b|ओटीपी|one\\s*time\\s*password|verification\\s*c
 const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
 const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
+// "मैं आपको 1 रुपया भेजता हूँ, QR scan करो" (OLX वाला 'army officer'): पैसे भेजने का वादा = पैसे पाने का झाँसा।
+// पैसे वाला शब्द पहले चाहिए ("QR भेज रहा हूँ, scan करके payment करो" दुकानदार की असली बात है)
+const MONEY_WORD = "पैसे|पैसा|\\brupa(?:y|ya|ye)\\b|\\brupees?\\b|रुपया|रुपये|रुपए|₹\\s*\\d[\\d,]*|\\brs\\.?\\s*\\d[\\d,]*";
+const WILL_SEND = "भेजता|भेज\\s*रहा|भेज\\s*रही|भेजूंगा|भेजूंगी|\\bbhejta|\\bbhej\\s*raha|\\bbhej\\s*rahi|\\bbhejunga|\\bbhejungi";
+const RECEIVE_PROMISE = `(?:${MONEY_WORD})\\s*(?:\\S+\\s*){0,2}?(?:${WILL_SEND})|\\bsend(?:ing)?\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)|\\bi\\s+(?:will|am\\s+going\\s+to)\\s+send\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)`;
 const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
 const PIN = "(?<![a-z])pin(?![\\s-]*code|[a-z])|पिन(?![\\s-]*कोड)|\\bmpin\\b";
 const REQUEST = "request|रिक्वेस्ट|collect|approve|accept|स्वीकार|एक्सेप्ट|अप्रूव";
 
-const ARREST_DIRECT =
-  "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)|सरकारी\\s*खात|safe\\s*account|secure\\s*account|सुरक्षित\\s*खात|government\\s*account|rbi\\s*(?:के\\s*)?(?:खात|account)|बेगुनाह|ज़मानत\\s*(?:के\\s*लिए|राशि)";
+const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)|बेगुनाह|ज़मानत\\s*(?:के\\s*लिए|राशि)";
+// "safe/सरकारी/RBI account" तभी, जब उसमें पैसे डलवाने की बात हो ("to secure account" वाला WhatsApp message digital arrest नहीं)
+const SAFE_ACCOUNT = "सरकारी\\s*खात|safe\\s*account|secure\\s*account|सुरक्षित\\s*खात|government\\s*account|rbi\\s*(?:के\\s*)?(?:खात|account)";
+const MOVE_MONEY = "transfer|ट्रांसफ़र|भेज|जमा|\\bmove\\b|shift|\\bbhej|\\bjama|deposit";
 // ठग का message हमेशा पढ़ने वाले से बात करता है ("आपके नाम से…"); ख़बर वाले text पर danger न लगे
 const YOU = "आप|तुम|तेरा|तेरे|तेरी|\\byou|\\byour|\\baap|\\btum|\\btera|\\btere|\\bmam\\b|\\bmadam|\\bsir\\b";
 const AUTHORITY =
@@ -104,7 +111,7 @@ const LOAN_SEND = "भेज|\\bsend|\\bbhej|बता|\\btell|\\bcall|कॉल
 const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
 const BLOCK =
-  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट";
+  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट|रुक\\s*(?:गई|गया|गयी|जाएगी|जाएगा)|रुकी\\s*(?:है|हुई)|रोक\\s*(?:दी|दिया)|withheld";
 // असली बैंक message में "block" धमकी नहीं होता: "SMS BLOCK 1234 to …" (बैंक का निर्देश), "to block your card",
 // "blocked as requested"। kyc_block इन्हें हटाकर ही "block" देखता है।
 const BLOCK_NOT_THREAT =
@@ -130,8 +137,8 @@ const NEW_NUMBER = "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:n
 
 const LOAN_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|insurance|बीमा|\\bgst\\b|stamp\\s*duty";
 const LOAN_ADVANCE =
-  "\\bto\\s+get\\b|to\\s+receive|disburs|\\brelease|before|advance|पहले|पाने\\s*के\\s*लिए|मिलने\\s*से\\s*पहले|approval\\s*के\\s*लिए|\\bpehle";
-const LOAN_OFFER = "pre[\\s-]*approved|approved|sanction|मंज़ूर|स्वीकृत|instant|तुरंत\\s*loan|\\blakh|लाख|₹|\\brs\\b";
+  "\\bto\\s+get\\b|to\\s+receive|disburs|\\brelease|before|advance|पहले|पाने\\s*के\\s*लिए|मिलने\\s*से\\s*पहले|approval\\s*के\\s*लिए|\\bpehle|file\\s*charge|फ़ाइल\\s*चार्ज|भेजो|भेज\\s*दो|\\bbhejo\\b|\\bbhej\\s*do\\b";
+const LOAN_OFFER = "pre[\\s-]*approved|\\bapprove|sanction|मंज़ूर|स्वीकृत|instant|तुरंत\\s*loan|\\blakh|लाख|₹|\\brs\\b";
 
 const WRONG =
   "ग़लती\\s*से|\\bgalti\\s*se|\\bghalti\\s*se|by\\s*mistake|mistakenly|wrongly|accidentally|wrong\\s*(?:number|account|transfer)|भूल\\s*से|ग़लत\\s*(?:नंबर|खाते)";
@@ -152,8 +159,26 @@ const JOB_SELECTED =
   "selected|चयन|चुन\\s*लिया|shortlisted|joining|जॉइनिंग|ज्वाइनिंग|offer\\s*letter|ऑफ़र\\s*लेटर|appointment\\s*letter|नियुक्ति\\s*पत्र|नौकरी\\s*पक्की|confirm\\s*your\\s*(?:job|joining|seat)";
 const JOB_FEE =
   "registration|रजिस्ट्रेशन|\\bfees?\\b|फ़ीस|शुल्क|deposit|डिपॉज़िट|जमा|training|ट्रेनिंग|uniform|यूनिफ़ॉर्म|\\bkit\\b|किट|\\bcharges?\\b|चार्ज|verification|वेरिफ़िकेशन|security|सिक्योरिटी|\\bvisa\\b|वीज़ा|ticket|टिकट";
+// "work from home / part time / data entry" वाली निजी नौकरी में चयन शब्द के बिना भी (सरकारी "भर्ती" की असली fee पर नहीं)
+const JOB_INFORMAL =
+  "work\\s*from\\s*home|\\bwfh\\b|घर\\s*बैठे|part[\\s-]*time|पार्ट\\s*टाइम|data\\s*entry|डाटा\\s*एंट्री|typing\\s*(?:job|work)|copy\\s*paste\\s*(?:job|work)";
 // पैसे भेजने का कहना ज़रूरी ("Pay is ₹25,000 per month" तनख़्वाह है, "kit will be provided free" मुफ़्त है)
-const JOB_PAY = "जमा\\s*कर|भेज|\\bpay\\s+(?:rs|₹|inr|\\d)|deposit|transfer\\b|भुगतान\\s*कर|\\bbhej|\\bjama\\s*kar|\\bsend\\b";
+const JOB_PAY =
+  "जमा\\s*कर|भेज|\\bpay\\s+(?:rs|₹|inr|\\d|on|via|to|at|through|now|this)|deposit|transfer\\b|भुगतान\\s*कर|\\bbhej|\\bjama\\s*kar|\\bsend\\b";
+
+// कुछ पाने (bonus, gift, scholarship, refund) के लिए पहले पैसे: आम advance-fee ठगी। शाखा/counter पर जमा वाली असली बात नहीं।
+const CLAIM =
+  "पाने\\s*के\\s*लिए|पाने\\s*हेतु|मिलने\\s*के\\s*लिए|लेने\\s*के\\s*लिए|छुड़ाने\\s*के\\s*लिए|\\bto\\s+(?:receive|get|claim|release|collect)\\b|\\bfor\\s+(?:release|clearance)\\b|clearance|\\bpane\\s*ke\\s*liye|\\bmilne\\s*ke\\s*liye";
+const ADV_FEE =
+  "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक्स|\\bgst\\b|\\bcharges?\\b|चार्ज|processing|प्रोसेसिंग|registration|रजिस्ट्रेशन|clearance|deposit|जमा";
+const IN_PERSON = "शाखा|branch|counter|काउंटर|दफ़्तर\\s*में|office\\s*में";
+
+// किसी अपने की मुसीबत (accident, hospital, पुलिस) बताकर तुरंत पैसे: नक़ली आवाज़ वाले call भी
+const RELATIVE =
+  "बेटे|बेटा|बेटी|\\bbete\\b|\\bbeta\\b|\\bbeti\\b|\\bsons?\\b|daughter|पति|पत्नी|husband|wife|भाई|\\bbhai\\b|बहन|\\bbehen\\b|पापा|\\bpapa\\b|मम्मी|\\bmummy\\b|पिता|father|mother|brother|sister|रिश्तेदार|relative|दोस्त|friend";
+const EMERGENCY =
+  "accident|एक्सीडेंट|दुर्घटना|hospital|अस्पताल|\\bicu\\b|आईसीयू|operation|ऑपरेशन|emergency|इमरजेंसी|पकड़\\s*लिया|पकड़ा\\s*गया|arrested|custody|हिरासत|जेल|\\bjail\\b";
+const SEND_NOW = "भेजो|भेज\\s*दो|भेजिए|भेज\\s*दीजिए|भेजें|\\bbhejo\\b|\\bbhej\\s*do\\b|\\bsend\\b|transfer|ट्रांसफ़र";
 
 // "यह आपने नहीं किया तो…" वाला हिस्सा: असली alert की जल्दी (तुरंत बताएँ) धमकी नहीं, इसलिए urgency इसे हटाकर देखी जाती है।
 // पर उसी हिस्से में mobile नंबर हो, तो नकली alert का निशान (ठग अपने नंबर पर call करवाते हैं)।
@@ -239,6 +264,14 @@ const R = {
   jobSelected: rx(JOB_SELECTED),
   jobFee: rx(JOB_FEE),
   jobPay: rx(JOB_PAY),
+  jobInformal: rx(JOB_INFORMAL),
+  claimFee: near(CLAIM, ADV_FEE, 40),
+  inPerson: rx(IN_PERSON),
+  relative: rx(RELATIVE),
+  emergency: rx(EMERGENCY),
+  sendNow: rx(SEND_NOW),
+  receivePromise: rx(RECEIVE_PROMISE),
+  safeAccount: near(SAFE_ACCOUNT, MOVE_MONEY, 40),
   amount: rx(AMOUNT),
   smsBlockTo: new RegExp(normalizePattern(SMS_BLOCK_TO), "gi"),
   biometricSend: near(BIOMETRIC, SEND_BIO, 50),
@@ -250,6 +283,14 @@ const R = {
   urgent: rx(URGENT),
   link: rx(LINK),
 };
+
+// कुछ नियम दूसरे नियमों में भी काम आते हैं (आम "पहले पैसे" वाला निशान सिर्फ़ तब, जब इनमें से कोई ठीक-ठीक न मिले)
+const isLotteryFee = (t: CheckedText) => (R.prize.test(t.text) || R.winAmount.test(t.text)) && R.fee.test(t.text);
+const isWithdrawFee = (t: CheckedText) => R.withdraw.test(t.text) && R.withdrawFee.test(t.text) && R.gains.test(t.text);
+const isLoanAdvanceFee = (t: CheckedText) =>
+  R.loan.test(t.text) && R.loanFee.test(t.text) && R.loanAdvance.test(t.text) && R.loanOffer.test(t.text);
+const isJobFee = (t: CheckedText) =>
+  (R.jobSelected.test(t.text) || R.jobInformal.test(t.text)) && R.jobFee.test(t.text) && R.amount.test(t.text) && R.jobPay.test(t.stripped);
 
 // क्रम: पहले सारे danger, फिर warn (नतीजे में इसी क्रम से दिखते हैं)
 export const CHECKER_RULES: readonly CheckerRule[] = [
@@ -268,7 +309,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "पैसे पाने के लिए कभी QR scan नहीं करना पड़ता। QR scan करके PIN डालने से पैसे आपके खाते से जाते हैं।",
     gyan: "upi-pin-qr",
     turant: "upi",
-    test: (t) => R.qr.test(t.stripped) && R.receive.test(t.stripped),
+    test: (t) => R.qr.test(t.stripped) && (R.receive.test(t.stripped) || R.receivePromise.test(t.stripped)),
   },
   {
     id: "upi_request_pin",
@@ -277,7 +318,8 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "UPI PIN सिर्फ़ पैसे भेजने के लिए डलता है, पाने के लिए कभी नहीं। 'request' पर PIN डाला तो पैसे कटेंगे।",
     gyan: "upi-pin-qr",
     turant: "upi",
-    test: (t) => R.pin.test(t.stripped) && (R.request.test(t.stripped) || R.receive.test(t.stripped)),
+    test: (t) =>
+      R.pin.test(t.stripped) && (R.request.test(t.stripped) || R.receive.test(t.stripped) || R.receivePromise.test(t.stripped)),
   },
   {
     id: "digital_arrest",
@@ -287,7 +329,9 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "digital-arrest",
     turant: "digital-arrest",
     test: (t) =>
-      R.arrestDirect.test(t.text) || (R.authority.test(t.text) && R.threat.test(t.text) && R.you.test(t.text)),
+      R.arrestDirect.test(t.text) ||
+      R.safeAccount.test(t.text) ||
+      (R.authority.test(t.text) && R.threat.test(t.text) && R.you.test(t.text)),
   },
   {
     id: "apk_file",
@@ -322,7 +366,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "lottery-inaam",
     turant: "upi",
     explainHi: "जिस लॉटरी का टिकट आपने ख़रीदा ही नहीं, वह नहीं लगती। इनाम के नाम पर 'fee' या 'tax' माँगना ठगी है।",
-    test: (t) => (R.prize.test(t.text) || R.winAmount.test(t.text)) && R.fee.test(t.text),
+    test: isLotteryFee,
   },
   {
     id: "blackmail",
@@ -350,7 +394,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "यह task या निवेश वाली ठगी का आख़िरी कदम है। fee भरने से पैसा नहीं निकलता, और पैसे जाते हैं। आगे कुछ न भेजें।",
     gyan: "task-investment",
     turant: "investment-task",
-    test: (t) => R.withdraw.test(t.text) && R.withdrawFee.test(t.text) && R.gains.test(t.text),
+    test: isWithdrawFee,
   },
   {
     id: "loan_advance_fee",
@@ -359,7 +403,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "loan-app",
     explainHi: "loan के नाम पर पहले 'processing fee', 'insurance' या 'GST' माँगकर ग़ायब हो जाना ठगी का आम तरीका है। loan सिर्फ़ अपने बैंक या उसके अपने ऐप से लें।",
     turant: "upi",
-    test: (t) => R.loan.test(t.text) && R.loanFee.test(t.text) && R.loanAdvance.test(t.text) && R.loanOffer.test(t.text),
+    test: isLoanAdvanceFee,
   },
   {
     id: "job_fee",
@@ -368,7 +412,24 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "असली नौकरी में चयन या joining के लिए पैसे नहीं लगते। registration, training, deposit या visa के नाम पर पहले पैसे माँगना ठगी का आम तरीका है।",
     gyan: "naukri-fee",
     turant: "upi",
-    test: (t) => R.jobSelected.test(t.text) && R.jobFee.test(t.text) && R.amount.test(t.text) && R.jobPay.test(t.stripped),
+    test: isJobFee,
+  },
+  {
+    id: "advance_fee",
+    level: "danger",
+    labelHi: "कुछ पाने के लिए पहले पैसे माँगना (bonus, gift, scholarship…)",
+    explainHi: "bonus, refund, gift या scholarship पाने के लिए पहले fee, tax या GST माँगना ठगी का पक्का निशान है। पैसे न भेजें।",
+    gyan: "lottery-inaam",
+    turant: "upi",
+    test: (t) =>
+      R.claimFee.test(t.stripped) &&
+      R.amount.test(t.text) &&
+      R.jobPay.test(t.stripped) &&
+      !R.inPerson.test(t.text) &&
+      !isLotteryFee(t) &&
+      !isLoanAdvanceFee(t) &&
+      !isJobFee(t) &&
+      !isWithdrawFee(t),
   },
   {
     id: "new_number_money",
@@ -448,6 +509,14 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "ठग पैसे कटने का नकली SMS भेजकर अपने नंबर पर call करवाते हैं। पहले बैंक के ऐप में ख़ुद देखें कि पैसे सच में कटे हैं या नहीं। call करना हो, तो card के पीछे या बैंक के ऐप में लिखे नंबर पर करें।",
     gyan: "customer-care-fake",
     test: (t) => R.debited.test(t.text) && R.fakeAlert.test(t.text.replace(R.smsBlockTo, " ")),
+  },
+  {
+    id: "relative_emergency",
+    level: "warn",
+    labelHi: "किसी अपने की मुसीबत बताकर तुरंत पैसे माँगना",
+    explainHi: "पैसे भेजने से पहले उसी इंसान को, या घर के किसी और को, उनके जाने-पहचाने नंबर पर call करके पक्का करें। आजकल आवाज़ की नक़ल करके भी call आते हैं।",
+    gyan: "apna-bankar",
+    test: (t) => R.relative.test(t.text) && R.emergency.test(t.text) && R.sendNow.test(t.stripped) && R.money.test(t.text),
   },
   {
     id: "customer_care",

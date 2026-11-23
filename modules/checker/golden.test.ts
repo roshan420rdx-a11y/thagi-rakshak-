@@ -57,6 +57,15 @@ const SCAMS: string[] = [
   "Sir aapka parcel return ho raha hai, delivery ke liye **21* ke baad ye number dial karo",
   // नकली "पैसे कटे" alert, ठग के नंबर के साथ
   "Dear customer, Rs 10,000 debited from your account. If not you, call 9876543210 immediately.",
+  // चौथा दौर: पहले छूटने वाले आम रूप
+  "आपकी LIC policy का bonus ₹2,40,000 तैयार है। पाने के लिए ₹12,000 GST आज जमा करें।",
+  "आपकी बेटी को ₹25,000 की scholarship मिली है, पाने के लिए ₹1,500 registration fee भेजें।",
+  "Hi dear, I sent you a gift with $50,000 cash. The courier company says pay ₹35,000 customs clearance fee to receive it.",
+  "आपके बेटे का accident हो गया है, hospital में भर्ती है, तुरंत ₹50,000 भेजो",
+  "Sir main army se hoon, aapka sofa kharidna hai, pehle main aapko 1 rupaya bhejta hoon, aap QR scan karke confirm karo",
+  "Work from home job, registration fee ₹999 only, earn ₹30,000 per month. Pay on this UPI.",
+  "Hello, aapke number par 2 lakh ka loan approve hua hai, sirf 2,000 file charge bhejo",
+  "आपकी गैस subsidy रुकी है, KYC के लिए इस नंबर पर call करें 98XXXXXX21",
 ];
 
 const BENIGN: string[] = [
@@ -95,6 +104,10 @@ const BENIGN: string[] = [
   "Dear Customer, your debit card ending 1234 has been blocked as requested. For help call 18001234567.",
   "आपके खाते से ₹1,500 ATM से निकाले गए। यह आपने नहीं किया तो तुरंत 1800-XXX-XXXX पर संपर्क करें।",
   "Rs 500 transferred to 9876543210@ybl. If not you, call 18001234567 -Bank",
+  "Pay your LIC premium of ₹12,000 before 30 Nov to keep the policy active.",
+  "मैं आपको QR भेज रहा हूँ, scan करके ₹250 payment कर दीजिए",
+  "Papa ka operation kal hai, hospital ka bill 40,000 aaya hai, maine bhar diya",
+  "नया passbook पाने के लिए ₹100 शुल्क शाखा के counter पर जमा करें।",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {
@@ -150,6 +163,8 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("sim_swap")).toBe("sim-swap");
   expect(gyanOf("call_forward")).toBe("sim-swap");
   expect(gyanOf("job_fee")).toBe("naukri-fee");
+  expect(gyanOf("advance_fee")).toBe("lottery-inaam");
+  expect(gyanOf("relative_emergency")).toBe("apna-bankar");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
 });
