@@ -2,7 +2,7 @@
 // text spec और plan A1 (Task 5) की तालिकाओं से जस का तस है। copy बदले तो TURANT_CONTENT_VERSION बढ़ाएँ
 // (service worker इसी से पुराना cache हटाता है)।
 
-export const TURANT_CONTENT_VERSION = "2026-11-22.1";
+export const TURANT_CONTENT_VERSION = "2026-11-23.1";
 
 export const TURANT_SLUGS = [
   "upi",
@@ -89,7 +89,10 @@ const STEPS: Record<StepId, TurantStep> = {
     titleHi: "बैंक को लिखित शिकायत भेजें (मुफ़्त)",
     bodyHi:
       "बैंक को email में लिखें: क्या हुआ, कब हुआ, कितने पैसे गए, और लेन-देन नंबर (UTR)। जवाब में मिली पावती सँभालकर रखें।",
-    actions: [{ kind: "link", href: "/shikayat-rasta", labelHi: "शिकायत का पूरा रास्ता देखें", external: false }],
+    actions: [
+      { kind: "link", href: "/arzi", labelHi: "तैयार पत्र बनाएँ (मुफ़्त)", external: false },
+      { kind: "link", href: "/shikayat-rasta", labelHi: "शिकायत का पूरा रास्ता देखें", external: false },
+    ],
   },
   keep_evidence: {
     id: "keep_evidence",

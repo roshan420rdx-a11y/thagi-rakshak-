@@ -45,7 +45,7 @@ test("worker install में हर पन्ने की static files भी
 });
 
 test("swVersion: content version + commit के 7 अक्षर", () => {
-  expect(swVersion({ RENDER_GIT_COMMIT: "abcdef123456" })).toBe("turant-2026-11-22.1-abcdef1");
-  expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-22.1-9999999");
-  expect(swVersion({})).toBe("turant-2026-11-22.1-local");
+  expect(swVersion({ RENDER_GIT_COMMIT: "abcdef123456" })).toBe("turant-2026-11-23.1-abcdef1");
+  expect(swVersion({ GITHUB_SHA: "9999999aaaa" })).toBe("turant-2026-11-23.1-9999999");
+  expect(swVersion({})).toBe("turant-2026-11-23.1-local");
 });

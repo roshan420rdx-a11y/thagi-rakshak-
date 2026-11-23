@@ -90,4 +90,9 @@ test("बैंक वाले कदमों पर अपने बैंक
   }
 });
 
-test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-22.1"));
+test("लिखित शिकायत वाले कदम पर पहले तैयार पत्र (/arzi), फिर पूरा रास्ता", () => {
+  const step = getTurantPage("upi").steps.find((s) => s.id === "written_complaint")!;
+  expect(step.actions.map((a) => (a.kind === "link" ? a.href : a.number))).toEqual(["/arzi", "/shikayat-rasta"]);
+});
+
+test("content version बदला (offline cache नया हो)", () => expect(TURANT_CONTENT_VERSION).toBe("2026-11-23.1"));

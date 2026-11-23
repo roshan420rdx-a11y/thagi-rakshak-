@@ -135,7 +135,7 @@ export function AbhyasQuiz({ pageUrl }: { pageUrl: string }) {
         </div>
       ) : (
         <div className="space-y-3">
-          <div className={`space-y-2 rounded-xl border-2 p-3 ${v.correct ? "border-safe bg-safe-bg" : "border-warn bg-warn-bg"}`}>
+          <div id="abhyas-fb-box" className={`space-y-2 rounded-xl border-2 p-3 ${v.correct ? "border-safe bg-safe-bg" : "border-warn bg-warn-bg"}`}>
             <h3 id="abhyas-feedback" ref={focusRef} tabIndex={-1} className={`text-[19px] font-bold leading-snug ${v.correct ? "text-safe" : "text-warn"}`}>
               {v.titleHi}
             </h3>
@@ -154,6 +154,7 @@ export function AbhyasQuiz({ pageUrl }: { pageUrl: string }) {
             ) : null}
             <p className="text-ink">{v.whyHi}</p>
           </div>
+          <ListenButton targetId="abhyas-fb-box" />
           <button type="button" onClick={() => setIdx(idx + 1)} className={`${BTN} w-full bg-brand text-paper`}>
             {idx + 1 < total ? "अगला सवाल →" : "नतीजा देखें →"}
           </button>

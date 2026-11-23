@@ -25,9 +25,10 @@ export function assert(cond, msg) {
   if (!cond) throw new Error(msg);
 }
 
-// "कोई request नहीं" वाली जाँचों के लिए। Next.js अपने ही पन्नों के link screen पर आते ही उनका ढाँचा पहले से
-// ले आता है (GET, सिर्फ़ ?_rsc=…, कोई user data नहीं); सिर्फ़ उन्हें छोड़ा जाता है। बाकी हर request गिनी जाती है,
-// और अगर किसी request (prefetch भी) के पते या body में user की लिखी कोई बात हो, तो वह भी।
+// "कोई request नहीं" वाली जाँचों के लिए। Next.js अपने ही पन्नों के link screen पर आते ही उनका ढाँचा (GET, सिर्फ़
+// ?_rsc=…) और उनकी JS file (GET /_next/static/…, build से तय नाम) पहले से ले आता है; इनमें कोई user data नहीं, सिर्फ़
+// इन्हें छोड़ा जाता है। बाकी हर request गिनी जाती है, और अगर किसी request (prefetch भी) के पते या body में user की
+// लिखी कोई बात हो, तो वह भी।
 export function watchRequests(page, secrets = []) {
   const seen = [];
   const origin = new URL(BASE).origin;
@@ -35,7 +36,8 @@ export function watchRequests(page, secrets = []) {
     const url = r.url();
     const u = new URL(url);
     const keys = [...u.searchParams.keys()];
-    const prefetch = u.origin === origin && r.method() === "GET" && keys.length === 1 && keys[0] === "_rsc";
+    const sameGet = u.origin === origin && r.method() === "GET";
+    const prefetch = sameGet && ((keys.length === 1 && keys[0] === "_rsc") || (keys.length === 0 && u.pathname.startsWith("/_next/static/")));
     const text = `${decodeURIComponent(url)} ${r.postData() ?? ""}`;
     if (!prefetch || secrets.some((s) => s && text.includes(s))) seen.push(url);
   });

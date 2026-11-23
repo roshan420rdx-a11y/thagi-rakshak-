@@ -1,5 +1,5 @@
 // "ठगी या असली?" अभ्यास (/abhyas) की असली browser में जाँच। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, check, assert, withPage, watchRequests, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, check, assert, withPage, watchRequests, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 const Q = "#abhyas-q";
 
@@ -51,6 +51,25 @@ await check("'फिर से': नया round, सवाल 1 / 8; 'परि
     assert(text.includes("8 में से 4") && text.includes("/abhyas"), `share text: ${text}`);
     await page.getByRole("button", { name: /फिर से अभ्यास करें/ }).click();
     await page.getByText("सवाल 1 / 8").waitFor();
+  }),
+);
+
+await check("सुनें: पहले message, जवाब के बाद नतीजा और कारण (Hindi आवाज़ में)", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await installSpeechStub(context);
+    await open(page);
+    const msg = await page.locator(`${Q} blockquote`).innerText();
+    await page.getByRole("button", { name: "सुनें" }).click();
+    let spoken = await page.evaluate(() => window.__spoken);
+    assert(spoken.length === 1 && spoken[0].text.includes(msg.slice(0, 20)), `message नहीं बोला: ${JSON.stringify(spoken).slice(0, 90)}`);
+    await page.getByRole("button", { name: "ठगी है" }).click();
+    // पहला बटन अब "रोकें" है (नकली आवाज़ कभी ख़त्म नहीं होती); नतीजे वाला अपना "सुनें"
+    const fbListen = page.locator("#abhyas-fb-box + button", { hasText: "सुनें" });
+    await fbListen.waitFor();
+    await fbListen.click();
+    spoken = await page.evaluate(() => window.__spoken);
+    const fb = await page.locator("#abhyas-feedback").innerText();
+    assert(spoken.length === 2 && spoken[1].text.includes(fb), `नतीजा नहीं बोला: ${JSON.stringify(spoken[1] ?? {}).slice(0, 90)}`);
   }),
 );
 
