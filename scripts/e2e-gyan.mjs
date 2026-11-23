@@ -16,9 +16,10 @@ const PAGES = [
   ["galti-se-paise", "upi"],
   ["aeps-angootha", "pata-nahi"],
   ["sim-swap", "pata-nahi"],
+  ["naukri-fee", "upi"],
 ];
 
-await check("/gyan: सारे 14 पन्नों के links", () =>
+await check("/gyan: सारे 15 पन्नों के links", () =>
   withPage({}, async (page) => {
     await page.goto(`${BASE}/gyan`);
     for (const [slug] of PAGES) assert((await page.locator(`main a[href="/gyan/${slug}"]`).count()) === 1, `${slug} link नहीं`);
@@ -46,7 +47,7 @@ await check("JS बंद: FAQ का सवाल दबाने पर जव
   }),
 );
 
-await check("320px: ज्ञानकोश के 15 पन्नों पर बगल में scroll नहीं", () =>
+await check("320px: ज्ञानकोश के 16 पन्नों पर बगल में scroll नहीं", () =>
   withPage({ viewport: { width: 320, height: 640 } }, async (page) => {
     for (const path of ["/gyan", ...PAGES.map(([s]) => `/gyan/${s}`)]) {
       await page.goto(`${BASE}${path}`);

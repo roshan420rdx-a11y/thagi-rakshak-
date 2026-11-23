@@ -146,6 +146,15 @@ const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|�
 const URGENT =
   "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
+// नौकरी के नाम पर ठगी: "चयन हो गया / joining / offer letter" + registration, training, deposit, visa वगैरह + रकम।
+// सरकारी भर्ती की असली application fee ("Application fee ₹500…") में "चयन/joining" नहीं होता, उस पर निशान नहीं।
+const JOB_SELECTED =
+  "selected|चयन|चुन\\s*लिया|shortlisted|joining|जॉइनिंग|ज्वाइनिंग|offer\\s*letter|ऑफ़र\\s*लेटर|appointment\\s*letter|नियुक्ति\\s*पत्र|नौकरी\\s*पक्की|confirm\\s*your\\s*(?:job|joining|seat)";
+const JOB_FEE =
+  "registration|रजिस्ट्रेशन|\\bfees?\\b|फ़ीस|शुल्क|deposit|डिपॉज़िट|जमा|training|ट्रेनिंग|uniform|यूनिफ़ॉर्म|\\bkit\\b|किट|\\bcharges?\\b|चार्ज|verification|वेरिफ़िकेशन|security|सिक्योरिटी|\\bvisa\\b|वीज़ा|ticket|टिकट";
+// पैसे भेजने का कहना ज़रूरी ("Pay is ₹25,000 per month" तनख़्वाह है, "kit will be provided free" मुफ़्त है)
+const JOB_PAY = "जमा\\s*कर|भेज|\\bpay\\s+(?:rs|₹|inr|\\d)|deposit|transfer\\b|भुगतान\\s*कर|\\bbhej|\\bjama\\s*kar|\\bsend\\b";
+
 // "यह आपने नहीं किया तो…" वाला हिस्सा: असली alert की जल्दी (तुरंत बताएँ) धमकी नहीं, इसलिए urgency इसे हटाकर देखी जाती है।
 // पर उसी हिस्से में mobile नंबर हो, तो नकली alert का निशान (ठग अपने नंबर पर call करवाते हैं)।
 const NOT_YOU_CORE =
@@ -227,6 +236,10 @@ const R = {
   notYouClause: new RegExp(normalizePattern(`(?:${NOT_YOU_CORE})${END}*`), "gi"),
   fakeAlert: rx(`(?:${NOT_YOU_CORE})[^\\n]{0,80}?(?:${ALERT_NUMBER})`),
   debited: rx(DEBITED),
+  jobSelected: rx(JOB_SELECTED),
+  jobFee: rx(JOB_FEE),
+  jobPay: rx(JOB_PAY),
+  amount: rx(AMOUNT),
   smsBlockTo: new RegExp(normalizePattern(SMS_BLOCK_TO), "gi"),
   biometricSend: near(BIOMETRIC, SEND_BIO, 50),
   sim: rx(SIM),
@@ -347,6 +360,15 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "loan के नाम पर पहले 'processing fee', 'insurance' या 'GST' माँगकर ग़ायब हो जाना ठगी का आम तरीका है। loan सिर्फ़ अपने बैंक या उसके अपने ऐप से लें।",
     turant: "upi",
     test: (t) => R.loan.test(t.text) && R.loanFee.test(t.text) && R.loanAdvance.test(t.text) && R.loanOffer.test(t.text),
+  },
+  {
+    id: "job_fee",
+    level: "danger",
+    labelHi: "नौकरी के चयन या joining के लिए पहले पैसे माँगना",
+    explainHi: "असली नौकरी में चयन या joining के लिए पैसे नहीं लगते। registration, training, deposit या visa के नाम पर पहले पैसे माँगना ठगी का आम तरीका है।",
+    gyan: "naukri-fee",
+    turant: "upi",
+    test: (t) => R.jobSelected.test(t.text) && R.jobFee.test(t.text) && R.amount.test(t.text) && R.jobPay.test(t.stripped),
   },
   {
     id: "new_number_money",

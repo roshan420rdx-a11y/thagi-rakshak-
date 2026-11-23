@@ -15,7 +15,8 @@ export type GyanSlug =
   | "apna-bankar"
   | "galti-se-paise"
   | "aeps-angootha"
-  | "sim-swap";
+  | "sim-swap"
+  | "naukri-fee";
 
 export type RbiRef = { file: string; paragraph: string; quote: string };
 

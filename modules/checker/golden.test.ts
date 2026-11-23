@@ -149,6 +149,7 @@ test("निशान से सही ज्ञानकोश पन्ना,
   expect(gyanOf("biometric_ask")).toBe("aeps-angootha");
   expect(gyanOf("sim_swap")).toBe("sim-swap");
   expect(gyanOf("call_forward")).toBe("sim-swap");
+  expect(gyanOf("job_fee")).toBe("naukri-fee");
   const slugs = new Set(GYAN_PAGES.map((p) => p.slug as string));
   for (const r of CHECKER_RULES) if (r.gyan) expect(slugs.has(r.gyan), r.id).toBe(true);
 });

@@ -8,7 +8,7 @@ import { isTurantSlug } from "@/modules/scams";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
 const ALLOWED_LINKS = ["/haq/thagi", "/gyan/bank", "/haq/frozen-money", "/turant"];
 
-test("14 पन्ने, तय क्रम", () =>
+test("15 पन्ने, तय क्रम", () =>
   expect(GYAN_PAGES.map((p) => p.slug)).toEqual([
     "digital-arrest",
     "customer-care-fake",
@@ -24,6 +24,7 @@ test("14 पन्ने, तय क्रम", () =>
     "galti-se-paise",
     "aeps-angootha",
     "sim-swap",
+    "naukri-fee",
   ]));
 
 test.each(GYAN_PAGES.map((p) => [p.slug, p] as const))("%s: ढाँचे के गिनती वाले नियम", (_s, p) => {
@@ -57,6 +58,7 @@ test("हो गया है? का सही /turant पन्ना", () => 
   expect(getGyanPage("kyc-link")?.turantSlug).toBe("netbanking");
   expect(getGyanPage("apna-bankar")?.turantSlug).toBe("upi");
   expect(getGyanPage("galti-se-paise")?.turantSlug).toBe("upi");
+  expect(getGyanPage("naukri-fee")?.turantSlug).toBe("upi");
 });
 
 test("gyanForTurant: customer-care-fake → customer care, APK और बिजली बिल", () =>
@@ -85,4 +87,10 @@ test("ज्ञानकोश के समूह: हर पन्ना ठ�
   const all = GYAN_GROUPS.flatMap((g) => g.slugs);
   expect([...all].sort()).toEqual(GYAN_PAGES.map((p) => p.slug).sort());
   expect(new Set(all).size).toBe(all.length);
+});
+
+test("नौकरी वाले पन्ने में सरकारी भर्ती की असली application fee का फ़र्क़, और विदेश के लिए eMigrate", () => {
+  const text = JSON.stringify(getGyanPage("naukri-fee"));
+  expect(text).toContain("application fee");
+  expect(text).toContain("emigrate.gov.in");
 });

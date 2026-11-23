@@ -134,6 +134,15 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     gyan: "sextortion",
   },
 
+  {
+    id: "naukri-fee",
+    channelHi: "WhatsApp, 'HR Team' नाम वाले खाते से",
+    text: "Congratulations! आप Amazon में Data Entry job के लिए selected हैं। ID card और training kit के लिए ₹1,999 जमा करके अपनी joining confirm करें।",
+    scam: true,
+    whyHi: "असली नौकरी में चयन या joining के लिए पैसे नहीं लगते। नाम किसी बड़ी कंपनी का हो, तब भी पैसे माँगे जाएँ, तो वहीं रुकें।",
+    gyan: "naukri-fee",
+  },
+
   // असली
   {
     id: "otp-asli",

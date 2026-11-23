@@ -6,7 +6,10 @@ export const SCAM_SIGNS: readonly { titleHi: string; bodyHi: string }[] = [
   { titleHi: "पैसे पाने के लिए PIN डालना या QR scan करना", bodyHi: "पैसा पाने के लिए कभी PIN या QR की ज़रूरत नहीं होती।" },
   { titleHi: "कोई ऐप या APK फ़ाइल डलवाना", bodyHi: "AnyDesk जैसे ऐप या अनजान APK से वे आपका फ़ोन चला सकते हैं।" },
   { titleHi: "पुलिस, CBI या कोर्ट की धमकी, वह भी video call पर", bodyHi: "असली पुलिस video call पर गिरफ़्तार नहीं करती। call काटें।" },
-  { titleHi: "बहुत ज़्यादा कमाई का वादा", bodyHi: '"घर बैठे like करो, रोज़ हज़ारों कमाओ" या "पैसे दुगने" ठगी का चारा है।' },
+  {
+    titleHi: "बहुत ज़्यादा कमाई का वादा, या नौकरी के लिए fee",
+    bodyHi: '"घर बैठे like करो, रोज़ हज़ारों कमाओ", "पैसे दुगने", या "चयन हो गया, पहले fee भरो": सब ठगी का चारा है।',
+  },
   { titleHi: 'Google या social media पर मिला "customer care" नंबर', bodyHi: "नंबर सिर्फ़ कंपनी के अपने ऐप या वेबसाइट से लें।" },
   {
     titleHi: 'आधार, अंगूठे का निशान या "SIM upgrade" वाला SMS माँगना',
