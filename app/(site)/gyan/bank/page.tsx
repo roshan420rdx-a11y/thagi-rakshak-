@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import Link from "next/link";
+import { BankArziLink } from "@/components/banks/arzi-link";
 import { BankTips } from "@/components/banks/bank-tips";
 import { Notice } from "@/components/ui/notice";
 import { BANKS } from "@/modules/banks";
@@ -18,6 +19,7 @@ export default function BankIndexPage() {
       <h1 className="text-[22px] font-bold leading-snug">अपने बैंक को ठगी कैसे बताएँ</h1>
       <Notice tone="warn">नंबर Google पर न खोजें। नकली &quot;customer care&quot; नंबर ठगी का बड़ा जाल हैं।</Notice>
       <BankTips />
+      <BankArziLink />
       <h2 className="text-[19px] font-bold">अपना बैंक चुनें</h2>
       <ul className="grid gap-2 sm:grid-cols-2">
         {BANKS.map((b) => (

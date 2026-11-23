@@ -10,6 +10,7 @@ test("/gyan/bank: 10 बैंक, 6 सुझाव, Google चेतावन�
   expect(html).toContain(".bank.in");
   expect(html).toContain("नंबर Google पर न खोजें।");
   expect((html.match(/data-tip=/g) ?? []).length).toBe(6);
+  expect(html).toContain('href="/arzi"');
 });
 
 test.each(BANKS.map((b) => b.slug))("/gyan/bank/%s: बिना दो-जाँच कोई tel: या .bank.in link नहीं", async (slug) => {
@@ -18,4 +19,5 @@ test.each(BANKS.map((b) => b.slug))("/gyan/bank/%s: बिना दो-जा�
   expect(html).not.toMatch(/href="https:\/\/[^"]*\.bank\.in/);
   expect(html).toContain("अभी जाँच में हैं");
   expect(html).toContain('href="/turant"');
+  expect(html).toContain('href="/arzi"'); // बैंक को देने का तैयार पत्र
 });

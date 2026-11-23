@@ -86,3 +86,11 @@ test("/poster: छपने वाला हिस्सा, 8 बातें, 
   expect(html).not.toMatch(/qr\s*code|<canvas/i);
   expect(renderToStaticMarkup(<HomePage />)).toContain('href="/poster"');
 });
+
+test("404 पन्ना: हिंदी, 1930 मिलाने का link और /turant का दरवाज़ा", async () => {
+  const { default: NotFound } = await import("@/app/not-found");
+  const html = renderToStaticMarkup(<NotFound />);
+  expect(html).toContain("यह पन्ना नहीं मिला");
+  expect(html).toContain('href="tel:1930"');
+  expect(html).toContain('href="/turant"');
+});

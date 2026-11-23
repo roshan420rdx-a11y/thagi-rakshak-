@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/modules/site/meta";
 import { notFound } from "next/navigation";
+import { BankArziLink } from "@/components/banks/arzi-link";
 import { BankChannelView } from "@/components/banks/bank-channel";
 import { BankTips } from "@/components/banks/bank-tips";
 import { BigDoor } from "@/components/ui/big-door";
@@ -61,6 +62,7 @@ export default async function BankPage({ params }: Props) {
 
       <Notice tone="warn">नंबर Google पर न खोजें। नकली &quot;customer care&quot; नंबर ठगी का बड़ा जाल हैं।</Notice>
       <BankTips />
+      <BankArziLink />
       <BigDoor href="/turant" title="पैसे जा चुके हैं?" subtitle="पहले 60 मिनट में क्या करें" tone="danger" icon={<IconAlert className="h-8 w-8" />} />
     </div>
   );

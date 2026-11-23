@@ -1,4 +1,5 @@
 import { BigDoor } from "@/components/ui/big-door";
+import { Call1930Strip } from "@/components/ui/call-1930-strip";
 import { IconAlert } from "@/components/ui/icons";
 import Link from "next/link";
 
@@ -14,6 +15,7 @@ export default function NotFound() {
         tone="danger"
         icon={<IconAlert className="h-8 w-8" />}
       />
+      <Call1930Strip />
       <p>
         <Link href="/" className="inline-flex min-h-12 items-center font-semibold text-brand">
           होम पर जाएँ
