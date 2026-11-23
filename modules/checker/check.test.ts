@@ -5,13 +5,13 @@ const ids = (t: string) => checkMessage(t).hits.map((h) => h.id);
 
 // हर नियम: [id, पकड़ने वाले उदाहरण, न-पकड़ने वाले उदाहरण]
 const CASES: [string, string[], string[]][] = [
-  ["otp_request", ["Sir apna OTP bata dijiye verification ke liye", "कृपया आपके मोबाइल पर आया OTP बताइए", "Please share the OTP received on your phone"], ["123456 is your OTP for login. Do not share it with anyone. -SBI", "आपका OTP 4567 है। इसे किसी को न बताएँ।"]],
+  ["otp_request", ["Sir apna OTP bata dijiye verification ke liye", "कृपया आपके मोबाइल पर आया OTP बताइए", "Please share the OTP received on your phone", "Aapke WhatsApp par jo 6 ank ka code aaya hai wo bata dijiye, galti se aapke number par chala gaya"], ["123456 is your OTP for login. Do not share it with anyone. -SBI", "आपका OTP 4567 है। इसे किसी को न बताएँ।"]],
   ["receive_pin_qr", ["यह QR scan करके PIN डालिए, आपका cashback आपके खाते में आ जाएगा", "Scan this QR code to receive your refund", "Sir main army se hoon, aapka sofa kharidna hai, pehle main aapko 1 rupaya bhejta hoon, aap QR scan karke confirm karo"], ["दुकान पर QR scan करके भुगतान करें", "मैं आपको QR भेज रहा हूँ, scan करके ₹250 payment कर दीजिए"]],
   ["upi_request_pin", ["मैंने आपको ₹5,000 की request भेजी है, बस PIN डालकर accept कर लीजिए", "I have sent a collect request, approve it with your UPI PIN to receive money"], ["आपकी UPI payment सफल रही"]],
-  ["digital_arrest", ["मैं पुलिस से बोल रहा हूँ। आपके नाम से भेजे गए पार्सल में ड्रग्स मिले हैं। आपको अभी digital arrest किया जा रहा है", "This is CBI officer, your Aadhaar is linked to a money laundering case, stay on video call"], ["पुलिस भर्ती की परीक्षा कल है"]],
+  ["digital_arrest", ["मैं पुलिस से बोल रहा हूँ। आपके नाम से भेजे गए पार्सल में ड्रग्स मिले हैं। आपको अभी digital arrest किया जा रहा है", "This is CBI officer, your Aadhaar is linked to a money laundering case, stay on video call", "Your Aadhaar is being misused for illegal activities. Press 1 to talk to officer"], ["पुलिस भर्ती की परीक्षा कल है"]],
   ["apk_file", ["हमारी बेटी की शादी में ज़रूर आइए, कार्ड भेज रहे हैं: Wedding_Invitation.apk"], ["ऐप Play Store से डाउनलोड करें"]],
   ["remote_app", ["AnyDesk download kariye, main theek kar dunga", "please install TeamViewer QuickSupport"], ["कल मिलते हैं"]],
-  ["electricity_cut", ["प्रिय ग्राहक, आज रात 9:30 बजे आपकी बिजली काट दी जाएगी। तुरंत अधिकारी से संपर्क करें 98XXXXXX21", "Dear consumer your electricity power will be disconnected tonight at 9.30 pm please contact electricity officer"], ["कल सुबह 10 से 2 बजे तक मरम्मत के कारण बिजली बंद रहेगी"]],
+  ["electricity_cut", ["प्रिय ग्राहक, आज रात 9:30 बजे आपकी बिजली काट दी जाएगी। तुरंत अधिकारी से संपर्क करें 98XXXXXX21", "Dear consumer your electricity power will be disconnected tonight at 9.30 pm please contact electricity officer", "Sir, aapki bijli ka bill update nahi hua, aaj raat 9:30 baje connection kat jayega, is number par call karein 98XXXXXX12"], ["कल सुबह 10 से 2 बजे तक मरम्मत के कारण बिजली बंद रहेगी"]],
   ["lottery_fee", ["Congratulations! You won Rs 25 lakh in KBC lottery. Pay Rs 15,000 processing fee", "आपने 25 लाख की लॉटरी जीती है, टैक्स जमा करें"], ["लॉटरी का टिकट मत ख़रीदना"]],
   ["blackmail", ["तुम्हारा video सबको भेज दूँगा, पैसे भेजो", "your video will be viral, pay now", "पैसे भेजो वरना तेरा video YouTube पर डाल दूँगा"], ["video call पर बात करते हैं", "Part time job: YouTube video like कीजिए, हर like पर ₹50", "YouTube पर नया video डाला है, देखकर बताना ₹500 का gift मिलेगा"]],
   ["loan_threat", ["loan नहीं भरा तो तेरी photo तेरे सारे contacts को भेज देंगे", "repay the loan or we will send your photos to all your contacts"], ["home loan की EMI इस महीने 5 तारीख़ को कटेगी"]],
@@ -25,7 +25,8 @@ const CASES: [string, string[], string[]][] = [
   ["advance_fee", ["आपकी LIC policy का bonus ₹2,40,000 तैयार है। पाने के लिए ₹12,000 GST आज जमा करें।", "Hi dear, I sent you a gift with $50,000 cash. The courier company says pay ₹35,000 customs clearance fee to receive it.", "आपकी बेटी को ₹25,000 की scholarship मिली है, पाने के लिए ₹1,500 registration fee भेजें।"], ["Pay your LIC premium of ₹12,000 before 30 Nov to keep the policy active.", "To get your new card, visit the branch. No charges.", "नया passbook पाने के लिए ₹100 शुल्क शाखा के counter पर जमा करें।"]],
   ["relative_emergency", ["आपके बेटे का accident हो गया है, hospital में भर्ती है, तुरंत ₹50,000 भेजो", "Your son met with an accident, he is in ICU. Send Rs 40,000 immediately for operation."], ["Papa ka operation kal hai, hospital ka bill 40,000 aaya hai, maine bhar diya", "बेटा, शाम को सब्ज़ी लेते आना"]],
   ["recovery_fee", ["आपकी ठगी की रकम वापस दिलाने के लिए cyber cell की ओर से ₹5,000 processing fee जमा करें।", "We are a fund recovery agency. We can recover your lost money. Pay 10% advance fee of Rs 8,000 to start.", "Aapka paisa wapas dilwa denge, bas 2000 file charge bhejo", "मैं cyber cell से advocate बोल रहा हूँ। आपका ठगी वाला पैसा वापस दिला दूँगा, बस ₹5,000 fee पहले जमा करें।"], ["आपकी शिकायत पर ₹5,000 वापस आपके खाते में आ गए हैं।", "बैंक ने कहा है कि जाँच के बाद पैसा वापस मिलेगा, कोई fee नहीं लगेगी।", "गलती से आपके खाते में ₹5000 भेज दिए, प्लीज़ वापस कर दो"]],
-  ["new_number_money", ["पापा, मेरा फ़ोन ख़राब हो गया, यह मेरा नया नंबर है। अभी ₹15,000 भेज दो", "Hi Mom, this is my new number, please send money urgently"], ["पापा, मेरा फ़ोन नंबर बदल गया है, नया नंबर सेव कर लो"]],
+  ["account_rent", ["Bhai mera account freeze ho gaya hai, apne account me 50,000 mangwa lu? Baad me wapas kar dunga", "Part time काम: अपने खाते में पैसे लो और आगे भेजो, हर ₹1 लाख पर ₹2,000 commission।", "Apna bank account kiraye par do, har mahine ₹10,000 milenge"], ["आपके खाते में ₹5,000 जमा हो गए हैं।", "बेटा, मेरा ATM card दे दो, पेंशन निकालनी है", "Agent commission ₹50 per transaction is credited to your account."]],
+  ["new_number_money", ["पापा, मेरा फ़ोन ख़राब हो गया, यह मेरा नया नंबर है। अभी ₹15,000 भेज दो", "Hi Mom, this is my new number, please send money urgently", "Mummy mera phone kharab ho gaya, ye dost ka number hai, 5000 bhej do jaldi"], ["पापा, मेरा फ़ोन नंबर बदल गया है, नया नंबर सेव कर लो"]],
   ["new_number", ["Hi Mummy, ye mera new number hai, purana kharab ho gaya", "पापा, मेरा नंबर बदल गया है"], ["गाड़ी की नंबर प्लेट बदलवानी है"]],
   ["kyc_block", ["Your account will be blocked today, update KYC by clicking the link", "आपका खाता बंद हो जाएगा, तुरंत KYC अपडेट करें", "आपकी गैस subsidy रुकी है, KYC के लिए इस नंबर पर call करें 98XXXXXX21"], ["KYC के लिए शाखा में आधार लाएँ"]],
   ["task_job", ["Part-time job: video like कीजिए, हर like पर ₹50", "Work from home and earn 3000 daily by giving 5 star review"], ["कल office में meeting है"]],
@@ -125,4 +126,16 @@ test("advance_fee तभी, जब ज़्यादा ठीक निशा
   for (const m of ["बधाई हो! आपने KBC lottery में ₹25 लाख जीते हैं। इनाम पाने के लिए ₹12,500 GST जमा करें।", "आपका ₹2 लाख का loan मंज़ूर है, पाने के लिए ₹1,500 फ़ीस पहले जमा करें"]) {
     expect(ids(m), m).not.toContain("advance_fee");
   }
+});
+
+test("'खाता बंद' भी रुकावट, और 'आज शाम तक' भी जल्दबाज़ी", () => {
+  const r = ids("आपके बैंक खाते की KYC अधूरी है, आज शाम तक नहीं करवाई तो खाता बंद, इस link पर करें: kyc-sbi.online");
+  expect(r).toEqual(expect.arrayContaining(["kyc_block", "urgency"]));
+  expect(checkMessage("आपके बैंक खाते की KYC अधूरी है, आज शाम तक नहीं करवाई तो खाता बंद, इस link पर करें: kyc-sbi.online").level).toBe("danger");
+});
+
+test("आम बातों पर नए निशान नहीं: 'ये video सबको भेज दो', 'मेरा फ़ोन ख़राब है, कल ठीक करवाऊँगा', बिजली वाला 'officer'", () => {
+  expect(ids("ये video सबको भेज दो, बहुत अच्छा है")).toEqual([]);
+  expect(ids("मेरा फ़ोन ख़राब हो गया है, कल ठीक करवाऊँगा")).toEqual([]);
+  expect(ids("Dear consumer your electricity power will be disconnected tonight at 9.30 pm please contact electricity officer")).not.toContain("digital_arrest");
 });

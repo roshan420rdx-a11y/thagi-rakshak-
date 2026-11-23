@@ -192,6 +192,14 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     whyHi: "ठगी के बाद 'पैसा वापस दिलाने' वाले भी ठग होते हैं; असली पुलिस, बैंक या cyber cell इसके लिए पैसे नहीं माँगते। शिकायत 1930, cybercrime.gov.in और बैंक से ही करें।",
   },
 
+  {
+    id: "khata-kiraya",
+    channelHi: "Telegram, 'Earn Daily' group से",
+    text: "घर बैठे कमाई: अपना bank account हमें किराए पर दो, हर महीने ₹10,000 मिलेंगे। बस आने वाले पैसे आगे भेजने हैं।",
+    scam: true,
+    whyHi: "खाता किराए पर देना ठगों की मदद करना है: उसमें ठगी का पैसा आता-जाता है। खाता freeze होता है, और पुलिस केस आप पर बनता है। खाता, ATM card, UPI या SIM किसी को न दें।",
+  },
+
   // असली
   {
     id: "otp-asli",

@@ -72,6 +72,13 @@ const SCAMS: string[] = [
   // ठगी के बाद दूसरी ठगी: "पैसा वापस दिला देंगे, पहले fee"
   "We are a fund recovery agency. We can recover your lost money. Pay 10% advance fee of Rs 8,000 to start.",
   "Aapka paisa wapas dilwa denge, bas 2000 file charge bhejo",
+  // पाँचवाँ दौर: Hinglish, IVR, खाता किराए पर
+  "Aapke WhatsApp par jo 6 ank ka code aaya hai wo bata dijiye, galti se aapke number par chala gaya",
+  "Sir, aapki bijli ka bill update nahi hua, aaj raat 9:30 baje connection kat jayega, is number par call karein 98XXXXXX12",
+  "Your Aadhaar is being misused for illegal activities. Press 1 to talk to officer",
+  "Mummy mera phone kharab ho gaya, ye dost ka number hai, 5000 bhej do jaldi",
+  "Bhai mera account freeze ho gaya hai, apne account me 50,000 mangwa lu? Baad me wapas kar dunga",
+  "Part time काम: अपने खाते में पैसे लो और आगे भेजो, हर ₹1 लाख पर ₹2,000 commission।",
 ];
 
 const BENIGN: string[] = [
@@ -115,6 +122,9 @@ const BENIGN: string[] = [
   "Papa ka operation kal hai, hospital ka bill 40,000 aaya hai, maine bhar diya",
   "नया passbook पाने के लिए ₹100 शुल्क शाखा के counter पर जमा करें।",
   "बैंक ने कहा है कि जाँच के बाद पैसा वापस मिलेगा, कोई fee नहीं लगेगी।",
+  "ये video सबको भेज दो, बहुत अच्छा है",
+  "बेटा, मेरा ATM card दे दो, पेंशन निकालनी है",
+  "Agent commission ₹50 per transaction is credited to your account.",
 ];
 
 test("गिनती: कम से कम 20 ठगी वाले और 8 आम message", () => {

@@ -52,7 +52,7 @@ export function stripNegations(text: string): string {
   return NEGATIONS.reduce((t, r) => t.replace(r, " "), text);
 }
 
-const OTP = "\\botp\\b|ओटीपी|one\\s*time\\s*password|verification\\s*code|वेरिफिकेशन\\s*कोड|\\d\\s*(?:digit|अंक)\\S*\\s*(?:का\\s*)?(?:code|कोड)";
+const OTP = "\\botp\\b|ओटीपी|one\\s*time\\s*password|verification\\s*code|वेरिफिकेशन\\s*कोड|\\d\\s*(?:digit|अंक|ank|anko|ankon)\\S*\\s*(?:का\\s*|ka\\s*)?(?:code|कोड)";
 const ASK = "\\b(?:share|send|tell|give|provide|forward|read\\s*out)\\b|बता|बोल|भेज|शेयर|साझा|दे\\s*दो|दे\\s*दीजिए|दीजिए|दीजिये|\\bbata|\\bbol(?:o|iye|\\s*do)\\b|\\bbhej|\\bde\\s*do\\b|\\bdedo\\b|\\bdijiye|\\bdijie";
 const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
@@ -76,6 +76,9 @@ const AUTHORITY =
 const THREAT =
   "arrest|अरेस्ट|गिरफ़्तार|warrant|वारंट|money\\s*laundering|मनी\\s*लॉन्ड्रिंग|मनी\\s*लांड्रिंग|drugs|ड्रग्स|नशीले|narcotic|parcel|पार्सल|video\\s*call|वीडियो\\s*कॉल|skype|स्काइप|हिरासत|custody|\\bjail\\b|जेल|एफ़आईआर|ग़ैरक़ानूनी|illegal|अवैध|ग़लत\\s*इस्तेमाल|misuse|दुरुपयोग|पकड़\\s*लिया|पकड़ा\\s*गया|छुड़ाने|disconnect";
 
+// IVR वाला call ("Press 1 to talk to officer", "1 दबाएँ"): धमकी के साथ हो, तो digital arrest की शुरुआत
+const PRESS = "\\bpress\\s*\\d|\\d\\s*(?:दबाएं|दबाइए|दबाये|दबाएँ)|\\d\\s*(?:dabaye|dabaiye|dabayein|dabaen)\\b";
+
 const APK = "\\.apk\\b|\\bapk\\b|एपीके";
 const REMOTE =
   "any\\s*desk|एनी\\s*डेस्क|team\\s*viewer|टीम\\s*व्यूअर|quick\\s*support|rust\\s*desk|air\\s*droid|screen\\s*shar|स्क्रीन\\s*शेयर|screen\\s*(?:पर|par)\\s*(?:देख|dekh)|स्क्रीन\\s*पर\\s*देख|(?:support|सपोर्ट|help|हेल्प)\\s*(?:app|ऐप|एप)";
@@ -85,7 +88,7 @@ const MASKED_NUMBER = "\\d{2}x{4,}\\d{2}";
 
 const ELECTRICITY = "बिजली|\\bbijli|\\bbijlee|electricity|electric|\\bpower\\b|लाइट\\s*(?:बिल|कनेक्शन)|light\\s*(?:bill|connection)";
 const CUT =
-  "काट|कट\\s*जा|कट\\s*दी|\\bcut\\b|disconnect|\\bkaat|\\bkat\\s*(?:di|jayegi|jaegi)|बंद\\s*कर\\s*दी\\s*जाएगी|band\\s*kar\\s*di\\s*jayegi";
+  "काट|कट\\s*जा|कट\\s*दी|\\bcut\\b|disconnect|\\bkaat|\\bkat\\s*(?:di|diya|jayegi|jaegi|jayega|jaega|jaayega)|बंद\\s*कर\\s*दी\\s*जाएगी|band\\s*kar\\s*di\\s*jayegi";
 const CONTACT = `संपर्क|सम्पर्क|contact|\\bcall\\b|कॉल|officer|अधिकारी|whatsapp|व्हाट्सएप|${MOBILE}|${MASKED_NUMBER}`;
 
 const PRIZE =
@@ -111,7 +114,7 @@ const LOAN_SEND = "भेज|\\bsend|\\bbhej|बता|\\btell|\\bcall|कॉल
 const KYC = "\\bkyc\\b|केवाईसी|\\bpan\\b|पैन";
 const ACCOUNT = "account|\\ba/c\\b|खाता|खाते|अकाउंट|\\bsim\\b|सिम|\\byono\\b|net\\s*banking|नेट\\s*बैंकिंग|\\bcard\\b|कार्ड|wallet|वॉलेट";
 const BLOCK =
-  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट|रुक\\s*(?:गई|गया|गयी|जाएगी|जाएगा)|रुकी\\s*(?:है|हुई)|रोक\\s*(?:दी|दिया)|withheld";
+  "block|ब्लॉक|suspend|सस्पेंड|deactivat|freeze|फ़्रीज़|बंद\\s*हो\\s*जा|बंद\\s*कर\\s*दिया\\s*जा|बंद\\s*कर\\s*दी\\s*जा|band\\s*ho\\s*ja|expire|एक्सपायर|on\\s*hold|blacklist|ब्लैकलिस्ट|रुक\\s*(?:गई|गया|गयी|जाएगी|जाएगा)|रुकी\\s*(?:है|हुई)|रोक\\s*(?:दी|दिया)|withheld|(?:खाता|खाते|account|\\ba/c)\\s*बंद(?!\\s*(?:नहीं|नही))|\\bkhata\\s*band\\b";
 // असली बैंक message में "block" धमकी नहीं होता: "SMS BLOCK 1234 to …" (बैंक का निर्देश), "to block your card",
 // "blocked as requested"। kyc_block इन्हें हटाकर ही "block" देखता है।
 const BLOCK_NOT_THREAT =
@@ -133,7 +136,8 @@ const WITHDRAW_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\btax|टैक�
 // सिर्फ़ "पैसे/₹" काफ़ी नहीं (ATM के असली शुल्क वाले message पर निशान न लगे); मुनाफ़ा/balance/wallet जैसा शब्द चाहिए
 const GAINS = "मुनाफ़ा|मुनाफ़े|profit|earning|कमाई|balance|बैलेंस|wallet|वॉलेट|commission|कमीशन|reward|bonus|बोनस";
 
-const NEW_NUMBER = "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number";
+const NEW_NUMBER =
+  "नया\\s*नंबर|नए\\s*नंबर|new\\s*(?:number|no\\b)|\\bnaya\\s*(?:number|no\\b)|नंबर\\s*बदल|number\\s*(?:badal|change)|changed\\s*my\\s*number|(?:\\bdost|दोस्त|\\bfriend)\\s*(?:ka|का|'s)\\s*(?:number|नंबर|phone|फ़ोन)|दूसरे\\s*(?:के\\s*)?(?:नंबर|फ़ोन)\\s*से|\\bdusre\\s*(?:ke\\s*)?(?:number|phone)\\s*se";
 
 const LOAN_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|insurance|बीमा|\\bgst\\b|stamp\\s*duty";
 const LOAN_ADVANCE =
@@ -151,7 +155,7 @@ const REFUND_HOOK = "refund|रिफंड|cash\\s*back|कैशबैक|comp
 const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|गूगल`;
 
 const URGENT =
-  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
+  "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|आज\\s*(?:शाम|रात|दोपहर)\\s*तक|\\baaj\\s*(?:shaam|sham|raat|rat)\\s*tak\\b|\\bby\\s*(?:today|tonight)\\b|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
 // नौकरी के नाम पर ठगी: "चयन हो गया / joining / offer letter" + registration, training, deposit, visa वगैरह + रकम।
 // सरकारी भर्ती की असली application fee ("Application fee ₹500…") में "चयन/joining" नहीं होता, उस पर निशान नहीं।
@@ -179,6 +183,14 @@ const RECOVER =
   "वापस\\s*(?:दिला|दिलवा|करवा\\s*दें|करवा\\s*देंगे|ला\\s*देंगे|लाकर)|\\brecover|\\brecovery\\b|money\\s*back|\\bwapas\\s*(?:dila|dilwa|karwa)|\\bvapas\\s*(?:dila|dilwa|karwa)";
 const RECOVER_FEE =
   "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|processing|प्रोसेसिंग|advance|एडवांस|commission|कमीशन|(?<!\\d)\\d{1,2}\\s*%|\\btax|टैक्स";
+
+// खाता किराए पर / किसी और का पैसा अपने खाते में (money mule): ठगी का पैसा घुमाने वाले खाते; freeze और पुलिस केस का ख़तरा।
+// "आपके खाते में ₹5,000 जमा हुए", "ATM card दे दो" (घर वाले), "commission credited" (असली agent) पर नहीं
+const MULE_ASK =
+  "(?:\\bapne|\\baapke|\\btumhare|तुम्हारे|आपके|अपने|\\byour)\\s*(?:bank\\s*)?(?:account|\\bkhate|\\bkhata|खाते|खाता|a/c)\\s*(?:\\bme\\b|\\bmein\\b|में|\\bin\\b|\\bpar\\b|पर)?\\s*(?:\\S+\\s*){0,4}?(?:mangwa|मंगवा|bhejwa|भिजवा|dalwa|डलवा|\\breceive)";
+const MULE_RENT =
+  "(?:account|\\bkhata|खाता|खाते|atm\\s*card|एटीएम\\s*कार्ड|passbook|पासबुक|\\bsim\\b|सिम)\\s*(?:\\S+\\s*){0,3}?(?:\\brent|kiraye|kiraaye|किराए|किराये|किराया)";
+const MULE_FORWARD = "आगे\\s*(?:भेज|transfer)|\\bforward|\\btransfer\\b|\\baage\\s*bhej";
 
 // किसी अपने की मुसीबत (accident, hospital, पुलिस) बताकर तुरंत पैसे: नक़ली आवाज़ वाले call भी
 const RELATIVE =
@@ -279,6 +291,11 @@ const R = {
   claimFee: near(CLAIM, ADV_FEE, 40),
   inPerson: rx(IN_PERSON),
   // यहाँ fee अक्सर अगले वाक्य में ("…recover your money. Pay 10% advance fee…"), इसलिए वाक्य के पार 100 अक्षर तक
+  press: rx(PRESS),
+  muleAsk: rx(MULE_ASK),
+  muleRent: rx(MULE_RENT),
+  muleCommission: near("commission|कमीशन", "खाते|खाता|account|a/c|\\bupi\\b", 60),
+  muleForward: rx(MULE_FORWARD),
   recoverFee: rx(`(?:${RECOVER}).{0,100}?(?:${RECOVER_FEE})|(?:${RECOVER_FEE}).{0,100}?(?:${RECOVER})`),
   relative: rx(RELATIVE),
   emergency: rx(EMERGENCY),
@@ -297,6 +314,8 @@ const R = {
   link: rx(LINK),
   govName: rx(GOV_NAME),
 };
+
+const isNewNumberMoney = (t: CheckedText) => R.newNumber.test(t.text) && (R.money.test(t.text) || R.sendNow.test(t.stripped));
 
 // कुछ नियम दूसरे नियमों में भी काम आते हैं (आम "पहले पैसे" वाला निशान सिर्फ़ तब, जब इनमें से कोई ठीक-ठीक न मिले)
 const isLotteryFee = (t: CheckedText) => (R.prize.test(t.text) || R.winAmount.test(t.text)) && R.fee.test(t.text);
@@ -345,7 +364,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: (t) =>
       R.arrestDirect.test(t.text) ||
       R.safeAccount.test(t.text) ||
-      (R.authority.test(t.text) && R.threat.test(t.text) && R.you.test(t.text)),
+      ((R.authority.test(t.text) || R.press.test(t.text)) && R.threat.test(t.text) && R.you.test(t.text)),
   },
   {
     id: "apk_file",
@@ -429,6 +448,13 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     test: isJobFee,
   },
   {
+    id: "account_rent",
+    level: "danger",
+    labelHi: "आपके खाते में किसी और का पैसा मँगवाना, या खाता किराए पर माँगना",
+    explainHi: "किसी और का पैसा अपने खाते में न आने दें, और खाता, ATM card, UPI या SIM किसी को न दें, चाहे दोस्त कहे या commission मिले। ऐसे खाते ठगी का पैसा घुमाने में इस्तेमाल होते हैं; खाता freeze हो सकता है, और पुलिस केस भी।",
+    test: (t) => R.muleAsk.test(t.text) || R.muleRent.test(t.text) || (R.muleCommission.test(t.text) && R.muleForward.test(t.text)),
+  },
+  {
     id: "recovery_fee",
     level: "danger",
     labelHi: "ठगी का पैसा वापस दिलाने के नाम पर पैसे माँगना",
@@ -460,7 +486,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     explainHi: "ठग किसी अपने के नाम से नए नंबर से मुसीबत बताकर पैसे माँगते हैं। पैसे भेजने से पहले उस इंसान को उसके पुराने नंबर पर call करके पक्का करें।",
     gyan: "apna-bankar",
     turant: "upi",
-    test: (t) => R.newNumber.test(t.text) && R.money.test(t.text),
+    test: isNewNumberMoney,
   },
   {
     id: "biometric_ask",
@@ -557,7 +583,7 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     labelHi: "'मेरा नया नंबर है' वाला message",
     gyan: "apna-bankar",
     explainHi: "ठग किसी अपने के नाम से नए नंबर से लिखते हैं, फिर पैसे माँगते हैं। उस इंसान को उसके पुराने नंबर पर call करके पक्का करें।",
-    test: (t) => R.newNumber.test(t.text) && !R.money.test(t.text),
+    test: (t) => R.newNumber.test(t.text) && !isNewNumberMoney(t),
   },
   {
     id: "urgency",
