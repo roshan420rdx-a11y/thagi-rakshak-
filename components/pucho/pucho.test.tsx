@@ -77,3 +77,12 @@ test("सुनें के लिए नतीजा और कारण क�
   const verdict = html.slice(html.indexOf('id="pucho-verdict"'), html.indexOf("message में मिले पते"));
   expect(verdict).not.toContain("sbi-yono-kyc");
 });
+
+test("ठगी या शक वाले नतीजे पर: पैसे नहीं गए हों तो नंबर की शिकायत Sanchar Saathi (चक्षु) पर; आम नतीजे पर नहीं", () => {
+  for (const m of ["शादी का कार्ड भेज रहे हैं: Wedding_Invitation.apk", "URGENT: last chance to claim"]) {
+    const html = renderToStaticMarkup(<VerdictCard result={checkMessage(m)} pageUrl={PAGE} />);
+    expect(html, m).toContain('href="https://sancharsaathi.gov.in"');
+    expect(html, m).toContain("चक्षु");
+  }
+  expect(renderToStaticMarkup(<VerdictCard result={checkMessage("कल शाम मिलते हैं")} pageUrl={PAGE} />)).not.toContain("sancharsaathi");
+});

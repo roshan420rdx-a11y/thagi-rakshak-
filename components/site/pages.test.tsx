@@ -48,6 +48,9 @@ test("/shikayat-rasta: पाँच पड़ाव, 1930, cybercrime.gov.in, cm
   expect((html.match(/<li data-status=/g) ?? []).length).toBe(5);
   for (const h of ['href="tel:1930"', 'href="https://cybercrime.gov.in"', 'href="https://cms.rbi.org.in"', 'href="tel:14448"', 'href="https://www.rbi.org.in/commonman/']) expect(html).toContain(h);
   expect(html).toContain('id="shikayat-steps"');
+  // पैसे नहीं गए, बस ठगी का call/SMS: नंबर की शिकायत DoT के Sanchar Saathi (चक्षु) पर
+  expect(html).toContain('href="https://sancharsaathi.gov.in"');
+  expect(html).toContain("चक्षु");
 });
 
 test("होम पर 'शिकायत का पूरा रास्ता' का link", () => {

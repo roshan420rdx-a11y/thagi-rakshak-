@@ -104,7 +104,10 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection title="बाहरी links">
-        <p>हम RBI, cybercrime.gov.in और बैंकों की साइटों के links देते हैं। वहाँ जाने पर उनकी अपनी नीति लागू होती है।</p>
+        <p>
+          हम RBI, cybercrime.gov.in, Sanchar Saathi (sancharsaathi.gov.in) और बैंकों की साइटों के links देते हैं। वहाँ जाने पर उनकी अपनी
+          नीति लागू होती है।
+        </p>
       </LegalSection>
 
       <LegalSection title="आगे क्या बदलेगा">

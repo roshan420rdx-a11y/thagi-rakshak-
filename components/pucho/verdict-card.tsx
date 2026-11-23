@@ -86,6 +86,16 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
         </a>
       ) : null}
 
+      {result.level !== "no_signals" ? (
+        <p className="text-[15px]">
+          पैसे नहीं गए? तो भी उस नंबर की शिकायत करें, ताकि वह बंद हो सके: दूरसंचार विभाग की{" "}
+          <a href="https://sancharsaathi.gov.in" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand">
+            Sanchar Saathi
+          </a>{" "}
+          साइट पर &quot;चक्षु&quot; में।
+        </p>
+      ) : null}
+
       <p className="text-[15px] text-muted">{CHECK_LIMIT_HI}</p>
     </section>
   );

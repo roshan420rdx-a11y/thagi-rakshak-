@@ -64,6 +64,17 @@ export default function ShikayatRastaPage() {
           </StepCard>
         ))}
       </ol>
+      <section aria-labelledby="bina-nuksan" className="space-y-2 rounded-xl border border-line bg-paper p-3">
+        <h2 id="bina-nuksan" className="text-[19px] font-bold leading-snug">
+          पैसे नहीं गए, बस ठगी का call या SMS आया?
+        </h2>
+        <p>
+          उस नंबर की शिकायत दूरसंचार विभाग (DoT) की Sanchar Saathi साइट पर &quot;चक्षु&quot; में करें, ताकि वह नंबर जाँचा और बंद किया
+          जा सके। ठग का नंबर, तारीख़-समय और message का screenshot काम आते हैं।
+        </p>
+        <p>वहीं यह भी देख सकते हैं कि आपके नाम पर कौन-कौन से mobile नंबर चल रहे हैं; जो आपका नहीं, उसकी शिकायत करें।</p>
+        <ActionLink action={{ kind: "link", href: "https://sancharsaathi.gov.in", labelHi: "sancharsaathi.gov.in खोलें", external: true }} />
+      </section>
       <Notice tone="info">यह जानकारी RBI और सरकारी portal के नियमों पर है, कानूनी सलाह नहीं। नियम बदल सकते हैं; हर पन्ने पर मूल text का link है।</Notice>
       <p>
         <Link href="/turant" className="inline-flex min-h-12 items-center font-semibold text-brand">
