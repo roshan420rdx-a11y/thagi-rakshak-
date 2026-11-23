@@ -27,7 +27,7 @@ export default function TurantIndex() {
           <li key={slug}>
             <Link
               href={`/turant/${slug}`}
-              className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline"
+              className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline transition-colors hover:border-brand"
             >
               {getTurantPage(slug).titleHi}
             </Link>

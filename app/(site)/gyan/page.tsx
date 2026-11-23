@@ -30,7 +30,7 @@ export default function GyanIndexPage() {
       <p>ठगी कैसे होती है, कैसे पहचानें, और हो जाए तो क्या करें। आसान भाषा में।</p>
       <Link
         href="/abhyas"
-        className="flex min-h-12 items-center rounded-xl border-2 border-brand bg-brand-bg px-4 py-2 font-bold text-brand no-underline"
+        className="flex min-h-12 items-center rounded-xl border-2 border-brand bg-brand-bg px-4 py-2 font-bold text-brand no-underline transition hover:brightness-95"
       >
         ख़ुद को परखें: ठगी या असली? (8 message, 2 मिनट) →
       </Link>

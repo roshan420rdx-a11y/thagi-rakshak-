@@ -71,7 +71,7 @@ export default function PosterPage() {
         href={whatsappShareLink(`ठगी से बचाव का मुफ़्त पोस्टर, छापकर लगाएँ: ${absoluteUrl("/poster", siteUrl)}`)}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex min-h-12 items-center justify-center rounded-xl border border-line bg-paper px-4 font-semibold text-ink no-underline"
+        className="flex min-h-12 items-center justify-center rounded-xl border border-line bg-paper px-4 font-semibold text-ink no-underline transition-colors hover:border-brand"
       >
         पोस्टर का link WhatsApp पर भेजें
       </a>

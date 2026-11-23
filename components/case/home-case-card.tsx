@@ -25,7 +25,7 @@ export function HomeCaseCard() {
 
   if (!text) return null;
   return (
-    <Link href="/case" className="block rounded-xl border-2 border-brand bg-brand-bg p-3 text-brand no-underline">
+    <Link href="/case" className="block rounded-xl border-2 border-brand bg-brand-bg p-3 text-brand no-underline transition hover:brightness-95">
       <span className="block text-[17px] font-bold">आपका केस (इस फ़ोन में)</span>
       <span className="block">{text}</span>
       <span className="block font-semibold">मेरा केस खोलें →</span>

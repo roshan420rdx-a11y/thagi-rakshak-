@@ -24,7 +24,7 @@ export default function LegalIndexPage() {
       <ul className="space-y-3">
         {ITEMS.map((i) => (
           <li key={i.href}>
-            <Link href={i.href} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline">
+            <Link href={i.href} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline transition-colors hover:border-brand">
               <span className="block text-[17px] font-bold text-brand">{i.title} →</span>
               <span className="block text-[15px]">{i.body}</span>
             </Link>

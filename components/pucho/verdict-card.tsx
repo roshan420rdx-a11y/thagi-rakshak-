@@ -84,7 +84,7 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
           href={whatsappShareLink(verdictShareText(result, pageUrl))}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-12 items-center rounded-[10px] border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline"
+          className="inline-flex min-h-12 items-center rounded-[10px] border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline transition-colors hover:border-brand"
         >
           परिवार को भेजें (WhatsApp)
         </a>

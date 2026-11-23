@@ -143,7 +143,7 @@ export function MeraCase() {
           </h2>
           <div className="flex flex-wrap gap-2">
             {next === "call_1930" ? <ActionLink action={{ kind: "tel", number: "1930", labelHi: "1930 मिलाएँ" }} primary /> : null}
-            <Link href="/shikayat-rasta" className="inline-flex min-h-12 items-center rounded-[10px] border border-line bg-paper px-4 font-semibold text-brand no-underline">
+            <Link href="/shikayat-rasta" className="inline-flex min-h-12 items-center rounded-[10px] border border-line bg-paper px-4 font-semibold text-brand no-underline transition-colors hover:border-brand">
               कैसे करें, देखें
             </Link>
           </div>
@@ -264,7 +264,7 @@ export function MeraCase() {
 
       <Link
         href="/arzi"
-        className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline"
+        className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 font-semibold text-brand no-underline transition-colors hover:border-brand"
       >
         बैंक, पुलिस और RBI के लिए पत्र बनाएँ (print/PDF) →
       </Link>

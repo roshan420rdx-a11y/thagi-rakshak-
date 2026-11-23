@@ -68,7 +68,7 @@ export default function NambarPage() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-12 items-start gap-2 rounded-xl border border-line bg-paper px-4 py-3 text-ink no-underline print:block print:min-h-0 print:border-0 print:p-0"
+                  className="flex min-h-12 items-start gap-2 rounded-xl border border-line bg-paper px-4 py-3 text-ink no-underline print:block print:min-h-0 print:border-0 print:p-0 transition-colors hover:border-brand"
                 >
                   <span className="min-w-0">
                     <span className="block font-bold text-brand print:inline">{s.labelHi}</span>

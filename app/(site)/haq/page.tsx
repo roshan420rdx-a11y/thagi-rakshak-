@@ -24,7 +24,7 @@ export default function HaqIndexPage() {
       <ul className="space-y-3">
         {CARDS.map((c) => (
           <li key={c.href}>
-            <Link href={c.href} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline">
+            <Link href={c.href} className="block min-h-12 rounded-xl border border-line bg-paper p-3 text-ink no-underline transition-colors hover:border-brand">
               <span className="block text-[17px] font-bold text-brand">{c.title} →</span>
               <span className="block text-[15px]">{c.body}</span>
             </Link>

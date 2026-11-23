@@ -28,7 +28,7 @@ export default function BankIndexPage() {
           <li key={b.slug}>
             <Link
               href={`/gyan/bank/${b.slug}`}
-              className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline"
+              className="flex min-h-12 items-center rounded-xl border border-line bg-paper px-4 py-2 font-semibold text-ink no-underline transition-colors hover:border-brand"
             >
               {b.nameHi}
             </Link>
