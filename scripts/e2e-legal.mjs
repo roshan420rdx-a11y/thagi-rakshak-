@@ -67,7 +67,7 @@ await check('निजता पन्ने में "पहले पूछ�
     await page.getByRole("heading", { name: '"सुनें" बटन' }).waitFor();
     await page.getByRole("heading", { name: '"मेरा केस" में भरी जानकारी' }).waitFor();
     await page.getByRole("heading", { name: "WhatsApp पर बात" }).waitFor();
-    await page.getByText("“पहले पूछो” internet बंद होने पर भी खुलें", { exact: false }).waitFor();
+    await page.getByText("“मेरा केस” और “अर्ज़ियाँ” internet बंद होने पर भी खुलें", { exact: false }).waitFor();
   }),
 );
 

@@ -68,6 +68,11 @@ export function serializeCase(c: LocalCase): string {
   return JSON.stringify(c);
 }
 
+// फ़ोन में कोई केस भरा है या नहीं (होम पर "आपका केस" दिखाने के लिए)
+export function caseHasData(c: LocalCase): boolean {
+  return !!(c.txnDate || c.amount || STAGE_IDS.some((id) => c.stages[id].on || c.stages[id].number));
+}
+
 // अगला पड़ाव: जिसकी तारीख़ अभी नहीं भरी (क्रम से); सब भरे हों तो null
 export function nextStage(c: LocalCase): ShikayatStageId | null {
   return STAGE_IDS.find((id) => !c.stages[id].on) ?? null;

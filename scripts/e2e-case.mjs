@@ -120,6 +120,38 @@ await check("अर्ज़ी: 'मेरा केस' की तारीख
   }),
 );
 
+await check("होम: फ़ोन में केस हो तो 'आपका केस' और अगला कदम; न हो तो कुछ नहीं", async () => {
+  await withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/`);
+    await page.getByRole("heading", { name: "और मदद" }).waitFor();
+    assert((await page.getByText("आपका केस (इस फ़ोन में)").count()) === 0, "बिना केस के card दिखा");
+  });
+  await withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    await page.getByLabel("ठगी किस तारीख़ को हुई?").fill(minusDays(1));
+    await page.locator('[data-stage="call_1930"]').getByLabel("कब की?").fill(minusDays(1));
+    await page.getByText("फ़ोन में सेव हो गया").waitFor();
+    await page.goto(`${BASE}/`);
+    await page.getByText("आपका केस (इस फ़ोन में)").waitFor();
+    await page.getByText(/अगला कदम: cybercrime\.gov\.in/).waitFor();
+  });
+});
+
+await check("offline: internet बंद होने पर भी 'मेरा केस' खुले और भरी जानकारी दिखे", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await open(page);
+    await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("7,777");
+    await page.getByText("फ़ोन में सेव हो गया").waitFor();
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await context.setOffline(true);
+    await page.reload();
+    await page.getByRole("heading", { name: "मेरी शिकायतें" }).waitFor();
+    assert((await page.getByLabel("कुल कितने पैसे गए? (₹)").inputValue()) === "7777", "offline में जानकारी नहीं दिखी");
+  }),
+);
+
 await check("JS बंद: साफ़ संदेश और शिकायत के रास्ते का link", () =>
   withPage({ javaScriptEnabled: false, viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/case`);

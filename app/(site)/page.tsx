@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconSearch } from "@/components/ui/icons";
 import Link from "next/link";
+import { HomeCaseCard } from "@/components/case/home-case-card";
 import { InstallButton } from "@/components/site/install-button";
 import { whatsappShareLink } from "@/modules/checker/share";
 import { absoluteUrl, getSiteConfig, whatsappLink } from "@/modules/site";
@@ -30,6 +31,7 @@ export default function HomePage() {
   return (
     <div className="space-y-4">
       <h1 className="sr-only">ठगी रक्षक: डिजिटल ठगी में मदद</h1>
+      <HomeCaseCard />
       <BigDoor
         href="/turant"
         title="मेरे साथ ठगी हो गई"
