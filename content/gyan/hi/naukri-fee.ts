@@ -47,7 +47,7 @@ export const naukriFee: GyanPage = {
     },
     {
       qHi: "विदेश की नौकरी का offer असली है या नहीं, कैसे जाँचूँ?",
-      aHi: "agent का नाम और registration eMigrate (emigrate.gov.in) पर देखें। अपना passport किसी agent को न सौंपें। विदेश में फँस गए हों, तो वहाँ के भारतीय दूतावास से संपर्क करें।",
+      aHi: "agent का नाम और registration विदेश मंत्रालय (MEA) की eMigrate साइट (emigrate.gov.in) पर देखें; वहाँ उन agencies की सूची भी है जिनके ख़िलाफ़ शिकायतें आई हैं। अपना passport किसी agent को न सौंपें। विदेश में फँस गए हों, तो वहाँ के भारतीय दूतावास से संपर्क करें।",
     },
   ],
   turantSlug: "upi",
