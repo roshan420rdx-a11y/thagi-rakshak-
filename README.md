@@ -8,6 +8,20 @@
 - हर हिस्से की plan: `docs/superpowers/plans/`
 - मालिक के काम (एक सूची): `docs/MALIK_KE_KAAM.md`
 
+## साइट में क्या है
+| पन्ना | काम |
+|-------|-----|
+| `/turant` | ठगी हो गई: पहले 60 मिनट के कदम (10 प्रकार), internet के बिना भी |
+| `/pucho` | "पहले पूछो": message या call की बात चिपकाकर ठगी के निशान (फ़ोन के अंदर, कहीं भेजा नहीं जाता) |
+| `/abhyas` | "ठगी या असली?" अभ्यास: 8 message पहचानें |
+| `/case` | "मेरा केस": शिकायतों की तारीख़ें, नंबर, आगे की तारीख़ें (सिर्फ़ इसी फ़ोन में) |
+| `/arzi` | बैंक, पुलिस और RBI Ombudsman के मुफ़्त पत्र (print/PDF) |
+| `/shikayat-rasta` | शिकायत का पूरा रास्ता: 1930 → cybercrime.gov.in → बैंक → पुलिस → RBI Ombudsman, और चक्षु |
+| `/haq` | RBI के नियमों से हक़ का हिसाब (ज़ीरो ज़िम्मेदारी, मुआवज़ा, fail लेन-देन, freeze) |
+| `/gyan` | ज्ञानकोश: 15 तरह की ठगी, और बैंक वाले पन्ने |
+| `/poster` | छापने वाला एक पन्ने का पोस्टर |
+| `/bharosa`, `/legal/*` | भरोसा, निजता, शर्तें, शिकायत अधिकारी |
+
 ## तकनीक
 Next.js (App Router) · TypeScript · Tailwind CSS · Zod · Vitest · Playwright
 
@@ -22,6 +36,11 @@ npm run lint
 npm run typecheck
 ```
 जाँच के लिए app चलाकर `/api/health` खोलें। जवाब में `"status": "ok"` आना चाहिए।
+
+असली browser वाली जाँचें (पहले `npm run build && npm start`):
+```bash
+for s in turant site haq gyan legal pucho case abhyas poster a11y console seo; do node scripts/e2e-$s.mjs || break; done
+```
 
 ## सुरक्षा का नियम
 असली secrets (`.env` वाली keys) कभी GitHub पर नहीं डालने। `.gitignore` इन्हें रोकता है।
