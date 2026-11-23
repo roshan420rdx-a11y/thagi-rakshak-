@@ -1,4 +1,4 @@
-import { isBankLookalike, type CheckResult } from "@/modules/checker";
+import { isBankLookalike, isGovDomain, type CheckResult } from "@/modules/checker";
 import { CHECK_LIMIT_HI, LEVEL_COPY, verdictShareText, whatsappShareLink } from "@/modules/checker/share";
 import { BigDoor } from "@/components/ui/big-door";
 import { IconAlert, IconInfo } from "@/components/ui/icons";
@@ -14,6 +14,7 @@ const LOOK = {
 export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl: string }) {
   const copy = LEVEL_COPY[result.level];
   const Icon = result.level === "no_signals" ? IconInfo : IconAlert;
+  const govNamed = result.hits.some((h) => h.id === "gov_lookalike");
   const turant = result.level === "danger" ? (result.hits.find((h) => h.level === "danger" && h.turant)?.turant ?? "pata-nahi") : null;
 
   return (
@@ -54,6 +55,9 @@ export function VerdictCard({ result, pageUrl }: { result: CheckResult; pageUrl:
                 <span className="font-mono break-all">{d}</span>
                 {isBankLookalike(d) ? (
                   <span className="block font-semibold text-warn">बैंक का नाम है, पर पता .bank.in पर नहीं</span>
+                ) : null}
+                {govNamed && !isGovDomain(d) ? (
+                  <span className="block font-semibold text-warn">सरकारी काम का नाम है, पर पता .gov.in पर नहीं</span>
                 ) : null}
               </li>
             ))}

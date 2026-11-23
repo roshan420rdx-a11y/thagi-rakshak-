@@ -32,6 +32,7 @@ const CASES: [string, string[], string[]][] = [
   ["wrong_transfer", ["गलती से आपके खाते में ₹5000 भेज दिए, प्लीज़ वापस कर दो", "I sent money to you by mistake, please return it"], ["मैंने तुम्हें पैसे भेज दिए हैं"]],
   ["customer_care", ["Customer care: refund के लिए 9876543210 पर call करें", "For refund call our helpline 9876543210"], ["refund 3 दिन में आपके खाते में आ जाएगा"]],
   ["urgency", ["तुरंत करें, वरना आज ही बंद हो जाएगा", "URGENT: last chance to claim"], ["आराम से देख लेना"]],
+  ["gov_lookalike", ["Your vehicle challan of Rs 500 is pending. Pay now at echallan-parivahan.xyz to avoid court action.", "Income Tax Dept: You are eligible for a refund of Rs 15,490. Click to verify your account: http://itr-refund.in", "PM Kisan की अगली किस्त पाने के लिए e-KYC करें: pmkisan-ekyc.online"], ["आपका ITR process हो गया है। देखें: incometax.gov.in", "Your challan has been paid. Receipt: echallan.parivahan.gov.in", "Your Amazon order has been shipped: amazon.in/track"]],
   ["link", ["details: http://bit.ly/abc123", "visit www.sbi-kyc-update.com now"], ["website का पता बाद में बताऊँगा"]],
 ];
 

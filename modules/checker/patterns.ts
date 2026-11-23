@@ -1,6 +1,6 @@
 import type { GyanSlug } from "@/modules/gyan";
 import type { TurantSlug } from "@/modules/scams";
-import { isBankLookalike } from "./links";
+import { isBankLookalike, isGovDomain } from "./links";
 import { normalizePattern } from "./normalize";
 
 // "पहले पूछो" के तय नियम (spec भाग 2, खंड 6.3, 7)। ये सिर्फ़ पहचान के लिए हैं, user को दिखने वाली बात नहीं,
@@ -207,6 +207,10 @@ const SIM_CHANGE =
 // call forwarding: *401* (Jio) या **21* / **61* / **62* / **67* / **002* / **004* (GSM) जैसे code
 const CALL_FORWARD = "\\*\\s*40[1-9]\\s*\\*|\\*\\*\\s*(?:21|61|62|67|002|004)\\s*\\*|(?<![*\\d])\\*\\s*21\\s*\\*";
 
+// सरकारी कामों के नाम (इनकी असली साइटें .gov.in / .nic.in पर); बिजली कंपनियाँ इसमें नहीं (उनकी साइटें अलग-अलग)
+const GOV_NAME =
+  "income\\s*tax|आयकर|\\bitr\\b|tax\\s*refund|challan|चालान|parivahan|परिवहन|traffic\\s*police|ट्रैफ़िक\\s*पुलिस|\\buidai\\b|\\baadhaa?r\\b|आधार|\\bpan\\s*card|पैन\\s*कार्ड|\\bepfo\\b|पीएफ|pm[\\s-]*kisan|पीएम\\s*किसान|किसान\\s*सम्मान|ration\\s*card|राशन\\s*कार्ड|passport|पासपोर्ट|digilocker|डिजीलॉकर|सरकारी\\s*योजना|government\\s*scheme";
+
 const LINK =
   "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
 
@@ -282,6 +286,7 @@ const R = {
   callForward: rx(CALL_FORWARD),
   urgent: rx(URGENT),
   link: rx(LINK),
+  govName: rx(GOV_NAME),
 };
 
 // कुछ नियम दूसरे नियमों में भी काम आते हैं (आम "पहले पैसे" वाला निशान सिर्फ़ तब, जब इनमें से कोई ठीक-ठीक न मिले)
@@ -551,6 +556,13 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     gyan: "kyc-link",
     explainHi: "RBI के निर्देश से भारत के बैंकों की वेबसाइट .bank.in पर है, और यह पता सिर्फ़ बैंक ले सकते हैं। बैंक के नाम वाला कोई और पता नकली हो सकता है। link न खोलें।",
     test: (t) => t.domains.some(isBankLookalike),
+  },
+  {
+    id: "gov_lookalike",
+    level: "warn",
+    labelHi: "सरकारी काम का नाम, पर पता .gov.in का नहीं",
+    explainHi: "आयकर, चालान, आधार, PF या किसान योजना जैसे सरकारी कामों की साइटें आम तौर पर .gov.in या .nic.in पर होती हैं। ऐसा link न खोलें; विभाग की साइट का पता ख़ुद टाइप करें।",
+    test: (t) => R.govName.test(t.text) && t.domains.some((d) => !isGovDomain(d)),
   },
   {
     id: "link",

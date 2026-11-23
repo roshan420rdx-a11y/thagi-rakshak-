@@ -66,6 +66,9 @@ const SCAMS: string[] = [
   "Work from home job, registration fee ₹999 only, earn ₹30,000 per month. Pay on this UPI.",
   "Hello, aapke number par 2 lakh ka loan approve hua hai, sirf 2,000 file charge bhejo",
   "आपकी गैस subsidy रुकी है, KYC के लिए इस नंबर पर call करें 98XXXXXX21",
+  // सरकारी नाम, पर पता .gov.in नहीं
+  "Your vehicle challan of Rs 500 is pending. Pay now at echallan-parivahan.xyz to avoid court action.",
+  "PM Kisan की अगली किस्त पाने के लिए e-KYC करें: pmkisan-ekyc.online",
 ];
 
 const BENIGN: string[] = [

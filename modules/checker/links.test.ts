@@ -35,3 +35,12 @@ test.each([
   "https://meet.google.com/abc-defg-hij",
   "details: http://bit.ly/abc123",
 ])("bank_lookalike न पकड़े: %s", (t) => expect(ids(t)).not.toContain("bank_lookalike"));
+
+test("सरकारी पता: .gov.in या .nic.in", async () => {
+  const { isGovDomain } = await import("@/modules/checker/links");
+  expect(isGovDomain("incometax.gov.in")).toBe(true);
+  expect(isGovDomain("echallan.parivahan.gov.in")).toBe(true);
+  expect(isGovDomain("services.india.nic.in")).toBe(true);
+  expect(isGovDomain("echallan-parivahan.xyz")).toBe(false);
+  expect(isGovDomain("gov.in.fake-site.com")).toBe(false);
+});

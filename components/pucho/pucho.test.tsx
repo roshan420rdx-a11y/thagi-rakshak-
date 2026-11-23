@@ -86,3 +86,9 @@ test("ठगी या शक वाले नतीजे पर: पैसे 
   }
   expect(renderToStaticMarkup(<VerdictCard result={checkMessage("कल शाम मिलते हैं")} pageUrl={PAGE} />)).not.toContain("sancharsaathi");
 });
+
+test("सरकारी काम वाले message में ग़ैर-.gov.in पते पर अलग चेतावनी", () => {
+  const html = renderToStaticMarkup(<VerdictCard result={checkMessage("Your vehicle challan of Rs 500 is pending. Pay now at echallan-parivahan.xyz")} pageUrl={PAGE} />);
+  expect(html).toContain("echallan-parivahan.xyz");
+  expect(html).toContain("सरकारी काम का नाम है, पर पता .gov.in पर नहीं");
+});

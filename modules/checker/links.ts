@@ -21,3 +21,8 @@ const BANK_WORD = /sbi|hdfc|icici|pnb|kotak|canara|baroda|yono|unionbank|bank|(?
 export function isBankLookalike(domain: string): boolean {
   return !domain.endsWith(".bank.in") && BANK_WORD.test(domain);
 }
+
+// सरकारी विभागों की साइटें आम तौर पर .gov.in या .nic.in पर। सरकारी काम (चालान, आयकर, आधार, PF…) वाले message में दूसरा पता = शक
+export function isGovDomain(domain: string): boolean {
+  return domain.endsWith(".gov.in") || domain.endsWith(".nic.in");
+}

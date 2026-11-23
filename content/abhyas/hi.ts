@@ -176,6 +176,14 @@ export const ABHYAS_ITEMS: readonly AbhyasItem[] = [
     gyan: "customer-care-fake",
   },
 
+  {
+    id: "challan-link",
+    channelHi: "SMS, एक mobile नंबर से",
+    text: "आपकी गाड़ी का ₹500 का चालान बाकी है। आज भरें, वरना court case होगा: echallan-pay.top",
+    scam: true,
+    whyHi: "चालान की असली साइट का पता .gov.in पर ख़त्म होता है (echallan.parivahan.gov.in)। message के link से नहीं, वह पता ख़ुद टाइप करके देखें।",
+  },
+
   // असली
   {
     id: "otp-asli",
