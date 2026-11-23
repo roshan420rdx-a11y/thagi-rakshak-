@@ -26,6 +26,7 @@
 1. GitHub पर `thagi-rakshak-` repo → **Settings → Secrets and variables → Actions → Variables** tab।
 2. **New repository variable**: नाम `SITE_URL`, मान साइट का पता (आख़िर में `/` के बिना)।
 3. अब हर 30 मिनट पर GitHub देखेगा कि साइट चल रही है। बंद मिली तो आपको email आएगा।
+4. **ध्यान दें:** यह जाँच GitHub Actions से चलती है, जो अभी इस खाते पर नहीं चल रहे (`docs/MALIK_KE_KAAM.md` का काम 1)। repo Public होने के बाद यह अपने-आप चलने लगेगी। तब तक साइट का पता फ़ोन में खोलकर देख लें।
 
 ## भाग 3: Free plan के बारे में ज़रूरी बात
 - Render का Free plan कुछ देर किसी के न आने पर साइट को सुला देता है, और अगला आने वाला करीब एक मिनट इंतज़ार करता है। marketplace में यही दिक़्क़त आई थी।
