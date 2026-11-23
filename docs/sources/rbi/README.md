@@ -25,3 +25,8 @@
 URL का रूप: `https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=<Id>&Mode=0` · press release: `https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63011` (24 जून 2026)
 
 **दूसरी जाँच (👤 मालिक):** हर नियम live होने से पहले कोई दूसरा इंसान ऊपर के link खोलकर मिलाए, कि नियम में दिया paragraph सच में वही कहता है।
+
+## दोबारा मिलान: 🤖 Claude, 2026-11-23 (मालिक की अनुमति से)
+"आपका हक़", "शिकायत का रास्ता" और ज्ञानकोश में इस्तेमाल हर RBI quote (5 नियम, TAT 2019, Ombudsman के 4, ज्ञानकोश के 3 = **13**) RBI की
+अपनी साइट पर उसी दिन फिर खोलकर मिलाया: **13/13 जस के तस ✓**। उलटी जाँच: एक शब्द या अंक बदला quote पन्ने पर नहीं मिलता।
+फिर से चलाना: `RECHECK=1 NODE_USE_ENV_PROXY=1 npx vitest run scripts/recheck/rbi.test.ts`
