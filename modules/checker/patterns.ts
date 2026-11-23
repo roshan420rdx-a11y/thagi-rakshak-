@@ -58,7 +58,8 @@ const RECEIVE =
   "\\breceive|\\bto\\s+get\\b|\\bget\\s+(?:your|the)\\b|credited|cash\\s*back|refund|reward|prize|पाने|प्राप्त|मिलेगा|मिलेंगे|मिल\\s*जा|खाते\\s*में\\s*आ|पैसे\\s*आ|कैशबैक|रिफंड|इनाम|\\bmilega|\\bmilenge|\\bmil\\s*ja|paise\\s*aa|khate\\s*me";
 // "मैं आपको 1 रुपया भेजता हूँ, QR scan करो" (OLX वाला 'army officer'): पैसे भेजने का वादा = पैसे पाने का झाँसा।
 // पैसे वाला शब्द पहले चाहिए ("QR भेज रहा हूँ, scan करके payment करो" दुकानदार की असली बात है)
-const MONEY_WORD = "पैसे|पैसा|\\brupa(?:y|ya|ye)\\b|\\brupees?\\b|रुपया|रुपये|रुपए|₹\\s*\\d[\\d,]*|\\brs\\.?\\s*\\d[\\d,]*";
+const MONEY_WORD =
+  "पैसे|पैसा|\\brupa(?:y|ya|ye)\\b|\\brupees?\\b|रुपया|रुपये|रुपए|₹\\s*\\d[\\d,]*|\\brs\\.?\\s*\\d[\\d,]*|(?<![\\d.])\\d{1,3}(?:,\\d{2,3})+(?![\\d.])";
 const WILL_SEND = "भेजता|भेज\\s*रहा|भेज\\s*रही|भेजूंगा|भेजूंगी|\\bbhejta|\\bbhej\\s*raha|\\bbhej\\s*rahi|\\bbhejunga|\\bbhejungi";
 const RECEIVE_PROMISE = `(?:${MONEY_WORD})\\s*(?:\\S+\\s*){0,2}?(?:${WILL_SEND})|\\bsend(?:ing)?\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)|\\bi\\s+(?:will|am\\s+going\\s+to)\\s+send\\s+you\\s+(?:₹|rs\\b|rupees|money|payment|\\d)`;
 const QR = "\\bqr\\b|क्यू\\s*आर|\\bscan|स्कैन";
@@ -82,6 +83,12 @@ const FILL =
   "\\bupdate|अपडेट|\\bfill|भरें|भरो|भरिए|भरिये|भर\\s*(?:दें|दो|दीजिए)|\\benter\\b|डालें|डालो|डालिए|दर्ज|\\bverify|वेरिफाई|\\bconfirm|\\bsubmit|\\bprovide|\\bbhar(?:o|e|ein|iye)?\\b|\\bdaal";
 const LINK_WORD = "\\blink|लिंक|click\\s*here|यहां\\s*क्लिक|नीचे\\s*दि";
 const DOWNLOAD = "download|डाउनलोड|install|इंस्टॉल|इंस्टाल";
+
+// card का नंबर, CVV, expiry या ATM PIN माँगना (बैंक वाला बनकर call/message)। "कभी न बताएँ" वाला असली SMS नकार से बाहर।
+const CARD_SECRET =
+  "\\bcvv\\b|सीवीवी|card\\s*(?:ka\\s*|का\\s*)?(?:number|no\\b|नंबर)|कार्ड\\s*(?:का\\s*)?नंबर|atm\\s*pin|एटीएम\\s*पिन|\\bexpiry|एक्सपायरी|पीछे\\s*(?:के\\s*|वाले\\s*|लिखे\\s*)?(?:3|तीन)\\s*अंक|\\bpeeche\\s*(?:ke\\s*|wale\\s*|likhe\\s*)?(?:3|teen)\\s*(?:ank|digit)";
+// "पैसे भेज रहा हूँ, बस request accept कर लो": भेजने वाले को request नहीं भेजनी पड़ती
+const REQUEST_ACCEPT = near("request|रिक्वेस्ट|collect", "accept|approve|स्वीकार|एक्सेप्ट|अप्रूव", 30).source;
 
 const ARREST_DIRECT = "digital\\s*arrest|डिजिटल\\s*(?:अरेस्ट|गिरफ़्तार|हिरासत)|बेगुनाह|ज़मानत\\s*(?:के\\s*लिए|राशि)";
 // "safe/सरकारी/RBI account" तभी, जब उसमें पैसे डलवाने की बात हो ("to secure account" वाला WhatsApp message digital arrest नहीं)
@@ -121,8 +128,9 @@ const MEDIA =
 // सिर्फ़ "YouTube" शब्द धमकी नहीं ("YouTube video like करो" वाला काम भी उसमें आता है); "डाल दूँगा", "upload" जैसे शब्द चाहिए
 const SPREAD =
   "viral|वायरल|\\bleak|लीक|सबको|सब\\s*को|सबके\\s*पास|everyone|everybody|family|परिवार|घरवालों|रिश्तेदार|relatives|contacts|कॉन्टैक्ट|upload|अपलोड|भेज\\s*दूंगा|भेज\\s*दूंगी|भेज\\s*देंगे|send\\s*(?:it\\s*)?to\\s*(?:all|your)|डाल\\s*दूंगा|फैला";
-const MONEY =
-  "पैसे|पैसा|\\bpaise|\\bpaisa|\\bpay\\b|payment|money|रुपये|रुपए|rupees|₹|\\brs\\.?\\s*\\d|transfer|भेजो|\\bbhejo|\\bupi\\b";
+// भुगतान ऐप के नाम ("Phone Pe karo") और comma वाली रकम ("20,000 chahiye") भी पैसे की बात
+const PAY_APP = "phone\\s*pe|phonepe|फोन\\s*पे|फोनपे|google\\s*pay|\\bgpay\\b|गूगल\\s*पे|paytm|पेटीएम|\\bbhim\\b";
+const MONEY = `पैसे|पैसा|\\bpaise|\\bpaisa|\\bpay\\b|payment|money|रुपये|रुपए|rupees|₹|\\brs\\.?\\s*\\d|transfer|भेजो|\\bbhejo|\\bupi\\b|${PAY_APP}|(?<![\\d.])\\d{1,3}(?:,\\d{2,3})+(?![\\d.])`;
 
 const LOAN = "\\bloan|लोन|ऋण|\\bemi\\b|ईएमआई|\\bkarz|क़र्ज़|\\bqarz|\\budhar|उधार";
 const LOAN_MEDIA = "photo|फ़ोटो|morph|मॉर्फ|nude|न्यूड|गाली|viral|वायरल|बदनाम|badnaam|धमकी";
@@ -159,7 +167,7 @@ const NEW_NUMBER =
 
 const LOAN_FEE = "\\bfees?\\b|फ़ीस|शुल्क|\\bcharges?\\b|चार्ज|insurance|बीमा|\\bgst\\b|stamp\\s*duty";
 const LOAN_ADVANCE =
-  "\\bto\\s+get\\b|to\\s+receive|disburs|\\brelease|before|advance|पहले|पाने\\s*के\\s*लिए|मिलने\\s*से\\s*पहले|approval\\s*के\\s*लिए|\\bpehle|file\\s*charge|फ़ाइल\\s*चार्ज|भेजो|भेज\\s*दो|\\bbhejo\\b|\\bbhej\\s*do\\b";
+  "\\bto\\s+get\\b|to\\s+receive|disburs|\\brelease|before|advance|पहले|पाने\\s*के\\s*लिए|मिलने\\s*से\\s*पहले|approval\\s*के\\s*लिए|\\bpehle|file\\s*charge|फ़ाइल\\s*चार्ज|भेजो|भेज\\s*दो|भेजिए|भेजें|भेज\\s*दीजिए|\\bbhejo\\b|\\bbhej\\s*do\\b|\\bbhejiye\\b|\\bbhejein\\b|\\bbhej\\s*dijiye\\b";
 const LOAN_OFFER = "pre[\\s-]*approved|\\bapprove|sanction|मंज़ूर|स्वीकृत|instant|तुरंत\\s*loan|\\blakh|लाख|₹|\\brs\\b";
 
 const WRONG =
@@ -215,7 +223,7 @@ const RELATIVE =
   "बेटे|बेटा|बेटी|\\bbete\\b|\\bbeta\\b|\\bbeti\\b|\\bsons?\\b|daughter|पति|पत्नी|husband|wife|भाई|\\bbhai\\b|बहन|\\bbehen\\b|पापा|\\bpapa\\b|मम्मी|\\bmummy\\b|पिता|father|mother|brother|sister|रिश्तेदार|relative|दोस्त|friend";
 const EMERGENCY =
   "accident|एक्सीडेंट|दुर्घटना|hospital|अस्पताल|\\bicu\\b|आईसीयू|operation|ऑपरेशन|emergency|इमरजेंसी|पकड़\\s*लिया|पकड़ा\\s*गया|arrested|custody|हिरासत|जेल|\\bjail\\b";
-const SEND_NOW = "भेजो|भेज\\s*दो|भेजिए|भेज\\s*दीजिए|भेजें|\\bbhejo\\b|\\bbhej\\s*do\\b|\\bsend\\b|transfer|ट्रांसफ़र";
+const SEND_NOW = `भेजो|भेज\\s*दो|भेजिए|भेज\\s*दीजिए|भेजें|\\bbhejo\\b|\\bbhej\\s*do\\b|\\bsend\\b|transfer|ट्रांसफ़र|(?:${PAY_APP})\\s*(?:कर|\\bkar)`;
 
 // "यह आपने नहीं किया तो…" वाला हिस्सा: असली alert की जल्दी (तुरंत बताएँ) धमकी नहीं, इसलिए urgency इसे हटाकर देखी जाती है।
 // पर उसी हिस्से में mobile नंबर हो, तो नकली alert का निशान (ठग अपने नंबर पर call करवाते हैं)।
@@ -271,6 +279,8 @@ const R = {
   callVerb: rx(CALL_VERB),
   linkWord: rx(LINK_WORD),
   download: rx(DOWNLOAD),
+  cardSecret: near(CARD_SECRET, ASK, 40),
+  requestAccept: new RegExp(REQUEST_ACCEPT, "i"),
   request: rx(REQUEST),
   arrestDirect: rx(ARREST_DIRECT),
   authority: rx(AUTHORITY),
@@ -388,6 +398,25 @@ export const CHECKER_RULES: readonly CheckerRule[] = [
     turant: "upi",
     test: (t) =>
       R.pin.test(t.stripped) && (R.request.test(t.stripped) || R.receive.test(t.stripped) || R.receivePromise.test(t.stripped)),
+  },
+  {
+    id: "card_secret_ask",
+    level: "danger",
+    labelHi: "card का नंबर, CVV या ATM PIN माँगना",
+    explainHi: "बैंक या कोई असली कंपनी कभी card का नंबर, CVV, expiry या ATM PIN नहीं माँगती। ये बताते ही card से पैसे निकल सकते हैं।",
+    gyan: "customer-care-fake",
+    turant: "card",
+    test: (t) => R.cardSecret.test(t.stripped),
+  },
+  {
+    id: "request_accept",
+    level: "danger",
+    labelHi: "पैसे भेजने की बात, पर 'request' accept करवाना",
+    explainHi: "पैसे भेजने वाले को आपसे कोई request accept नहीं करवानी पड़ती। request accept करके PIN डालते ही पैसे आपके खाते से कटते हैं।",
+    gyan: "upi-pin-qr",
+    turant: "upi",
+    test: (t) =>
+      R.requestAccept.test(t.stripped) && !R.pin.test(t.stripped) && (R.receivePromise.test(t.stripped) || R.receive.test(t.stripped)),
   },
   {
     id: "digital_arrest",

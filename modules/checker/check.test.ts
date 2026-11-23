@@ -5,6 +5,14 @@ const ids = (t: string) => checkMessage(t).hits.map((h) => h.id);
 
 // हर नियम: [id, पकड़ने वाले उदाहरण, न-पकड़ने वाले उदाहरण]
 const CASES: [string, string[], string[]][] = [
+  // card number / CVV / ATM PIN माँगना (बैंक वाला बनकर call)
+  ["card_secret_ask", ["Hello madam, main SBI bank se bol raha hu, aapka ATM card block ho gaya hai, card number aur CVV batayiye", "आपका card चालू रखने के लिए card के पीछे लिखे 3 अंक बताइए।", "Please share your card number and expiry date to stop the blocking."], ["Never share your card number, CVV or OTP with anyone. -SBI", "CVV और ATM PIN कभी किसी को न बताएँ।", "card number aur CVV kisi ko mat batana", "आपका नया debit card डाक से भेजा गया है।"]],
+  // "पैसे भेज रहा हूँ, बस request accept कर लो" (PIN का नाम लिए बिना)
+  ["request_accept", ["बेटा, मैं तुम्हारे पापा का दोस्त हूँ, उन्होंने कहा है तुम्हारे account में 10,000 भेज रहा हूँ, बस मेरा भेजा request accept कर लो।", "I am sending you Rs 2,000 for the sofa, just approve the request I sent on Google Pay."], ["Facebook पर मेरी friend request accept कर लो।", "मैंने ₹500 की payment request भेजी है, सब्ज़ी के पैसे भेज देना।"]],
+  // Hinglish: "processing fee bhejiye"
+  ["loan_advance_fee", ["Sir aapke account me 49,999 ka loan approve hua hai, bas 2,999 processing fee bhejiye"], ["Dear customer, your loan EMI of Rs 4,500 is due on 5th. Please maintain sufficient balance. -HDFC Bank"]],
+  // "Phone Pe karo" और बिना ₹ वाली रकम ("20,000") भी पैसे की बात
+  ["new_number_money", ["Mera beta hospital me hai, urgent 20,000 chahiye, ye mera naya number hai, abhi Phone Pe karo"], ["ये मेरा नया नंबर है, save कर लेना।"]],
   // सरकारी काम (PF, आयकर, आधार, किसान योजना) के नाम पर किसी के mobile नंबर पर call
   ["gov_number", ["आपका PF का पैसा निकालने के लिए इस नंबर पर call करें, officer आपकी मदद करेंगे: 9123456789", "PM Kisan की किस्त रुकी है, चालू करवाने के लिए 98765 43210 पर WhatsApp करें।"], ["आधार की किसी भी मदद के लिए UIDAI के 1947 पर call करें।", "PF की जानकारी के लिए EPFO के toll-free 1800-118-005 पर call करें।", "कल 9876543210 पर call करना, PF वाली बात करनी है।"]],
   // "बंद होने वाला है" भी रुकावट की धमकी

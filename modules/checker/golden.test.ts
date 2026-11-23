@@ -11,6 +11,10 @@ import { FORBIDDEN_PHRASES, findForbidden } from "@/modules/i18n";
 const fromGyan = GYAN_PAGES.flatMap((p) => p.examplesHi.map((e) => e.replace(/^"|"$/g, "")));
 
 const SCAMS: string[] = [
+  "Hello madam, main SBI bank se bol raha hu, aapka ATM card block ho gaya hai, card number aur CVV batayiye",
+  "बेटा, मैं तुम्हारे पापा का दोस्त हूँ, उन्होंने कहा है तुम्हारे account में 10,000 भेज रहा हूँ, बस मेरा भेजा request accept कर लो।",
+  "Sir aapke account me 49,999 ka loan approve hua hai, bas 2,999 processing fee bhejiye",
+  "Mera beta hospital me hai, urgent 20,000 chahiye, ye mera naya number hai, abhi Phone Pe karo",
   "आपका PF का पैसा निकालने के लिए इस नंबर पर call करें, officer आपकी मदद करेंगे: 9123456789",
   "आपका गैस connection बंद होने वाला है, KYC update के लिए इस नंबर पर call करें 9876501234",
   // 2026-11-23: छूटती आम ठगियाँ (army वाला किराएदार, link से card/बैंक की जानकारी, बिजली का ऐप)
@@ -90,6 +94,9 @@ const SCAMS: string[] = [
 ];
 
 const BENIGN: string[] = [
+  "Rs 1500 credited to your a/c XX1234 by UPI from RAMESH. Avl bal Rs 8,200 -PNB",
+  "Facebook पर मेरी friend request accept कर लो।",
+  "Dear customer, your loan EMI of Rs 4,500 is due on 5th. Please maintain sufficient balance. -HDFC Bank",
   "Never share your card details, CVV or OTP with anyone. -SBI",
   "आपका सामान खरीदना है, अपना QR भेजिए, payment कर दूँगा।",
   "बिजली कटौती: कल सुबह 10 से 2 बजे तक power cut रहेगा।",
