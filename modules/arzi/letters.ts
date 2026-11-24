@@ -141,3 +141,9 @@ export function buildLetter(kind: LetterKind, i: LetterInput, today: string, lan
     "बैंक RBI के नियमों के अनुसार मेरी शिकायत की जाँच करे और मेरी रकम लौटाए, और देरी व परेशानी के लिए उचित मुआवज़ा दे।",
   ];
 }
+
+// "पत्र सुनें" (plan A2h): पढ़ना मुश्किल हो तो भी पत्र सुनकर जाँचा जा सके। [ ] वाली ख़ाली जगहें "ख़ाली जगह: …" कहकर,
+// ताकि सुनने वाले को भरा हुआ न लगे (और आवाज़ कोष्ठक न बोले)।
+export function speakableLetter(text: string): string {
+  return text.replace(/\[([^\]]*)\]/g, "ख़ाली जगह: $1।");
+}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { CopyBlock } from "@/components/ui/copy-block";
 import { DateField, TimeField } from "@/components/ui/date-time-fields";
+import { ListenButton } from "@/components/ui/listen-button";
 import { Notice } from "@/components/ui/notice";
 import {
   HOW_OPTIONS,
@@ -13,6 +14,7 @@ import {
   WHAT_TEMPLATES,
   applyWhatTemplate,
   buildLetter,
+  speakableLetter,
   type LetterInput,
   type LetterKind,
   type LetterLang,
@@ -279,9 +281,13 @@ export function ArziBuilder() {
       </p>
 
       <section aria-labelledby="arzi-preview" className="space-y-2">
-        <h2 id="arzi-preview" className="text-[19px] font-bold">
-          पत्र
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="arzi-preview" className="text-[19px] font-bold">
+            पत्र
+          </h2>
+          {/* पढ़ना मुश्किल हो तो सुनकर जाँचें (हिंदी आवाज़; English पत्र पर नहीं) */}
+          {lang === "hi" ? <ListenButton targetId="arzi-print" label="पत्र सुनें" transform={speakableLetter} /> : null}
+        </div>
         <article id="arzi-print" lang={lang} data-print-area="letter" className="space-y-1 rounded-xl border border-line bg-paper p-4 text-[16px] leading-relaxed text-ink">
           {lines.map((l, i) => (l ? <p key={i}>{l}</p> : <div key={i} className="h-3" aria-hidden="true" />))}
         </article>

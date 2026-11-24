@@ -1,6 +1,6 @@
 // "मेरा केस" (फ़ोन वाला) की असली browser में जाँच: सेव होकर reload पर बचे, भरते समय कोई network request नहीं,
 // "सब मिटाएँ" से सच में मिटे, JS बंद पर साफ़ संदेश। चलाने से पहले: npm run build && npm start
-import { BASE, PHONE, today, check, assert, withPage, watchRequests, pdfPageCount, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, today, check, assert, withPage, watchRequests, pdfPageCount, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 const KEY = "thagi-rakshak:mera-case:v1";
 const minusDays = (n) => {
@@ -306,6 +306,23 @@ await check("आगे की तारीख़ (जैसे ग़लत स�
     await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
     await page.getByLabel("ठगी किस तारीख़ को हुई?").fill("2099-01-05");
     assert(!(await page.locator("#arzi-print").innerText()).includes("2099"), "आगे की तारीख़ पत्र में");
+  }),
+);
+
+await check("अर्ज़ी: 'पत्र सुनें' पूरा पत्र हिंदी आवाज़ में पढ़े, ख़ाली जगहें 'ख़ाली जगह' कहकर; English पत्र पर बटन नहीं", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await installSpeechStub(context);
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.getByLabel("आपका नाम").fill("सीता देवी");
+    await page.getByRole("button", { name: "पत्र सुनें" }).click();
+    const spoken = await page.evaluate(() => window.__spoken);
+    assert(spoken.length === 1 && spoken[0].lang === "hi-IN", `बोला: ${JSON.stringify(spoken).slice(0, 120)}`);
+    const t = spoken[0].text;
+    assert(t.includes("शाखा प्रबंधक") && t.includes("सीता देवी"), "पत्र की बातें नहीं बोलीं");
+    assert(t.includes("ख़ाली जगह") && !t.includes("["), `ख़ाली जगहें ठीक से नहीं बोलीं: ${t.slice(0, 200)}`);
+    await page.getByRole("radio", { name: "English", exact: false }).check();
+    assert((await page.getByRole("button", { name: "पत्र सुनें" }).count()) === 0, "English पत्र पर हिंदी आवाज़ वाला बटन");
   }),
 );
 

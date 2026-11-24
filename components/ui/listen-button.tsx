@@ -19,7 +19,8 @@ function readableText(el: HTMLElement | null): string {
   }
 }
 
-export function ListenButton({ targetId }: { targetId: string | string[] }) {
+// label: बटन का नाम (जैसे "पत्र सुनें"); transform: बोलने से पहले text बदलना (जैसे [ ] को "ख़ाली जगह")
+export function ListenButton({ targetId, label = "सुनें", transform }: { targetId: string | string[]; label?: string; transform?: (text: string) => string }) {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [speaking, setSpeaking] = useState(false);
 
@@ -46,10 +47,11 @@ export function ListenButton({ targetId }: { targetId: string | string[] }) {
       return;
     }
     const ids = Array.isArray(targetId) ? targetId : [targetId];
-    const text = ids
+    const raw = ids
       .map((id) => readableText(document.getElementById(id)))
       .filter(Boolean)
       .join("\n");
+    const text = transform ? transform(raw) : raw;
     if (!text) return;
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "hi-IN";
@@ -73,7 +75,7 @@ export function ListenButton({ targetId }: { targetId: string | string[] }) {
       className="inline-flex min-h-12 items-center gap-2 rounded-[10px] border border-line bg-paper px-3 font-semibold text-brand"
     >
       <IconSpeaker className="h-5 w-5" />
-      {speaking ? "रोकें" : "सुनें"}
+      {speaking ? "रोकें" : label}
     </button>
   );
 }

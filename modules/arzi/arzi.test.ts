@@ -144,3 +144,12 @@ test("पुलिस वाला पत्र: थाने/cyber cell का 
   i.station = "Cyber Cell, Lucknow";
   expect(buildLetter("police", i, TODAY, "en")[2]).toBe("Cyber Cell, Lucknow");
 });
+
+test("सुनने के लिए पत्र: [ ] वाली जगहें 'ख़ाली जगह' कहकर पढ़ी जाएँ, कोष्ठक न बोले जाएँ", async () => {
+  const { speakableLetter } = await import("@/modules/arzi");
+  expect(speakableLetter("प्रति,\n[बैंक का नाम], [शाखा का नाम]")).toBe("प्रति,\nख़ाली जगह: बैंक का नाम।, ख़ाली जगह: शाखा का नाम।");
+  expect(speakableLetter("रकम: ₹500")).toBe("रकम: ₹500");
+  const t = speakableLetter(buildLetter("bank", { ...input(), branch: "", utr: "" }, TODAY).join("\n"));
+  expect(t).not.toMatch(/[[\]]/);
+  expect(t).toContain("ख़ाली जगह: शाखा का नाम");
+});
