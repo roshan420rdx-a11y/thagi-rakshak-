@@ -1,6 +1,7 @@
 "use client";
 
-import { addDays } from "@/modules/rules-engine";
+import { useState } from "react";
+import { addDays, isValidIsoDate } from "@/modules/rules-engine";
 
 // तारीख़ और समय भरने के खाने ("मेरा केस" और "अर्ज़ियाँ" दोनों में एक जैसे)। फ़ोन का अपना calendar/घड़ी वाला picker,
 // और साथ में एक tap वाले बटन, ताकि घबराहट में calendar खोलना ही न पड़े। सब फ़ोन में, कोई network नहीं।
@@ -16,6 +17,14 @@ export function DateField(props: {
   today: string;
   onChange: (v: string | null) => void;
 }) {
+  // phone का picker आगे की तारीख़ नहीं देता, पर computer पर साल टाइप करते समय ग़लती हो सकती है: वह न ली जाए
+  const [future, setFuture] = useState(false);
+  const warn = `${props.id}-warn`;
+  const set = (v: string | null) => {
+    const bad = !!v && (!isValidIsoDate(v) || v > props.today);
+    setFuture(bad);
+    props.onChange(bad ? null : v);
+  };
   return (
     <div className="space-y-1">
       <label htmlFor={props.id} className="block font-semibold">
@@ -27,19 +36,24 @@ export function DateField(props: {
           type="date"
           max={props.today}
           value={props.value ?? ""}
-          onChange={(e) => props.onChange(e.target.value || null)}
+          aria-describedby={future ? warn : undefined}
+          aria-invalid={future || undefined}
+          onChange={(e) => set(e.target.value || null)}
           className={PICKER}
         />
         {/* दोनों बटन साथ रहें: जगह कम हो तो दोनों एक साथ नीचे जाएँ */}
         <div className="flex gap-2">
-          <button type="button" aria-label={`${props.name}: आज`} onClick={() => props.onChange(props.today)} className={QUICK}>
+          <button type="button" aria-label={`${props.name}: आज`} onClick={() => set(props.today)} className={QUICK}>
             आज
           </button>
-          <button type="button" aria-label={`${props.name}: कल`} onClick={() => props.onChange(addDays(props.today, -1))} className={QUICK}>
+          <button type="button" aria-label={`${props.name}: कल`} onClick={() => set(addDays(props.today, -1))} className={QUICK}>
             कल
           </button>
         </div>
       </div>
+      <p id={warn} aria-live="polite" className="text-[15px] font-semibold text-danger">
+        {future ? "आगे की तारीख़ नहीं हो सकती। आज या पहले की तारीख़ चुनें।" : ""}
+      </p>
     </div>
   );
 }

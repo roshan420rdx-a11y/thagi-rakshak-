@@ -291,6 +291,24 @@ await check("अर्ज़ी English में: भाषा चुनते 
   }),
 );
 
+await check("आगे की तारीख़ (जैसे ग़लत साल) न ली जाए: साफ़ बात, न सेव, न पत्र में", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    const d = page.getByLabel("ठगी किस तारीख़ को हुई?");
+    await d.fill("2099-01-05");
+    await page.getByText("आगे की तारीख़ नहीं हो सकती", { exact: false }).waitFor();
+    assert((await d.inputValue()) === "", `आगे की तारीख़ खाने में रह गई: ${await d.inputValue()}`);
+    const saved = await page.evaluate((k) => JSON.parse(localStorage.getItem(k) ?? "{}").txnDate ?? null, KEY);
+    assert(saved === null, `आगे की तारीख़ सेव हुई: ${saved}`);
+    await d.fill(minusDays(1));
+    assert((await page.getByText("आगे की तारीख़ नहीं हो सकती", { exact: false }).count()) === 0, "सही तारीख़ पर भी ग़लती वाली बात");
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.getByLabel("ठगी किस तारीख़ को हुई?").fill("2099-01-05");
+    assert(!(await page.locator("#arzi-print").innerText()).includes("2099"), "आगे की तारीख़ पत्र में");
+  }),
+);
+
 await check("आपका हक़: फ़ोन में केस हो तो 'मेरा केस से भरें' → तारीख़ें और रकम भरें, हिसाब अपने-आप नहीं, कोई request नहीं", async () => {
   await withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/haq/thagi`);
