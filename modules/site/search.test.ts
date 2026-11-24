@@ -17,6 +17,7 @@ test("हिंदी-अंग्रेज़ी, नुक़्ता और 
   expect(hrefs("loan")).toEqual(expect.arrayContaining(["/turant/loan-app", "/gyan/loan-app"]));
   expect(hrefs("लोन")).toEqual(expect.arrayContaining(["/turant/loan-app"]));
   expect(hrefs("अर्ज़ी")).toContain("/arzi");
+  expect(hrefs("english letter")).toContain("/arzi");
   expect(hrefs("OTP")).toContain("/pucho");
   expect(hrefs("पुलिस")).toContain("tel:112");
 });

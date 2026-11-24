@@ -16,7 +16,7 @@ const TOOLS: readonly { href: string; titleHi: string; hintHi: string; keys: str
   { href: "/pucho", titleHi: "पहले पूछो: यह message या call ठगी है?", hintHi: "message चिपकाकर जाँचें", keys: "jaanch check message sms whatsapp call शक otp link qr pin" },
   { href: "/nambar", titleHi: "ज़रूरी नंबर", hintHi: "1930, 112, 181, 14448, 1947, 14416", keys: "helpline police number call" },
   { href: "/case", titleHi: "मेरा केस", hintHi: "शिकायतों का हिसाब, आगे की तारीख़ें", keys: "case complaint tareekh date reminder" },
-  { href: "/arzi", titleHi: "अर्ज़ियाँ: बैंक, पुलिस, RBI के पत्र", hintHi: "print या PDF, मुफ़्त", keys: "arzi letter application bank police rbi ombudsman pdf print" },
+  { href: "/arzi", titleHi: "अर्ज़ियाँ: बैंक, पुलिस, RBI के पत्र", hintHi: "हिंदी या English, print या PDF, मुफ़्त", keys: "arzi letter application bank police rbi ombudsman pdf print english patra shikayat patra" },
   { href: "/shikayat-rasta", titleHi: "शिकायत का पूरा रास्ता", hintHi: "1930 से RBI Ombudsman तक", keys: "complaint ncrp cybercrime ombudsman rbi police fir" },
   { href: "/haq/thagi", titleHi: "आपका हक़: ठगी में पैसा गया", hintHi: "पूरा पैसा वापस या मुआवज़ा? RBI के नियमों से हिसाब", keys: "haq refund wapas paisa muavza compensation rbi" },
   { href: "/haq/failed-txn", titleHi: "लेन-देन fail, पैसा अटका", hintHi: "देर पर ₹100 रोज़ का हिसाब", keys: "failed transaction atka refund" },

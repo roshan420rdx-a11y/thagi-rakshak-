@@ -6,7 +6,7 @@ import { pageMeta } from "@/modules/site/meta";
 export const metadata: Metadata = pageMeta({
   title: "अर्ज़ियाँ: बैंक, पुलिस और RBI के लिए पत्र",
   description:
-    "ठगी के बाद बैंक शाखा, थाने या cyber cell, और RBI Ombudsman के लिए तैयार पत्र। अपनी जानकारी भरें, फ़ोन से Print या PDF करें। मुफ़्त।",
+    "ठगी के बाद बैंक शाखा, थाने या cyber cell, और RBI Ombudsman के लिए तैयार पत्र, हिंदी या English में। जानकारी भरें, फ़ोन से Print या PDF करें। मुफ़्त।",
   path: "/arzi",
 });
 
