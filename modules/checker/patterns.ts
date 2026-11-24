@@ -293,8 +293,9 @@ const GOV_HOOK =
   "पैसा|पैसे|किस्त|\\bkist|refund|रिफंड|निकाल|withdraw|claim|क्लेम|bonus|बोनस|subsidy|सब्सिडी|रुक|अटक|बंद|block|ब्लॉक|update|अपडेट|\\bkyc\\b|केवाईसी";
 const CALL_VERB = "\\bcall\\b|कॉल|संपर्क|सम्पर्क|contact|whatsapp|व्हाट्सएप|बात\\s*कर";
 
+// "@" से ठीक पहले या बाद वाला पता link नहीं: UPI ID (help.me@ybl) और email (ram@gmail.com)
 const LINK =
-  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
+  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|(?<!@)\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)(?!@)";
 
 const R = {
   otp: near(OTP, ASK, 40),

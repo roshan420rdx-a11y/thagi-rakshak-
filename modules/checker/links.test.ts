@@ -44,3 +44,19 @@ test("सरकारी पता: .gov.in या .nic.in", async () => {
   expect(isGovDomain("echallan-parivahan.xyz")).toBe(false);
   expect(isGovDomain("gov.in.fake-site.com")).toBe(false);
 });
+
+// UPI ID (help.me@ybl) और email (ram.kumar@gmail.com) link नहीं हैं: "@" से ठीक पहले या बाद वाला पता नहीं गिना जाता
+test.each([
+  ["mera upi help.me@ybl hai, us par bhejo", []],
+  ["email me at ram.kumar@gmail.com", []],
+  ["resume hr.team@company.in par bhejo", []],
+] as const)("UPI ID या email पता नहीं: %s", (text, want) => {
+  expect(extractDomains(text)).toEqual(want);
+  expect(checkMessage(text).hits.map((h) => h.id)).not.toContain("link");
+});
+
+test("पर असली link अब भी link: 'help.me' अकेला, या email के साथ अलग से link", () => {
+  expect(checkMessage("visit help.me now").hits.map((h) => h.id)).toContain("link");
+  expect(checkMessage("mail ram@gmail.com, details: sbi-kyc.top").hits.map((h) => h.id)).toContain("link");
+  expect(extractDomains("mail ram@gmail.com, details: sbi-kyc.top")).toEqual(["sbi-kyc.top"]);
+});

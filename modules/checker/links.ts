@@ -1,8 +1,9 @@
 import { normalizeText } from "./normalize";
 
-// message में आए पते (domain)। सिर्फ़ फ़ोन पर नतीजे में दिखाने के लिए; share में कभी नहीं।
+// message में आए पते (domain)। सिर्फ़ फ़ोन पर नतीजे में दिखाने के लिए; share में कभी नहीं। "@" से ठीक पहले या बाद वाला
+// हिस्सा पता नहीं (UPI ID help.me@ybl, email ram@gmail.com)।
 const TLD = "com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz";
-const DOMAIN = new RegExp(`(?<![a-z0-9@._-])(?:https?://)?(?:www\\.)?((?:[a-z0-9-]+\\.)+(?:${TLD}))(?![a-z0-9-])`, "g");
+const DOMAIN = new RegExp(`(?<![a-z0-9@._-])(?:https?://)?(?:www\\.)?((?:[a-z0-9-]+\\.)+(?:${TLD}))(?![a-z0-9@-])`, "g");
 
 export const MAX_DOMAINS = 5;
 
