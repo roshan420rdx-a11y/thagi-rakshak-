@@ -4,6 +4,8 @@ export {
   addDays,
   addWorkingDays,
   daysBetween,
+  formatEnglishDate,
+  formatEnglishTime,
   formatHindiDate,
   formatHindiTime,
   isValidIsoDate,

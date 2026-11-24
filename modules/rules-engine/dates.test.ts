@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { addDays, daysBetween, formatHindiDate, formatHindiTime, isValidIsoDate, isValidTime, nowTimeInKolkata, todayInKolkata, workingDaysBetween } from "./dates";
+import { addDays, daysBetween, formatHindiDate, formatEnglishDate, formatEnglishTime, formatHindiTime, isValidIsoDate, isValidTime, nowTimeInKolkata, todayInKolkata, workingDaysBetween } from "./dates";
 
 test("isValidIsoDate", () => {
   expect(isValidIsoDate("2027-02-28")).toBe(true);
@@ -52,4 +52,14 @@ test("समय हिंदी में: पहर + 12 घंटे वाल
 test("अभी का समय भारत (Asia/Kolkata) के हिसाब से", () => {
   expect(nowTimeInKolkata(new Date("2026-11-24T10:00:00Z"))).toBe("15:30");
   expect(nowTimeInKolkata(new Date("2026-11-24T18:45:00Z"))).toBe("00:15");
+});
+
+test("English तारीख़ और समय (English वाले पत्र के लिए)", () => {
+  expect(formatEnglishDate("2027-01-12")).toBe("12 January 2027");
+  expect(formatEnglishDate("2026-09-05")).toBe("5 September 2026");
+  expect(formatEnglishTime("00:05")).toBe("12:05 AM (00:05)");
+  expect(formatEnglishTime("09:30")).toBe("9:30 AM (09:30)");
+  expect(formatEnglishTime("12:00")).toBe("12:00 PM (12:00)");
+  expect(formatEnglishTime("16:30")).toBe("4:30 PM (16:30)");
+  expect(formatEnglishTime("23:59")).toBe("11:59 PM (23:59)");
 });

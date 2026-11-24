@@ -3,8 +3,15 @@
 // शुद्ध functions: सब फ़ोन में बनता है, कहीं भेजा नहीं जाता।
 import type { LocalCase } from "@/modules/case";
 import { formatHindiDate, formatHindiTime } from "@/modules/rules-engine";
+import { buildLetterEn } from "./letters-en";
 
 export type LetterKind = "bank" | "police" | "ombudsman";
+// पत्र की भाषा (plan A2i): दूसरे राज्य की शाखा या थाने के लिए English
+export type LetterLang = "hi" | "en";
+export const LETTER_LANGS: readonly { id: LetterLang; labelHi: string; hintHi: string }[] = [
+  { id: "hi", labelHi: "हिंदी", hintHi: "" },
+  { id: "en", labelHi: "English", hintHi: "दूसरे राज्य की शाखा या थाने के लिए" },
+];
 
 export const LETTER_KINDS: readonly { id: LetterKind; labelHi: string; hintHi: string }[] = [
   { id: "bank", labelHi: "बैंक शाखा को शिकायत पत्र", hintHi: "शाखा में देकर पावती लें, या email करें" },
@@ -59,7 +66,8 @@ function signature(i: LetterInput, today: string): string[] {
   return ["", "भवदीय/भवदीया,", or(i.name, "आपका नाम"), `पता: ${or(i.address, "आपका पता")}`, `mobile: ${or(i.mobile, "आपका mobile नंबर")}`, `तारीख़: ${date(today)}`];
 }
 
-export function buildLetter(kind: LetterKind, i: LetterInput, today: string): string[] {
+export function buildLetter(kind: LetterKind, i: LetterInput, today: string, lang: LetterLang = "hi"): string[] {
+  if (lang === "en") return buildLetterEn(kind, i, today);
   const c = i.case;
   const facts = [
     `ठगी की तारीख़ और समय: ${date(c.txnDate)}, ${c.txnTime ? `लगभग ${formatHindiTime(c.txnTime)}` : "[लगभग समय]"}`,

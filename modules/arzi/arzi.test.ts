@@ -95,3 +95,40 @@ test("समय न भरा हो: तथ्यों में हाथ स
   }
   expect(buildLetter("ombudsman", i, TODAY).join("\n")).toContain("20 नवंबर 2026 को मेरे खाते");
 });
+
+const DEVANAGARI = /[\u0900-\u097F]/;
+function englishInput(): LetterInput {
+  const i = input();
+  return { ...i, name: "Ram Kumar", address: "Sitapur village, Barabanki", mobile: "98XXXXXX10", bankName: "State Bank of India", branch: "Hazratganj", what: "A man called pretending to be from the bank and took my OTP.", how: "deceived" };
+}
+
+test("English पत्र: तीनों में वही तथ्य, और सब खाने English में हों तो एक भी हिंदी अक्षर नहीं (कुछ अनुवाद से छूटा नहीं)", () => {
+  const i = englishInput();
+  i.case.txnTime = "16:30";
+  for (const k of LETTER_KINDS) {
+    const t = buildLetter(k.id, i, TODAY, "en").join("\n");
+    expect(t, k.id).not.toMatch(DEVANAGARI);
+    expect(findForbidden(t, FORBIDDEN_PHRASES), k.id).toEqual([]);
+    for (const must of ["20 November 2026 around 4:30 PM (16:30)", "₹40,000", "4321", "412345678901", "31611230012345"]) expect(t, `${k.id}: ${must}`).toContain(must);
+  }
+  const bank = buildLetter("bank", i, TODAY, "en").join("\n");
+  for (const must of ["The Branch Manager", "State Bank of India, Hazratganj", "Ram Kumar", "Date: 22 November 2026", "acknowledgement", "RBI"]) expect(bank).toContain(must);
+  const police = buildLetter("police", i, TODAY, "en").join("\n");
+  for (const must of ["Cyber Cell", "9XXXXXXXX0, abc@ybl", "FIR", "BNK-778"]) expect(police).toContain(must);
+  const omb = buildLetter("ombudsman", i, TODAY, "en").join("\n");
+  for (const must of ["Complaint to the bank: 21 November 2026", "BNK-778", "compensation"]) expect(omb).toContain(must);
+});
+
+test("English पत्र: ख़ाली खानों पर English वाली [ ] जगहें, और 'पैसे कैसे गए' न चुना हो तो चुनने की जगह", () => {
+  const c = emptyCase();
+  const blank: LetterInput = { case: c, name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", what: "", how: "" };
+  const t = buildLetter("bank", blank, TODAY, "en").join("\n");
+  for (const must of ["[date]", "[approximate time]", "[amount]", "[bank name]", "[branch name]", "[UTR number]", "[your name]", "choose one"]) expect(t).toContain(must);
+  expect(t).not.toMatch(DEVANAGARI);
+  expect(buildLetter("police", blank, TODAY, "en").join("\n")).not.toMatch(DEVANAGARI);
+  expect(buildLetter("ombudsman", blank, TODAY, "en").join("\n")).not.toMatch(DEVANAGARI);
+});
+
+test("भाषा न दें तो हिंदी (पहले जैसा)", () => {
+  expect(buildLetter("bank", input(), TODAY)).toEqual(buildLetter("bank", input(), TODAY, "hi"));
+});

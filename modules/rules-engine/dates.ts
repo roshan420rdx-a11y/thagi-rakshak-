@@ -57,6 +57,13 @@ export function addWorkingDays(from: string, n: number): string {
   return fromUtc(ms);
 }
 
+const MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+export function formatEnglishDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} ${MONTHS_EN[m - 1]} ${y}`;
+}
+
 export function formatHindiDate(iso: string): string {
   const [y, m, d] = iso.split("-").map(Number);
   return `${d} ${MONTHS_HI[m - 1]} ${y}`;
@@ -83,4 +90,10 @@ export function nowTimeInKolkata(now: Date = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(now);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
   return `${get("hour")}:${get("minute")}`;
+}
+
+// "16:30" → "4:30 PM (16:30)" (English वाले पत्र के लिए)
+export function formatEnglishTime(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"} (${hhmm})`;
 }

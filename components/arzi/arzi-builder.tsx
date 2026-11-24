@@ -5,7 +5,18 @@ import { Fragment, useEffect, useState } from "react";
 import { CopyBlock } from "@/components/ui/copy-block";
 import { DateField, TimeField } from "@/components/ui/date-time-fields";
 import { Notice } from "@/components/ui/notice";
-import { HOW_OPTIONS, LETTER_KINDS, WHAT_MAX, WHAT_TEMPLATES, applyWhatTemplate, buildLetter, type LetterInput, type LetterKind } from "@/modules/arzi";
+import {
+  HOW_OPTIONS,
+  LETTER_KINDS,
+  LETTER_LANGS,
+  WHAT_MAX,
+  WHAT_TEMPLATES,
+  applyWhatTemplate,
+  buildLetter,
+  type LetterInput,
+  type LetterKind,
+  type LetterLang,
+} from "@/modules/arzi";
 import { CASE_KEY, MAX_NUMBER_CHARS, cleanNumber, emptyCase, parseCase, serializeCase, type LocalCase } from "@/modules/case";
 import { parseRupees } from "@/modules/haq/money";
 import { nowTimeInKolkata, todayInKolkata } from "@/modules/rules-engine";
@@ -42,6 +53,7 @@ export function ArziBuilder() {
   const [today, setToday] = useState("");
   const [c, setC] = useState<LocalCase | null>(null);
   const [kind, setKind] = useState<LetterKind>("bank");
+  const [lang, setLang] = useState<LetterLang>("hi");
   const [f, setF] = useState<Fields>(EMPTY);
   const [amountText, setAmountText] = useState("");
   const [status, setStatus] = useState("");
@@ -77,14 +89,14 @@ export function ArziBuilder() {
   function pickTemplate(id: string) {
     const t = WHAT_TEMPLATES.find((x) => x.id === id);
     if (!t) return;
-    setF((old) => ({ ...old, what: applyWhatTemplate(old.what, t), how: old.how || t.how }));
+    setF((old) => ({ ...old, what: applyWhatTemplate(old.what, t, lang), how: old.how || t.how }));
     setStatus("नमूना डाल दिया: [ ] वाली जगहें अपनी बात से भरें या बदलें, और \"पैसे कैसे गए?\" एक बार देख लें");
   }
   function setStage(id: ShikayatStageId, patch: Partial<{ on: string | null; number: string }>) {
     saveCase({ ...c!, stages: { ...c!.stages, [id]: { ...c!.stages[id], ...patch } } });
   }
 
-  const lines = buildLetter(kind, { ...f, case: c }, today);
+  const lines = buildLetter(kind, { ...f, case: c }, today, lang);
   const set = (key: Exclude<keyof Fields, "how">, value: string) =>
     setF((old) => ({ ...old, [key]: key === "accountLast4" ? value.replace(/\D/g, "").slice(0, 4) : value.slice(0, key === "what" ? WHAT_MAX : 120) }));
 
@@ -107,6 +119,30 @@ export function ArziBuilder() {
             </span>
           </label>
         ))}
+      </fieldset>
+
+      {/* plan A2i: पत्र English में भी (दूसरे राज्य की शाखा या थाने के लिए); पन्ने के खाने हिंदी में ही */}
+      <fieldset className="space-y-2">
+        <legend className="mb-1 text-[17px] font-bold">पत्र की भाषा</legend>
+        <div className="flex flex-wrap gap-2">
+          {LETTER_LANGS.map((l) => (
+            <label key={l.id} className="flex min-h-12 items-center gap-3 rounded-[10px] border border-line bg-paper px-3 py-2">
+              <input type="radio" name="lang" value={l.id} checked={lang === l.id} onChange={() => setLang(l.id)} className="h-5 w-5 shrink-0" />
+              <span>
+                <span lang={l.id} className="block font-semibold">
+                  {l.labelHi}
+                </span>
+                {l.hintHi ? <span className="block text-[14px] text-muted">{l.hintHi}</span> : null}
+              </span>
+            </label>
+          ))}
+        </div>
+        {lang === "en" ? (
+          <p className="text-[14px] text-muted">
+            पत्र के हिस्से English में बनेंगे। आपका अपना लिखा (नाम, पता, &quot;क्या हुआ&quot;) जैसा लिखा है वैसा ही रहेगा; English
+            पत्र के लिए उन्हें English में लिखें, या &quot;लिखने में मदद&quot; से English नमूना लें।
+          </p>
+        ) : null}
       </fieldset>
 
       <section aria-labelledby="arzi-thagi" className="space-y-3 rounded-xl border border-line bg-paper p-3">
@@ -245,11 +281,13 @@ export function ArziBuilder() {
         <h2 id="arzi-preview" className="text-[19px] font-bold">
           पत्र
         </h2>
-        <article id="arzi-print" data-print-area="letter" className="space-y-1 rounded-xl border border-line bg-paper p-4 text-[16px] leading-relaxed text-ink">
+        <article id="arzi-print" lang={lang} data-print-area="letter" className="space-y-1 rounded-xl border border-line bg-paper p-4 text-[16px] leading-relaxed text-ink">
           {lines.map((l, i) => (l ? <p key={i}>{l}</p> : <div key={i} className="h-3" aria-hidden="true" />))}
         </article>
         {kind === "ombudsman" ? (
-          <CopyBlock text={lines.join("\n")} label="RBI Ombudsman के लिए text" />
+          <div lang={lang}>
+            <CopyBlock text={lines.join("\n")} label="RBI Ombudsman के लिए text" />
+          </div>
         ) : (
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={() => window.print()} className="min-h-12 rounded-[10px] bg-brand px-6 font-bold text-paper">

@@ -268,6 +268,27 @@ await check("अर्ज़ी: 'पत्र copy करें' से पू�
   }),
 );
 
+await check("अर्ज़ी English में: भाषा चुनते ही पूरा पत्र English (lang=en), English नमूना, copy भी English; हिंदी पर वापस", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    const letter = page.locator("#arzi-print");
+    await page.getByRole("radio", { name: "English", exact: false }).check();
+    await page.getByLabel("लिखने में मदद: ठगी कैसे हुई?").selectOption({ label: "AnyDesk जैसा ऐप डलवाया" });
+    await page.getByLabel("आपका नाम").fill("Ram Kumar");
+    const t = await letter.innerText();
+    for (const must of ["The Branch Manager", "Dear Sir/Madam", "AnyDesk", "Ram Kumar", "Yours faithfully"]) assert(t.includes(must), `English पत्र में "${must}" नहीं`);
+    assert(!/[\u0900-\u097F]/.test(t), `English पत्र में हिंदी अक्षर: ${t.match(/.{0,20}[\u0900-\u097F].{0,20}/)?.[0]}`);
+    assert((await letter.getAttribute("lang")) === "en", "पत्र पर lang=en नहीं");
+    await page.getByRole("button", { name: "पत्र copy करें" }).click();
+    const clip = await page.evaluate(() => navigator.clipboard.readText());
+    assert(clip.startsWith("To,") && clip.includes("Ram Kumar"), `copy English नहीं: ${clip.slice(0, 80)}`);
+    await page.getByRole("radio", { name: "हिंदी" }).check();
+    assert((await letter.innerText()).includes("शाखा प्रबंधक"), "हिंदी पर वापस नहीं आया");
+  }),
+);
+
 await check("आपका हक़: फ़ोन में केस हो तो 'मेरा केस से भरें' → तारीख़ें और रकम भरें, हिसाब अपने-आप नहीं, कोई request नहीं", async () => {
   await withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/haq/thagi`);
