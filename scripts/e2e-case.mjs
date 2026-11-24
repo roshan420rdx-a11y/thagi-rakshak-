@@ -266,6 +266,8 @@ await check("अर्ज़ी: 'पत्र copy करें' से पू�
     await page.getByText("पत्र copy हो गया", { exact: false }).waitFor();
     const clip = await page.evaluate(() => navigator.clipboard.readText());
     assert(clip.startsWith("प्रति,") && clip.includes("सीता देवी") && clip.includes("शाखा प्रबंधक"), `clipboard: ${clip.slice(0, 120)}`);
+    assert((await page.locator('#main a[href="/gyan/bank"], main a[href="/gyan/bank"]').count()) > 0, "बैंक का सही पता कहाँ से लें, उसका link नहीं");
+    assert((await page.getByText("Google से नहीं", { exact: false }).count()) > 0, "'Google से नहीं' वाली बात नहीं");
     assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
   }),
 );

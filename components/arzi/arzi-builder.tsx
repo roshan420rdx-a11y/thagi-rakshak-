@@ -324,6 +324,14 @@ export function ArziBuilder() {
         ) : (
           <p className="text-[14px] text-muted">cms.rbi.org.in पर शिकायत के &quot;क्या हुआ&quot; वाले डिब्बे में चिपकाएँ; बाकी खाने वहीं भरें।</p>
         )}
+        {kind === "bank" ? (
+          <p className="text-[15px]">
+            शाखा का पता या बैंक का शिकायत वाला email सिर्फ़ बैंक के अपने ऐप या उसकी .bank.in वेबसाइट से लें, Google से नहीं।{" "}
+            <Link href="/gyan/bank" className="font-semibold text-brand">
+              अपने बैंक से संपर्क →
+            </Link>
+          </p>
+        ) : null}
       </section>
     </div>
   );
