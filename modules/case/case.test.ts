@@ -143,12 +143,14 @@ test("noteWhen (/turant से एक tap): ख़ाली केस में 
   expect(c.next).toEqual(had);
 });
 
-test("हल्का रहे: store.ts और /turant वाला 'कब हुआ' RBI नियमों वाला भारी हिसाब (rules engine का पूरा barrel) न लें", async () => {
+test("हल्का रहे: store.ts, /turant वाला 'कब हुआ' और होम का केस card RBI नियमों वाला भारी हिसाब (rules engine का पूरा barrel) न लें", async () => {
   const { readFileSync } = await import("node:fs");
   const store = readFileSync("modules/case/store.ts", "utf8");
   expect(store).not.toMatch(/from "@\/modules\/rules-engine"/);
   expect(store).not.toMatch(/evaluate/);
-  const kab = readFileSync("components/turant/kab-chips.tsx", "utf8");
-  expect(kab).not.toMatch(/from "@\/modules\/case"/);
-  expect(kab).not.toMatch(/from "@\/modules\/rules-engine"/);
+  for (const f of ["components/turant/kab-chips.tsx", "components/case/home-case-card.tsx"]) {
+    const src = readFileSync(f, "utf8");
+    expect(src, f).not.toMatch(/from "@\/modules\/case"/);
+    expect(src, f).not.toMatch(/from "@\/modules\/rules-engine"/);
+  }
 });

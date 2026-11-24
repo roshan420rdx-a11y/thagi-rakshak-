@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CASE_KEY, caseHasData, nextStage, parseCase } from "@/modules/case";
-import { todayInKolkata } from "@/modules/rules-engine";
+// सीधे हल्की files से (barrel नहीं): होम पर RBI नियमों वाला भारी हिसाब न आए
+import { CASE_KEY, caseHasData, nextStage, parseCase } from "@/modules/case/store";
+import { todayInKolkata } from "@/modules/rules-engine/dates";
 import { SHIKAYAT_STAGES } from "@/modules/shikayat";
 
 // होम पर "आपका केस": जिस फ़ोन में पहले से "मेरा केस" भरा है, वहाँ होम खुलते ही अगला कदम। नए आने वाले को कुछ नहीं दिखता।

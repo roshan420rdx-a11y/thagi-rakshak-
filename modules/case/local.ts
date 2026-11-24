@@ -1,21 +1,10 @@
-// "मेरा केस" फ़ोन के अंदर (plan B0): ढाँचा, जाँच और हिसाब। शुद्ध functions: storage पढ़ना-लिखना UI करता है।
-// सिर्फ़ तारीख़ें, रकम और शिकायत नंबर; नाम, फ़ोन नंबर, खाता नंबर, OTP या PIN के लिए कोई जगह नहीं।
+// "मेरा केस" का हिसाब (plan B0): RBI नियमों से आगे की तारीख़ें और "आपका हक़" के लिए खाने। ढाँचा, पढ़ना/लिखना और
+// हल्की जाँच store.ts में (वहीं से यहाँ भी मिलते हैं)। नाम, फ़ोन नंबर, खाता नंबर, OTP या PIN के लिए कोई जगह नहीं।
 import { evaluateRights, type Deadline, type FraudInput } from "@/modules/rules-engine";
-import type { ShikayatStageId } from "@/modules/shikayat";
-import { STAGE_IDS, type LocalCase } from "./store";
+import type { LocalCase } from "./store";
 
-export { CASE_KEY, MAX_NUMBER_CHARS, STAGE_IDS, cleanNumber, emptyCase, noteWhen, parseCase, serializeCase } from "./store";
+export { CASE_KEY, MAX_NUMBER_CHARS, STAGE_IDS, caseHasData, cleanNumber, emptyCase, nextStage, noteWhen, parseCase, serializeCase } from "./store";
 export type { CaseStage, LocalCase } from "./store";
-
-// फ़ोन में कोई केस भरा है या नहीं (होम पर "आपका केस" दिखाने के लिए)
-export function caseHasData(c: LocalCase): boolean {
-  return !!(c.txnDate || c.txnTime || c.amount || STAGE_IDS.some((id) => c.stages[id].on || c.stages[id].number));
-}
-
-// अगला पड़ाव: जिसकी तारीख़ अभी नहीं भरी (क्रम से); सब भरे हों तो null
-export function nextStage(c: LocalCase): ShikayatStageId | null {
-  return STAGE_IDS.find((id) => !c.stages[id].on) ?? null;
-}
 
 // 1930 और cybercrime.gov.in में से जो पहले (RBI के नियम में दोनों एक ही "राष्ट्रीय रिपोर्ट" हैं)
 function firstNationalReport(c: LocalCase): string | null {
