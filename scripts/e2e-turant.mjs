@@ -1,6 +1,6 @@
 // /turant की असली browser में जाँच (Playwright)। चलाने से पहले app चालू हो: npm run build && npm start
 // हर जाँच "✓ नाम" छापती है; पहली गड़बड़ी पर "✗ नाम: कारण" छापकर exit 1।
-import { BASE, browser, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
+import { BASE, PHONE, today, browser, check, assert, withPage, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 // नाप वही जो तार पर जाता है (gzip): CSS अब HTML के अंदर है (next.config: inlineCss), अलग file का दूसरा round-trip नहीं
 await check("upi: कदम, tel:1930, पन्ना (CSS समेत) तार पर 25KB से छोटा", () =>
@@ -118,6 +118,30 @@ await check("'यह कब हुआ?': '1 घंटे से कम' पर �
     assert((await page.locator('a[href="/haq/thagi"]').count()) === 1, "हक़ का link नहीं");
     await page.getByRole("button", { name: "5 दिन से ज़्यादा पहले" }).click();
     await page.getByText("देर हो गई है, फिर भी शिकायत ज़रूर करें", { exact: false }).waitFor();
+  }),
+);
+
+await check("'यह कब हुआ?' → '1 घंटे से कम' → एक tap में ठगी का दिन और लगभग समय 'मेरा केस' में; दोबारा कभी नहीं मिटाता", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/turant/upi`);
+    await page.getByRole("heading", { name: "यह कब हुआ?" }).waitFor();
+    await page.getByRole("button", { name: "1 घंटे से कम" }).click();
+    const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    const before = fmt.format(new Date());
+    await page.getByRole("button", { name: /में लिख लें/ }).click();
+    const after = fmt.format(new Date());
+    await page.getByText("में लिख लिया: आज, लगभग", { exact: false }).waitFor();
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("thagi-rakshak:mera-case:v1")));
+    assert(saved.txnDate === today, `तारीख़: ${saved.txnDate}`);
+    assert(saved.txnTime === before || saved.txnTime === after, `समय: ${saved.txnTime}`);
+    // दूसरी बार (तारीख़ पहले से): बटन ही नहीं, और कुछ नहीं बदलता
+    await page.reload();
+    await page.getByRole("button", { name: "आज ही" }).click();
+    assert((await page.getByRole("button", { name: /में लिख लें/ }).count()) === 0, "तारीख़ होने पर भी बटन दिखा");
+    await page.goto(`${BASE}/case`);
+    await page.getByRole("heading", { name: "मेरी शिकायतें" }).waitFor();
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === today, "मेरा केस में तारीख़ नहीं");
+    assert((await page.getByLabel("लगभग किस समय? (याद हो तो)").inputValue()) === saved.txnTime, "मेरा केस में समय नहीं");
   }),
 );
 

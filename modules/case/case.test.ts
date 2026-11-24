@@ -126,3 +126,29 @@ test("सार में ठगी का समय (हो तो), न हो
   c.txnTime = "16:30";
   expect(caseSummaryText(c, TODAY)).toContain("ठगी की तारीख़: 20 नवंबर 2026, लगभग शाम 4:30 बजे (16:30)");
 });
+
+test("noteWhen (/turant से एक tap): ख़ाली केस में तारीख़ और समय; पहले से तारीख़ हो तो कुछ नहीं बदलता", async () => {
+  const { noteWhen } = await import("@/modules/case");
+  const empty = emptyCase();
+  const a = noteWhen(empty, "2026-11-22", "15:40");
+  expect(a.changed).toBe(true);
+  expect(a.next.txnDate).toBe("2026-11-22");
+  expect(a.next.txnTime).toBe("15:40");
+  expect(empty.txnDate).toBeNull(); // पुराना object नहीं बदला
+  const b = noteWhen(emptyCase(), "2026-11-22", null);
+  expect(b.next.txnTime).toBeNull();
+  const had = { ...emptyCase(), txnDate: "2026-11-18", txnTime: "09:00" };
+  const c = noteWhen(had, "2026-11-22", "15:40");
+  expect(c.changed).toBe(false);
+  expect(c.next).toEqual(had);
+});
+
+test("हल्का रहे: store.ts और /turant वाला 'कब हुआ' RBI नियमों वाला भारी हिसाब (rules engine का पूरा barrel) न लें", async () => {
+  const { readFileSync } = await import("node:fs");
+  const store = readFileSync("modules/case/store.ts", "utf8");
+  expect(store).not.toMatch(/from "@\/modules\/rules-engine"/);
+  expect(store).not.toMatch(/evaluate/);
+  const kab = readFileSync("components/turant/kab-chips.tsx", "utf8");
+  expect(kab).not.toMatch(/from "@\/modules\/case"/);
+  expect(kab).not.toMatch(/from "@\/modules\/rules-engine"/);
+});

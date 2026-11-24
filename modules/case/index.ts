@@ -8,6 +8,7 @@ export {
   emptyCase,
   haqFieldsFromCase,
   nextStage,
+  noteWhen,
   parseCase,
   serializeCase,
 } from "./local";
