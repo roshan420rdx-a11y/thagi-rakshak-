@@ -3,11 +3,25 @@
 import { useEffect, useState } from "react";
 import { checkMessage, MAX_CHECK_CHARS, type CheckResult } from "@/modules/checker";
 import { PASTE_HINT_HI, readPastedText } from "@/modules/checker/paste";
-import { SHARE_MISSED_HI, takeSharedText } from "@/modules/checker/share-inbox";
+import { SHARE_MISSED_HI, takeSharedImage, takeSharedText } from "@/modules/checker/share-inbox";
 import { IconClipboard, IconImage } from "@/components/ui/icons";
 import type { OcrProgress } from "@/modules/checker/ocr";
 import { VerdictCard } from "./verdict-card";
 import { VoiceInput } from "./voice-input";
+
+const PHOTO_EMPTY_HI = "photo में पढ़ने लायक अक्षर नहीं मिले। साफ़ screenshot लें, या जो लिखा है वह ख़ुद लिखें या बोलें।";
+const PHOTO_FAILED_HI = "photo पढ़ी नहीं जा सकी (शायद internet धीमा है)। फिर कोशिश करें, या जो लिखा है वह ख़ुद लिखें या बोलें।";
+
+// photo/screenshot (TR-36): फ़ोन के अंदर ही अक्षर पढ़ना। photo कहीं नहीं जाती।
+async function readPhoto(file: Blob, onProgress: (p: OcrProgress) => void): Promise<{ text: string; hint: string | null }> {
+  try {
+    const { readImageText } = await import("@/modules/checker/ocr");
+    const text = await readImageText(file, onProgress);
+    return { text, hint: text ? null : PHOTO_EMPTY_HI };
+  } catch {
+    return { text: "", hint: PHOTO_FAILED_HI };
+  }
+}
 
 // "पहले पूछो" का box। जाँच इसी फ़ोन के browser में होती है: message न server पर जाता है, न URL में, न कहीं सेव होता है।
 // mount से पहले कुछ नहीं दिखता, इसलिए बिना JS के पन्ना सिर्फ़ 8 आम निशान दिखाता है।
@@ -23,38 +37,43 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
     setMounted(true);
     setCanPaste(typeof navigator.clipboard?.readText === "function");
     // Share → "ठगी रक्षक" से आए (plan A2f): message फ़ोन के डिब्बे से लेकर तुरंत जाँच; पता साफ़ (message कभी URL में नहीं था)
+    // WhatsApp की photo/screenshot पर Share (TR-36b): photo भी फ़ोन के डिब्बे से, यहीं पढ़कर; साथ का caption भी जाँच में
     if (new URLSearchParams(window.location.search).has("shared")) {
       window.history.replaceState(null, "", window.location.pathname);
-      void takeSharedText(typeof caches === "undefined" ? undefined : caches).then((t) => {
-        if (t) {
-          setText(t);
-          setResult(checkMessage(t));
-        } else setPasteHint(SHARE_MISSED_HI);
+      const box = typeof caches === "undefined" ? undefined : caches;
+      void Promise.all([takeSharedText(box), takeSharedImage(box)]).then(async ([t, image]) => {
+        let full = t ?? "";
+        let hint: string | null = t ? null : SHARE_MISSED_HI;
+        if (image) {
+          setOcr({ stageHi: "तैयारी हो रही है", pct: 0 });
+          const photo = await readPhoto(image, setOcr);
+          setOcr(null);
+          full = [full, photo.text].filter(Boolean).join("\n").slice(0, MAX_CHECK_CHARS);
+          hint = photo.hint;
+        }
+        if (full) {
+          setText(full);
+          setResult(checkMessage(full));
+        }
+        setPasteHint(hint);
       });
     }
   }, []);
   if (!mounted) return null;
 
-  // photo/screenshot (TR-36): फ़ोन के अंदर ही अक्षर पढ़कर डिब्बे में, फिर तुरंत जाँच। photo कहीं नहीं जाती।
+  // photo/screenshot चुनी (TR-36): पढ़ा text डिब्बे में (ठीक किया जा सके), फिर तुरंत जाँच
   async function checkPhoto(file: File | Blob | null | undefined) {
     if (!file) return;
     setPasteHint(null);
     setResult(null);
     setOcr({ stageHi: "तैयारी हो रही है", pct: 0 });
-    try {
-      const { readImageText } = await import("@/modules/checker/ocr");
-      const read = await readImageText(file, setOcr);
-      if (!read) {
-        setPasteHint("photo में पढ़ने लायक अक्षर नहीं मिले। साफ़ screenshot लें, या जो लिखा है वह ख़ुद लिखें या बोलें।");
-        return;
-      }
-      setText(read);
-      setResult(checkMessage(read));
-    } catch {
-      setPasteHint("photo पढ़ी नहीं जा सकी (शायद internet धीमा है)। फिर कोशिश करें, या जो लिखा है वह ख़ुद लिखें या बोलें।");
-    } finally {
-      setOcr(null);
+    const photo = await readPhoto(file, setOcr);
+    setOcr(null);
+    if (photo.text) {
+      setText(photo.text);
+      setResult(checkMessage(photo.text));
     }
+    setPasteHint(photo.hint);
   }
 
   // एक tap: copy किया message डिब्बे में, और तुरंत जाँच। न मिले तो हाथ से Paste करने का तरीका।

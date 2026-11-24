@@ -19,7 +19,7 @@ export default function manifest(): MetadataRoute.Manifest {
       action: "/pucho/share",
       method: "POST",
       enctype: "multipart/form-data",
-      params: { title: "title", text: "text", url: "url" },
+      params: { title: "title", text: "text", url: "url", files: [{ name: "image", accept: ["image/*"] }] },
     },
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

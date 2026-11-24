@@ -16,7 +16,7 @@ export const metadata: Metadata = pageMeta({
 });
 
 // "पहले पूछो" (TR-23a): नियमों वाली जाँच फ़ोन के अंदर (CheckerBox, JS से)। बिना JS के भी 8 आम निशान दिखते हैं।
-// screenshot और AI वाली जाँच TR-24 में।
+// photo/screenshot से जाँच भी फ़ोन के अंदर (TR-36)।
 export default function PuchoPage() {
   const pageUrl = absoluteUrl("/pucho", getSiteConfig().siteUrl);
   return (
@@ -24,8 +24,8 @@ export default function PuchoPage() {
       <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">यह message ठगी है? पहले पूछो</h1>
       <p>SMS या WhatsApp का message चिपकाएँ, या call पर जो कहा गया वह अपने शब्दों में लिखें या बोलें। हिंदी, Hinglish या English, किसी में भी।</p>
       <CheckerBox pageUrl={pageUrl} />
-      {/* plan A2f: ऐप जुड़ा हो तो WhatsApp/SMS से Share करके सीधे जाँच (browser मौका दे, तभी दिखता है) */}
-      <InstallButton label="ऐप जोड़ें: फिर WhatsApp या SMS से सीधे Share करके जाँचें" />
+      {/* plan A2f, TR-36b: ऐप जुड़ा हो तो WhatsApp/SMS से message या photo Share करके सीधे जाँच (browser मौका दे, तभी दिखता है) */}
+      <InstallButton label="ऐप जोड़ें: फिर WhatsApp या SMS से message या photo सीधे Share करके जाँचें" />
       <h2 className="text-[20px] font-bold leading-snug">ठगी के {SCAM_SIGNS.length} आम निशान</h2>
       <p>इनमें से एक भी दिखे, तो रुकें। पैसे न भेजें, कोई ऐप न डालें।</p>
       <ol data-signs className="space-y-3">

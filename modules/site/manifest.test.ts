@@ -34,6 +34,6 @@ test("manifest: Share से सीधे 'पहले पूछो' (share_tar
     action: "/pucho/share",
     method: "POST",
     enctype: "multipart/form-data",
-    params: { title: "title", text: "text", url: "url" },
+    params: { title: "title", text: "text", url: "url", files: [{ name: "image", accept: ["image/*"] }] },
   });
 });

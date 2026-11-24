@@ -220,7 +220,7 @@ await check("Share: service worker न हो तो server message पढ़े
   withPage({ viewport: PHONE, serviceWorkers: "block" }, async (page) => {
     await openBox(page);
     await shareLikeAndroid(page, SCAM);
-    await page.getByText("share किया message यहाँ नहीं पहुँचा", { exact: false }).waitFor();
+    await page.getByText("share किया message या photo यहाँ नहीं पहुँचा", { exact: false }).waitFor();
     assert(new URL(page.url()).search === "", `URL: ${page.url()}`);
     assert((await page.getByLabel(BOX).inputValue()) === "", "डिब्बे में कुछ आ गया");
   }),
@@ -321,6 +321,50 @@ await check("photo से जाँच (English screenshot): फ़ोन मे
   withPage({ viewport: PHONE }, (page) =>
     checkPhotoFlow(page, "Dear Customer, your KYC is pending.<br>Your account will be blocked today.<br>Share the OTP sent to your mobile.", ["OTP", "blocked"]),
   ),
+);
+
+await check("WhatsApp की photo पर Share → 'ठगी रक्षक': photo service worker फ़ोन में रखे, पन्ना पढ़े, caption भी जाँच में; server तक कुछ नहीं, डिब्बा बाद में ख़ाली", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    const png = await photoOf("Dear Customer, your KYC is pending.<br>Your account will be blocked today.<br>Share the OTP sent to your mobile.");
+    await openBox(page);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    const toServer = [];
+    page.on("response", (r) => {
+      if (r.request().method() !== "GET" && !r.fromServiceWorker()) toServer.push(`${r.request().method()} ${r.url()}`);
+    });
+    // Android जैसा: multipart POST, "text" में caption और "image" में photo
+    await page.evaluate((b64) => {
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const f = document.createElement("form");
+      f.method = "post";
+      f.action = "/pucho/share";
+      f.enctype = "multipart/form-data";
+      const t = document.createElement("textarea");
+      t.name = "text";
+      t.value = "यह photo आई है";
+      const input = document.createElement("input");
+      input.type = "file";
+      input.name = "image";
+      const dt = new DataTransfer();
+      dt.items.add(new File([bytes], "IMG-20261124-WA0001.png", { type: "image/png" }));
+      input.files = dt.files;
+      f.append(t, input);
+      document.body.append(f);
+      f.submit();
+    }, png.toString("base64"));
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor({ timeout: 120000 });
+    const read = await page.getByLabel(BOX).inputValue();
+    for (const w of ["यह photo आई है", "OTP", "blocked"]) assert(read.includes(w), `डिब्बे में "${w}" नहीं: ${read}`);
+    assert(new URL(page.url()).search === "", `URL: ${page.url()}`);
+    assert(toServer.length === 0, `server तक: ${toServer.join(", ")}`);
+    const left = await page.evaluate(async () => {
+      const box = await caches.open("thagi-rakshak-share-v1");
+      return !!(await box.match("/__share-inbox")) || !!(await box.match("/__share-image"));
+    });
+    assert(!left, "photo या caption फ़ोन के डिब्बे में बचा रहा");
+  }),
 );
 
 // हिंदी photo के लिए machine पर हिंदी font चाहिए (वरना photo में डिब्बे बनते हैं, गलती OCR की नहीं)

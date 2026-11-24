@@ -70,3 +70,22 @@ test("worker का combineShared और फ़ोन वाला combineShared
   const cases: [unknown, unknown, unknown][] = [["", "OTP बताइए", ""], ["SBI", "KYC update करें", "http://x.top"], [null, "यहाँ खोलें http://x.top", "http://x.top"], [undefined, "  ", undefined]];
   for (const [a, b, c] of cases) expect(fromSw(a, b, c)).toBe(combineShared(a, b, c));
 });
+
+test("worker: Share से आई photo भी फ़ोन के अंदर, उसी अलग डिब्बे में (अपनी key पर), हद के साथ", async () => {
+  const { MAX_SHARE_IMAGE_BYTES, SHARE_IMAGE_KEY } = await import("@/modules/checker/share-inbox");
+  const sw = buildServiceWorker({ version: "v-test", urls: [] });
+  expect(sw).toContain(JSON.stringify(SHARE_IMAGE_KEY));
+  expect(sw).toContain(`const SHARE_IMAGE_MAX = ${MAX_SHARE_IMAGE_BYTES};`);
+  expect(sw).toMatch(/form\.getAll\("image"\)/);
+  expect(() => new Function(sw)).not.toThrow();
+});
+
+test("worker का pickSharedImage और फ़ोन वाला pickSharedImage एक जैसा जवाब दें", async () => {
+  const { pickSharedImage } = await import("@/modules/checker/share-inbox");
+  const sw = buildServiceWorker({ version: "v-test", urls: [] });
+  const fromSw = new Function(`${sw.replace(/self\.addEventListener[\s\S]*$/, "")}; return pickSharedImage;`)() as typeof pickSharedImage;
+  const png = new Blob(["x"], { type: "image/png" });
+  const big = new Blob(["x".repeat(50)], { type: "image/jpeg" });
+  const cases: unknown[][] = [[png], ["t", png], [new Blob([], { type: "image/png" })], [new Blob(["a"], { type: "text/plain" })], [big, png], [null, {}], []];
+  for (const c of cases) expect(fromSw(c, 10)).toBe(pickSharedImage(c, 10));
+});

@@ -1,5 +1,5 @@
 import { MAX_CHECK_CHARS } from "@/modules/checker/check";
-import { SHARE_CACHE, SHARE_KEY, SHARE_PATH } from "@/modules/checker/share-inbox";
+import { MAX_SHARE_IMAGE_BYTES, SHARE_CACHE, SHARE_IMAGE_KEY, SHARE_KEY, SHARE_PATH } from "@/modules/checker/share-inbox";
 import { TURANT_CONTENT_VERSION, TURANT_SLUGS } from "@/modules/scams";
 
 // offline में खुलने वाले पन्ने: /turant, उसके सारे प्रकार (data से बनते हैं) और अपने बैंक को बताने का पन्ना
@@ -33,13 +33,21 @@ const COMBINE_SHARED_SRC = String.raw`function combineShared(title, text, url) {
   return parts.filter(Boolean).join("\n").slice(0, SHARE_MAX);
 }`;
 
+// Share में आई files में से पहली असली photo: modules/checker/share-inbox.ts के pickSharedImage जैसा (test मिलाता है)
+const PICK_SHARED_IMAGE_SRC = String.raw`function pickSharedImage(entries, max) {
+  for (const f of entries) {
+    if (f instanceof Blob && f.type.startsWith("image/") && f.size > 0 && f.size <= max) return f;
+  }
+  return null;
+}`;
+
 export const extractNextAssets = new Function(`${EXTRACT_ASSETS_SRC}; return extractNextAssets;`)() as (html: string) => string[];
 
 // service worker का code (string)। नियम:
 // - install पर हर offline पन्ना और उसकी static files (CSS/JS) cache में; activate पर पुराने version के cache हटाना
 // - URLS वाले पन्ने (और उनके नीचे के, जैसे /gyan/bank/sbi): पहले network (ताज़ा content), न मिले तो cache
 // - /_next/static (CSS/JS): पहले cache, न हो तो network से लाकर रखना
-// - Share से आया message (POST /pucho/share): network पर नहीं; अलग डिब्बे (SHARE_CACHE) में रखकर /pucho?shared=1 पर भेजना
+// - Share से आया message या photo (POST /pucho/share): network पर नहीं; अलग डिब्बे (SHARE_CACHE) में रखकर /pucho?shared=1 पर भेजना
 // - बाकी सब: बिना छुए network
 export function buildServiceWorker({ version, urls }: { version: string; urls: readonly string[] }): string {
   return `
@@ -49,8 +57,11 @@ const SHARE_PATH = ${JSON.stringify(SHARE_PATH)};
 const SHARE_CACHE = ${JSON.stringify(SHARE_CACHE)};
 const SHARE_KEY = ${JSON.stringify(SHARE_KEY)};
 const SHARE_MAX = ${MAX_CHECK_CHARS};
+const SHARE_IMAGE_KEY = ${JSON.stringify(SHARE_IMAGE_KEY)};
+const SHARE_IMAGE_MAX = ${MAX_SHARE_IMAGE_BYTES};
 ${EXTRACT_ASSETS_SRC}
 ${COMBINE_SHARED_SRC}
+${PICK_SHARED_IMAGE_SRC}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -99,6 +110,9 @@ self.addEventListener("fetch", (event) => {
           const box = await caches.open(SHARE_CACHE);
           if (text) await box.put(SHARE_KEY, new Response(text, { headers: { "Content-Type": "text/plain; charset=utf-8" } }));
           else await box.delete(SHARE_KEY);
+          const image = pickSharedImage(form.getAll("image"), SHARE_IMAGE_MAX);
+          if (image) await box.put(SHARE_IMAGE_KEY, new Response(image, { headers: { "Content-Type": image.type } }));
+          else await box.delete(SHARE_IMAGE_KEY);
         } catch (e) {
           // message न मिले तो भी "पहले पूछो" खुले (वहाँ हाथ से चिपकाने की बात दिखती है)
         }

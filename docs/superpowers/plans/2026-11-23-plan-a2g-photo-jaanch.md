@@ -7,7 +7,7 @@
 
 ## तरीका
 - tesseract.js 7 (browser में WebAssembly)। उसकी files हमारी अपनी साइट से (`/ocr/…`), किसी CDN से नहीं: build से पहले
-  `scripts/copy-ocr-assets.mjs` node_modules से `public/ocr/` में (git में नहीं)।
+  `scripts/ocr-assets.mjs` node_modules से `public/ocr/` में (git में नहीं)।
 - भाषा: `hin+eng` (4.0.0_best_int, gzip: करीब 1.4 + 3 MB)। सिर्फ़ बटन दबाने पर download, फिर browser में cache।
 - CSP: worker अपनी साइट से (blob नहीं), WebAssembly के लिए `script-src 'wasm-unsafe-eval'` (eval नहीं)।
 - पढ़ा हुआ text डिब्बे में दिखता है (ठीक किया जा सके), और जाँच अपने-आप।

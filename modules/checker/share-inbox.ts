@@ -5,9 +5,12 @@ import { MAX_CHECK_CHARS } from "./check";
 export const SHARE_PATH = "/pucho/share";
 export const SHARE_CACHE = "thagi-rakshak-share-v1";
 export const SHARE_KEY = "/__share-inbox";
+// WhatsApp की photo/screenshot पर Share (TR-36b): photo भी उसी डिब्बे में, अपनी key पर; पन्ना उसे फ़ोन में ही पढ़कर मिटाता है
+export const SHARE_IMAGE_KEY = "/__share-image";
+export const MAX_SHARE_IMAGE_BYTES = 15 * 1024 * 1024;
 
 export const SHARE_MISSED_HI =
-  'share किया message यहाँ नहीं पहुँचा। message पर उँगली दबाकर copy करें, फिर ऊपर "चिपकाएँ" दबाएँ (या डिब्बे में Paste करें)।';
+  'share किया message या photo यहाँ नहीं पहुँचा। message पर उँगली दबाकर copy करें, फिर ऊपर "चिपकाएँ" दबाएँ (या डिब्बे में Paste करें); photo हो, तो "photo या screenshot से जाँचें" दबाकर चुनें।';
 
 // title, text, url जोड़कर एक message (service worker में यही तर्क एक string में है; test दोनों को मिलाता है)
 export function combineShared(title: unknown, text: unknown, url: unknown): string {
@@ -31,6 +34,30 @@ export async function takeSharedText(c: CachesLike | undefined): Promise<string 
     const text = (await hit.text()).trim().slice(0, MAX_CHECK_CHARS);
     await box.delete(SHARE_KEY);
     return text || null;
+  } catch {
+    return null;
+  }
+}
+
+// Share में आई files में से पहली असली photo (ख़ाली, ग़ैर-photo, हद से बड़ी नहीं)। service worker में यही तर्क एक string में है;
+// test दोनों को मिलाता है।
+export function pickSharedImage(entries: readonly unknown[], max: number): Blob | null {
+  for (const f of entries) {
+    if (f instanceof Blob && f.type.startsWith("image/") && f.size > 0 && f.size <= max) return f;
+  }
+  return null;
+}
+
+// डिब्बे से photo लेना और उसी समय मिटाना
+export async function takeSharedImage(c: CachesLike | undefined): Promise<Blob | null> {
+  if (!c) return null;
+  try {
+    const box = await c.open(SHARE_CACHE);
+    const hit = await box.match(SHARE_IMAGE_KEY);
+    if (!hit) return null;
+    const blob = await hit.blob();
+    await box.delete(SHARE_IMAGE_KEY);
+    return pickSharedImage([blob], MAX_SHARE_IMAGE_BYTES);
   } catch {
     return null;
   }
