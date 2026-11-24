@@ -377,6 +377,50 @@ await check("पहले पूछो: photo वाला बटन है, औ
   }),
 );
 
+await check("photo से जाँच offline भी: एक बार internet से चलने के बाद, internet बंद होने पर भी photo पढ़े और नतीजा दे", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    const png = await photoOf("Your account will be blocked today.<br>Share the OTP sent to your mobile.");
+    await openBox(page);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    const pick = () => page.locator('input[type="file"][accept="image/*"]').setInputFiles({ name: "scam.png", mimeType: "image/png", buffer: png });
+    await pick();
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor({ timeout: 120000 });
+    await context.setOffline(true);
+    await page.reload();
+    await page.getByLabel(BOX).waitFor();
+    await pick();
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor({ timeout: 120000 });
+    assert((await page.getByLabel(BOX).inputValue()).includes("OTP"), "offline में photo नहीं पढ़ी");
+  }),
+);
+
+await check("photo पढ़ने का सामान फ़ोन में न हो और internet चला जाए: अटके नहीं, 30 सेकंड के अंदर साफ़ बात", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    const png = await photoOf("Share the OTP sent to your mobile.");
+    await openBox(page);
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    const pick = () => page.locator('input[type="file"][accept="image/*"]').setInputFiles({ name: "scam.png", mimeType: "image/png", buffer: png });
+    await pick();
+    await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor({ timeout: 120000 });
+    // पढ़ने का सामान (worker/core) फ़ोन के डिब्बे से हटाकर internet बंद: अब photo पढ़ी नहीं जा सकती
+    await page.evaluate(async () => {
+      for (const k of await caches.keys()) if (k.startsWith("thagi-rakshak-ocr")) await caches.delete(k);
+    });
+    const cdp = await context.newCDPSession(page);
+    await cdp.send("Network.clearBrowserCache");
+    await context.setOffline(true);
+    const t = Date.now();
+    await pick();
+    await page.getByText("photo पढ़ी नहीं जा सकी", { exact: false }).waitFor({ timeout: 30000 });
+    assert(Date.now() - t < 30000, "बहुत देर");
+    assert((await page.getByText("photo के अक्षर पढ़ रहे हैं").count()) === 0 && (await page.getByText("पढ़ने का सामान आ रहा है", { exact: false }).count()) === 0, "progress वाली बात अब भी दिख रही");
+  }),
+);
+
 // हिंदी photo के लिए machine पर हिंदी font चाहिए (वरना photo में डिब्बे बनते हैं, गलती OCR की नहीं)
 const hindiFont = (() => {
   try {

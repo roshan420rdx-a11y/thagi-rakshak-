@@ -6,6 +6,10 @@ import { TURANT_CONTENT_VERSION, TURANT_SLUGS } from "@/modules/scams";
 // "/pucho" भी: उसकी जाँच पूरी तरह फ़ोन में होती है, इसलिए internet के बिना भी message जाँचा जा सके
 export const OFFLINE_URLS: readonly string[] = ["/turant", ...TURANT_SLUGS.map((s) => `/turant/${s}`), "/gyan/bank", "/pucho", "/shikayat-rasta", "/case", "/arzi", "/abhyas", "/nambar", "/khoj"];
 
+// photo से जाँच की files (/ocr: tesseract worker, core, हिंदी/English भाषा) का अलग डिब्बा। ये files हर deploy पर नहीं
+// बदलतीं, इसलिए डिब्बा deploy के साथ नहीं मिटता; tesseract या भाषा का version बदले तो नाम बदलें (test यह पक्का करता है)।
+export const OCR_CACHE = "thagi-rakshak-ocr-tess7.0.0-core7.0.0-hin1.0.0-eng1.0.0";
+
 // cache का version: content version + git commit। हर deploy पर नया version, और activate पर पुराने caches
 // (पुरानी build की JS/CSS समेत) अपने आप हटते हैं।
 export function swVersion(env: Record<string, string | undefined> = process.env): string {
@@ -47,6 +51,7 @@ export const extractNextAssets = new Function(`${EXTRACT_ASSETS_SRC}; return ext
 // - install पर हर offline पन्ना और उसकी static files (CSS/JS) cache में; activate पर पुराने version के cache हटाना
 // - URLS वाले पन्ने (और उनके नीचे के, जैसे /gyan/bank/sbi): पहले network (ताज़ा content), न मिले तो cache
 // - /_next/static (CSS/JS): पहले cache, न हो तो network से लाकर रखना
+// - /ocr (photo से जाँच की files): पहले अपना अलग डिब्बा (OCR_CACHE), न हो तो network से लाकर रखना
 // - Share से आया message या photo (POST /pucho/share): network पर नहीं; अलग डिब्बे (SHARE_CACHE) में रखकर /pucho?shared=1 पर भेजना
 // - बाकी सब: बिना छुए network
 export function buildServiceWorker({ version, urls }: { version: string; urls: readonly string[] }): string {
@@ -59,6 +64,7 @@ const SHARE_KEY = ${JSON.stringify(SHARE_KEY)};
 const SHARE_MAX = ${MAX_CHECK_CHARS};
 const SHARE_IMAGE_KEY = ${JSON.stringify(SHARE_IMAGE_KEY)};
 const SHARE_IMAGE_MAX = ${MAX_SHARE_IMAGE_BYTES};
+const OCR_CACHE = ${JSON.stringify(OCR_CACHE)};
 ${EXTRACT_ASSETS_SRC}
 ${COMBINE_SHARED_SRC}
 ${PICK_SHARED_IMAGE_SRC}
@@ -91,7 +97,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION && k !== SHARE_CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION && k !== SHARE_CACHE && k !== OCR_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
@@ -135,6 +141,23 @@ self.addEventListener("fetch", (event) => {
           return res;
         })
         .catch(() => caches.match(req).then((hit) => hit || caches.match(url.pathname))),
+    );
+    return;
+  }
+
+  // photo से जाँच की files: पहले फ़ोन का डिब्बा, न हों तो network से लाकर रखना (दूसरी बार से offline भी, और तेज़)
+  if (url.pathname.startsWith("/ocr/")) {
+    event.respondWith(
+      caches.open(OCR_CACHE).then((cache) =>
+        cache.match(req).then(
+          (hit) =>
+            hit ||
+            fetch(req).then((res) => {
+              if (res.ok) cache.put(req, res.clone());
+              return res;
+            }),
+        ),
+      ),
     );
     return;
   }

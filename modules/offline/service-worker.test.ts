@@ -89,3 +89,17 @@ test("worker का pickSharedImage और फ़ोन वाला pickSharedI
   const cases: unknown[][] = [[png], ["t", png], [new Blob([], { type: "image/png" })], [new Blob(["a"], { type: "text/plain" })], [big, png], [null, {}], []];
   for (const c of cases) expect(fromSw(c, 10)).toBe(pickSharedImage(c, 10));
 });
+
+test("worker: photo से जाँच की files (/ocr) एक बार आने के बाद फ़ोन में (offline भी); डिब्बे का नाम OCR के version से", async () => {
+  const { OCR_CACHE } = await import("./service-worker");
+  const { readFileSync } = await import("node:fs");
+  const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+  const core = JSON.parse(readFileSync("node_modules/tesseract.js-core/package.json", "utf8"));
+  // tesseract या भाषा की files बदलें तो डिब्बे का नाम भी बदले (वरना पुरानी files चलती रहें)
+  for (const v of [pkg.dependencies["tesseract.js"], core.version, pkg.dependencies["@tesseract.js-data/hin"], pkg.dependencies["@tesseract.js-data/eng"]]) expect(OCR_CACHE).toContain(v);
+  const sw = buildServiceWorker({ version: "v-test", urls: [] });
+  expect(sw).toContain(`const OCR_CACHE = ${JSON.stringify(OCR_CACHE)};`);
+  expect(sw).toMatch(/url\.pathname\.startsWith\("\/ocr\/"\)/);
+  expect(sw).toMatch(/k !== VERSION && k !== SHARE_CACHE && k !== OCR_CACHE/);
+  expect(() => new Function(sw)).not.toThrow();
+});
