@@ -51,3 +51,26 @@ test("2027 के लेन-देन पर यह नियम नहीं, 2
   expect(evaluateRights({ ...base, txnDate: "2027-01-05", reportedToBankOn: "2027-01-05" }, "2027-01-06").some((r) => r.ruleId === "rbi2025.liability")).toBe(false);
   expect(evaluateRights(base, "2026-12-02").some((r) => r.ruleId === "rbi2025.liability")).toBe(true);
 });
+
+test("अभी नहीं बताया, 6वाँ कार्य-दिवस: शब्द 'बताया' नहीं, 'आज बताएँ तो'; और सीमित ज़िम्मेदारी की आख़िरी तारीख़ (7 कार्य-दिवस)", () => {
+  const r = old({ ...base, reportedToBankOn: null }, "2026-12-08");
+  expect(r?.status).toBe("likely");
+  expect(r?.amount).toBe(10000);
+  const text = r?.reasonsHi.join(" ") ?? "";
+  expect(text).toContain("आज बताएँ तो");
+  expect(text).not.toContain("बताया, इसलिए");
+  expect(text).toContain("आज ही बैंक को बताएँ");
+  // 1 दिसंबर (मंगल) के बाद 7 कार्य-दिवस: 2, 3, 4 (बुध-शुक्र), 5 (पहला शनिवार, कार्य-दिवस), 7, 8, 9 (रविवार 6 छूटा) = 9 दिसंबर
+  expect(r?.deadlines[0]?.labelHi).toBe("ज़िम्मेदारी सीमित रहे, इसके लिए बैंक को इस तारीख़ तक बताएँ");
+  expect(r?.deadlines[0]?.date).toBe("2026-12-09");
+});
+test("बताया हो तो वही पुराना शब्द ('बताया, इसलिए') और कोई 'आज बताएँ तो' नहीं", () => {
+  const text = old({ ...base, reportedToBankOn: "2026-12-08" })?.reasonsHi.join(" ") ?? "";
+  expect(text).toContain("बताया, इसलिए");
+  expect(text).not.toContain("आज बताएँ तो");
+});
+test("अभी नहीं बताया और 7 कार्य-दिवस बीत चुके: देर पर भी आज ही बताने को कहा जाता है", () => {
+  const r = old({ ...base, reportedToBankOn: null }, "2026-12-20");
+  expect(r?.status).toBe("unclear");
+  expect(r?.reasonsHi.join(" ")).toContain("आज ही बैंक को लिखकर बताएँ");
+});

@@ -141,8 +141,9 @@ const CARE_HOOK = `${REFUND_HOOK}|whatsapp|व्हाट्सएप|google|�
 const URGENT =
   "तुरंत|तुरन्त|फ़ौरन|\\bturant\\b|urgent|immediately|\\basap\\b|last\\s*chance|आख़िरी\\s*मौका|अंतिम\\s*मौका|within\\s*(?<!\\d)\\d+\\s*(?:hours?|hrs?|minutes?|mins?)\\b|(?<!\\d)\\d+\\s*(?:घंटे|मिनट)\\s*(?:में|के\\s*अंदर|के\\s*भीतर)|(?<!\\d)\\d+\\s*(?:ghante|ghanton|ghanto|minute|minutes|min)\\s*(?:me|mein|main|ke\\s*andar)\\b|वरना|\\bwarna\\b|\\bvarna\\b|otherwise|जल्दी\\s*(?:करें|करो|कीजिए)|\\bjaldi\\s*kar|अभी\\s*के\\s*अभी|today\\s*itself|expires?\\s*today|आज\\s*ही\\s*(?:बंद|ब्लॉक|अंतिम|आख़िरी)";
 
+// (पते की शुरुआत "\\b" से नहीं, "पिछला अक्षर [a-z0-9_-] न हो" से: "a-a-a-…" जैसे लंबे text में \\b हर "-" के बाद फिर से शुरू होकर वर्गाकार (O(n²)) समय लेता था; 20,000 अक्षर पर 0.25 सेकंड)
 const LINK =
-  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|\\b[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
+  "https?://|\\bwww\\.|\\bbit\\.ly\\b|tinyurl|\\b(?:t|wa)\\.me/|(?<![a-z0-9_-])[a-z0-9-]{2,}\\.(?:com|in|net|org|xyz|top|info|ly|me|link|site|online|live|club|vip|shop|cc|co|io|app|biz)\\b(?!\\.\\d)";
 
 const R = {
   otp: near(OTP, ASK, 40),

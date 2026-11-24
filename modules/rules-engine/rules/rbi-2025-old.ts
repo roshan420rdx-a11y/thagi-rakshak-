@@ -68,20 +68,28 @@ export const liability2025: Rule = {
     }
 
     // third-party (बीच की कंपनी) की गलती: 3 / 4-7 / 7+ कार्य-दिवस (para 67(2), 68(2), 70)
+    // बैंक को अभी बताया ही न हो, तो "आज बताने पर" का हिसाब दिखता है (और शब्द भी वैसे): "बताया" लिखना ग़लत होता
+    const reported = input.reportedToBankOn !== null;
     const w = workingDaysBetween(input.txnDate, input.reportedToBankOn ?? today);
+    const when = reported ? "बताया" : "आज बताएँ तो";
     if (w <= 3) {
-      if (!input.reportedToBankOn) {
+      if (!reported) {
         deadlines.unshift({ labelHi: "ज़ीरो ज़िम्मेदारी के लिए बैंक को इस तारीख़ तक बताएँ", date: addWorkingDays(input.txnDate, 3), status: "likely" });
       }
       return make({ status: "likely", reasonsHi: ["3 कार्य-दिवस के अंदर बताने पर ज़िम्मेदारी ज़ीरो है।", COUNTING_NOTE], deadlines });
     }
     if (w <= 7) {
+      // 3 कार्य-दिवस की ज़ीरो-ज़िम्मेदारी वाली खिड़की निकल चुकी; जो बचा है वह है 7 कार्य-दिवस तक की सीमित ज़िम्मेदारी: उसकी आख़िरी तारीख़
+      if (!reported) {
+        deadlines.unshift({ labelHi: "ज़िम्मेदारी सीमित रहे, इसके लिए बैंक को इस तारीख़ तक बताएँ", date: addWorkingDays(input.txnDate, 7), status: "likely" });
+      }
       if (input.accountKind === "unknown") {
-        return make({ status: "unclear", reasonsHi: ["4 से 7 कार्य-दिवस में बताने पर ज़िम्मेदारी सीमित है: खाते के प्रकार के हिसाब से ₹5,000, ₹10,000 या ₹25,000 तक (Table 1)।", COUNTING_NOTE], deadlines });
+        return make({ status: "unclear", reasonsHi: [`4 से 7 कार्य-दिवस में ${reported ? "बताने पर" : "बताने पर (आज बताएँ तो यही हालत है)"} ज़िम्मेदारी सीमित है: खाते के प्रकार के हिसाब से ₹5,000, ₹10,000 या ₹25,000 तक (Table 1)।`, COUNTING_NOTE], deadlines });
       }
       const cap = Math.min(TABLE_1[input.accountKind], input.grossLoss);
-      return make({ status: "likely", amount: cap, amountLabelHi: "आपकी ज़्यादा से ज़्यादा ज़िम्मेदारी", reasonsHi: [`4 से 7 कार्य-दिवस में बताया, इसलिए आपकी ज़िम्मेदारी ज़्यादा से ज़्यादा ₹${cap.toLocaleString("en-IN")} (प्रति लेन-देन, Table 1); बाकी बैंक का।`, COUNTING_NOTE], deadlines });
+      const urgency = reported ? [] : ["जितनी देर होगी, ज़िम्मेदारी उतनी बढ़ सकती है (7 कार्य-दिवस के बाद बैंक की नीति के हिसाब से तय होती है), इसलिए आज ही बैंक को बताएँ।"];
+      return make({ status: "likely", amount: cap, amountLabelHi: "आपकी ज़्यादा से ज़्यादा ज़िम्मेदारी", reasonsHi: [`4 से 7 कार्य-दिवस में ${when}, ${reported ? "इसलिए " : ""}आपकी ज़िम्मेदारी ज़्यादा से ज़्यादा ₹${cap.toLocaleString("en-IN")} (प्रति लेन-देन, Table 1); बाकी बैंक का।`, ...urgency, COUNTING_NOTE], deadlines });
     }
-    return make({ status: "unclear", reasonsHi: ["7 कार्य-दिवस के बाद बताया, इसलिए ज़िम्मेदारी बैंक की नीति के हिसाब से तय होगी (para 69)।", COUNTING_NOTE], deadlines });
+    return make({ status: "unclear", reasonsHi: [`7 कार्य-दिवस के बाद ${reported ? "बताया" : "बता रहे हैं"}, इसलिए ज़िम्मेदारी बैंक की नीति के हिसाब से तय होगी (para 69)।${reported ? "" : " फिर भी देर न करें: आज ही बैंक को लिखकर बताएँ।"}`, COUNTING_NOTE], deadlines });
   },
 };

@@ -1,6 +1,6 @@
 // 1 जनवरी 2027 या बाद के लेन-देन: RBI (Responsible Business Conduct) Amendment Directions, 24 जून 2026
 // (सातों तरह के बैंकों के लिए एक जैसे नियम; मूल text: docs/sources/rbi/)
-import { addDays, daysBetween } from "../dates";
+import { addDays, daysBetween, formatHindiDate } from "../dates";
 import { SRC_2026 } from "../sources";
 import type { Deadline, FraudInput, RightResult, Rule } from "../types";
 
@@ -28,10 +28,8 @@ export const zeroLiability: Rule = {
   },
   evaluate(input: FraudInput, today: string) {
     if (input.fault === "customer") return null;
+    // (credit card की अस्थायी वापसी, shadow reversal, अलग नियम है: rbi2027.shadowReversal, क्योंकि वह ग्राहक की लापरवाही पर भी मिलती है)
     const deadlines: Deadline[] = [];
-    if (input.instrument === "credit_card" && input.reportedToBankOn) {
-      deadlines.push({ labelHi: "credit card पर अस्थायी वापसी (shadow reversal)", date: addDays(input.reportedToBankOn, REPORT_DAYS), status: "confirmed" });
-    }
     if (input.fault === "bank") {
       return result(this, {
         status: "likely",
@@ -40,11 +38,16 @@ export const zeroLiability: Rule = {
       });
     }
     if (input.fault === "unknown") {
+      const selfSent =
+        input.howHappened === "self_sent_deceived"
+          ? ["आपने बिना दबाव के ख़ुद पैसे भेजे थे; RBI की \"ठगी\" की परिभाषा में यह आता है या नहीं, साफ़ नहीं है (4(15A))। इसलिए इस हक़ पर भरोसा करके बैठें नहीं: बैंक और 1930 को आज ही बताएँ।"]
+          : [];
       return result(this, {
         status: "unclear",
         reasonsHi: [
           "अगर गलती बैंक की, या बीच की किसी कंपनी (जैसे UPI ऐप, payment gateway, मोबाइल कंपनी) की निकली, तो पूरा पैसा वापस बनता है।",
           "गलती किसकी है, यह बैंक जाँच से तय करेगा, और साबित करने का बोझ बैंक पर है (76K)।",
+          ...selfSent,
         ],
         deadlines,
       });
@@ -153,4 +156,61 @@ export const bankResponseTime: Rule = {
   },
 };
 
-export const RBI_2027_RULES: readonly Rule[] = [zeroLiability, smallValueCompensation, bankResponseTime];
+// credit card की ठगी: बैंक को बताने के 5 दिन में अस्थायी वापसी (shadow reversal)। 76R में यह "credit card की ठगी की किसी भी शिकायत" पर है, ग़लती किसकी भी हो:
+// इसलिए जिसने OTP दे दिया (ग्राहक की लापरवाही) उसे भी यह मिलता है, और यह हक़ पहले सिर्फ़ ग़लती बैंक/बीच की कंपनी की निकलने पर दिखता था।
+export const shadowReversal: Rule = {
+  id: "rbi2027.shadowReversal",
+  version: 1,
+  titleHi: "credit card पर 5 दिन में अस्थायी वापसी",
+  txnFrom: "2027-01-01",
+  txnTo: null,
+  verifiedBy: VERIFIED,
+  source: {
+    ...SRC_2026,
+    paragraph: "76R, 4(25A)",
+    quote:
+      "Further, in case of a complaint arising out of fraudulent EBT(s) in a credit card, a bank shall provide shadow reversal equivalent to the amount involved in the fraudulent EBT(s) within five calendar days from the date of receipt of notification from the customer.",
+  },
+  evaluate(input: FraudInput) {
+    if (input.instrument !== "credit_card" || !input.reportedToBankOn) return null;
+    return result(this, {
+      status: "likely",
+      reasonsHi: [
+        "बैंक को बताने के 5 दिन के अंदर बैंक को उतनी रकम अस्थायी तौर पर आपके card में लौटानी है (जाँच पूरी होने से पहले)। वह रकम आप ख़र्च नहीं कर सकते, पर उस पर ब्याज या शुल्क नहीं लगेगा (4(25A))।",
+        "यह ग़लती किसी की भी निकले, ठगी की शिकायत पर मिलता है। अंतिम फ़ैसला बैंक की जाँच से होगा।",
+      ],
+      deadlines: [{ labelHi: "credit card पर अस्थायी वापसी (shadow reversal)", date: addDays(input.reportedToBankOn, REPORT_DAYS), status: "confirmed" }],
+    });
+  },
+};
+
+// बैंक को बताने के बाद का नुकसान बैंक का (76O): ग्राहक की लापरवाही वाले मामले में भी। बताने में देर न करने की सबसे बड़ी वजह यही है।
+export const afterReport: Rule = {
+  id: "rbi2027.afterReport",
+  version: 1,
+  titleHi: "बैंक को बताने के बाद का नुकसान बैंक का",
+  txnFrom: "2027-01-01",
+  txnTo: null,
+  verifiedBy: VERIFIED,
+  source: {
+    ...SRC_2026,
+    paragraph: "76O",
+    quote: "Loss arising from any unauthorised transaction occurring after the reporting of the fraudulent EBT by a customer to a bank shall be borne by the bank.",
+  },
+  evaluate(input: FraudInput) {
+    if (input.reportedToBankOn) {
+      return result(this, {
+        status: "likely",
+        reasonsHi: [`आपने बैंक को ${formatHindiDate(input.reportedToBankOn)} को बताया। उसके बाद उसी खाते या card से कोई और बिना-मंज़ूरी का लेन-देन हो, तो उसका नुकसान बैंक का है। तुरंत बैंक को लिखकर बताएँ।`],
+        deadlines: [],
+      });
+    }
+    return result(this, {
+      status: "likely",
+      reasonsHi: ["बैंक को बताने तक का नुकसान (ग्राहक की लापरवाही हो तो) आपके हिस्से आ सकता है, पर बताने के बाद के किसी भी बिना-मंज़ूरी के लेन-देन का नुकसान बैंक का होता है। इसलिए बैंक को आज ही बताएँ।"],
+      deadlines: [],
+    });
+  },
+};
+
+export const RBI_2027_RULES: readonly Rule[] = [zeroLiability, smallValueCompensation, bankResponseTime, shadowReversal, afterReport];

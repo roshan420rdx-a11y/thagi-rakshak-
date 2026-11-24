@@ -73,12 +73,38 @@ test("बैंक जवाब: 45 दिन, विदेशी 60", () => {
 });
 test("बैंक को नहीं बताया → बैंक-जवाब वाला नियम नहीं", () =>
   expect(find({ ...base, reportedToBankOn: null }, "2027-03-10", "rbi2027.bankResponseTime")).toBeUndefined());
-test("credit card: shadow reversal 5 दिन", () =>
-  expect(find({ ...base, fault: "third_party", instrument: "credit_card" }, "2027-03-10", "rbi2027.zeroLiability")!.deadlines).toContainEqual({
+test("credit card: shadow reversal 5 दिन (ग़लती बैंक/बीच की कंपनी की हो तो भी)", () =>
+  expect(find({ ...base, fault: "third_party", instrument: "credit_card" }, "2027-03-10", "rbi2027.shadowReversal")!.deadlines).toContainEqual({
     labelHi: "credit card पर अस्थायी वापसी (shadow reversal)",
     date: "2027-03-15",
     status: "confirmed",
   }));
+test("credit card + ग्राहक की लापरवाही (OTP दिया): shadow reversal फिर भी मिलता है (76R किसी भी ग़लती पर)", () => {
+  const r = find({ ...base, fault: "customer", instrument: "credit_card" }, "2027-03-10", "rbi2027.shadowReversal");
+  expect(r?.status).toBe("likely");
+  expect(r?.deadlines).toEqual([{ labelHi: "credit card पर अस्थायी वापसी (shadow reversal)", date: "2027-03-15", status: "confirmed" }]);
+  // और ज़ीरो-ज़िम्मेदारी वाला नियम तब भी नहीं (यह हक़ अलग है)
+  expect(find({ ...base, fault: "customer", instrument: "credit_card" }, "2027-03-10", "rbi2027.zeroLiability")).toBeUndefined();
+});
+test("shadow reversal सिर्फ़ credit card पर, और बैंक को बताने के बाद ही", () => {
+  expect(find({ ...base, instrument: "bank_account" }, "2027-03-10", "rbi2027.shadowReversal")).toBeUndefined();
+  expect(find({ ...base, instrument: "wallet" }, "2027-03-10", "rbi2027.shadowReversal")).toBeUndefined();
+  expect(find({ ...base, instrument: "credit_card", reportedToBankOn: null }, "2027-03-10", "rbi2027.shadowReversal")).toBeUndefined();
+});
+test("बताने के बाद का नुकसान बैंक का (76O): बताया हो या नहीं, दोनों हालत में समझाता है", () => {
+  const told = find({ ...base, reportedToBankOn: "2027-03-11" }, "2027-03-12", "rbi2027.afterReport");
+  expect(told?.status).toBe("likely");
+  expect(told?.reasonsHi.join(" ")).toContain("11 मार्च 2027");
+  const notYet = find({ ...base, reportedToBankOn: null }, "2027-03-12", "rbi2027.afterReport");
+  expect(notYet?.reasonsHi.join(" ")).toContain("आज ही बताएँ");
+});
+test("ख़ुद भेजे (बिना दबाव) + गलती पता नहीं: ज़ीरो-ज़िम्मेदारी की रोशनी पर भरोसा न करने की चेतावनी, बाकी हालात में नहीं", () => {
+  const sent = find({ ...base, howHappened: "self_sent_deceived", fault: "unknown" }, "2027-03-12", "rbi2027.zeroLiability");
+  expect(sent?.status).toBe("unclear");
+  expect(sent?.reasonsHi.join(" ")).toContain("भरोसा करके बैठें नहीं");
+  const coerced = find({ ...base, howHappened: "coerced", fault: "unknown" }, "2027-03-12", "rbi2027.zeroLiability");
+  expect(coerced?.reasonsHi.join(" ")).not.toContain("भरोसा करके बैठें नहीं");
+});
 test("2026 का लेन-देन → 2027 वाला कोई नियम नहीं", () => {
   const d = "2026-12-31";
   expect(evaluateRights({ ...base, txnDate: d, reportedTo1930On: d, reportedToBankOn: d }, "2027-01-02").filter((r) => r.ruleId.startsWith("rbi2027"))).toEqual([]);
