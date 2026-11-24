@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { CopyBlock } from "@/components/ui/copy-block";
 import { DateField, TimeField } from "@/components/ui/date-time-fields";
 import { Notice } from "@/components/ui/notice";
-import { HOW_OPTIONS, LETTER_KINDS, buildLetter, type LetterInput, type LetterKind } from "@/modules/arzi";
+import { HOW_OPTIONS, LETTER_KINDS, WHAT_MAX, WHAT_TEMPLATES, applyWhatTemplate, buildLetter, type LetterInput, type LetterKind } from "@/modules/arzi";
 import { CASE_KEY, MAX_NUMBER_CHARS, cleanNumber, emptyCase, parseCase, serializeCase, type LocalCase } from "@/modules/case";
 import { parseRupees } from "@/modules/haq/money";
 import { nowTimeInKolkata, todayInKolkata } from "@/modules/rules-engine";
@@ -45,6 +45,7 @@ export function ArziBuilder() {
   const [f, setF] = useState<Fields>(EMPTY);
   const [amountText, setAmountText] = useState("");
   const [status, setStatus] = useState("");
+  const [canCopy, setCanCopy] = useState(false);
 
   useEffect(() => {
     const t = todayInKolkata(new Date());
@@ -57,6 +58,7 @@ export function ArziBuilder() {
     setToday(t);
     setC(loaded);
     setAmountText(loaded.amount ? String(loaded.amount) : "");
+    setCanCopy(typeof navigator.clipboard?.writeText === "function");
   }, []);
 
   if (!c) return null;
@@ -71,13 +73,20 @@ export function ArziBuilder() {
       setStatus("इस browser में सेव नहीं हो पाया (private mode?); पत्र फिर भी बन जाएगा");
     }
   }
+  // "क्या हुआ" लिखने में मदद: नमूना डिब्बे में (अपना लिखा कभी नहीं मिटता), और "पैसे कैसे गए?" ख़ाली हो तो वह भी
+  function pickTemplate(id: string) {
+    const t = WHAT_TEMPLATES.find((x) => x.id === id);
+    if (!t) return;
+    setF((old) => ({ ...old, what: applyWhatTemplate(old.what, t), how: old.how || t.how }));
+    setStatus("नमूना डाल दिया: [ ] वाली जगहें अपनी बात से भरें या बदलें, और \"पैसे कैसे गए?\" एक बार देख लें");
+  }
   function setStage(id: ShikayatStageId, patch: Partial<{ on: string | null; number: string }>) {
     saveCase({ ...c!, stages: { ...c!.stages, [id]: { ...c!.stages[id], ...patch } } });
   }
 
   const lines = buildLetter(kind, { ...f, case: c }, today);
   const set = (key: Exclude<keyof Fields, "how">, value: string) =>
-    setF((old) => ({ ...old, [key]: key === "accountLast4" ? value.replace(/\D/g, "").slice(0, 4) : value.slice(0, key === "what" ? 600 : 120) }));
+    setF((old) => ({ ...old, [key]: key === "accountLast4" ? value.replace(/\D/g, "").slice(0, 4) : value.slice(0, key === "what" ? WHAT_MAX : 120) }));
 
   return (
     <div className="space-y-4">
@@ -192,7 +201,23 @@ export function ArziBuilder() {
           अपनी जानकारी (ख़ाली छोड़ें तो पत्र में [ ] रहेगा)
         </h2>
         {FIELDS.filter((x) => x.kinds.includes(kind)).map((x) => (
-          <label key={x.key} className="block space-y-1">
+          <Fragment key={x.key}>
+            {x.key === "what" ? (
+              <div className="space-y-1">
+                <label htmlFor="arzi-what-tpl" className="block font-semibold">
+                  लिखने में मदद: ठगी कैसे हुई?
+                </label>
+                <select id="arzi-what-tpl" value="" onChange={(e) => pickTemplate(e.target.value)} className={INPUT}>
+                  <option value="">नमूना चुनें (फिर अपने हिसाब से बदलें)</option>
+                  {WHAT_TEMPLATES.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.labelHi}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
+          <label className="block space-y-1">
             <span className="block font-semibold">{x.label}</span>
             {x.long ? (
               <textarea rows={4} value={f[x.key]} onChange={(e) => set(x.key, e.target.value)} className={`${INPUT} py-2`} />
@@ -207,6 +232,7 @@ export function ArziBuilder() {
               />
             )}
           </label>
+          </Fragment>
         ))}
         <p className="text-[14px] text-muted">पूरा खाता या card नंबर, OTP, PIN, CVV कभी न लिखें।</p>
       </section>
@@ -225,9 +251,28 @@ export function ArziBuilder() {
         {kind === "ombudsman" ? (
           <CopyBlock text={lines.join("\n")} label="RBI Ombudsman के लिए text" />
         ) : (
-          <button type="button" onClick={() => window.print()} className="min-h-12 rounded-[10px] bg-brand px-6 font-bold text-paper">
-            Print / PDF बनाएँ
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={() => window.print()} className="min-h-12 rounded-[10px] bg-brand px-6 font-bold text-paper">
+              Print / PDF बनाएँ
+            </button>
+            {/* email या WhatsApp से भेजने वालों के लिए: पत्र का text सिर्फ़ इसी फ़ोन के clipboard में */}
+            {canCopy ? (
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(lines.join("\n"));
+                    setStatus("पत्र copy हो गया: email या WhatsApp में चिपकाएँ, और [ ] वाली जगहें भरना न भूलें");
+                  } catch {
+                    setCanCopy(false);
+                  }
+                }}
+                className="min-h-12 rounded-[10px] border border-line bg-paper px-4 font-semibold text-brand"
+              >
+                पत्र copy करें
+              </button>
+            ) : null}
+          </div>
         )}
         {kind !== "ombudsman" ? (
           <p className="text-[14px] text-muted">फ़ोन पर: Print खुलने पर printer की जगह &quot;Save as PDF&quot; चुनें, PDF फ़ोन में सेव हो जाएगी।</p>

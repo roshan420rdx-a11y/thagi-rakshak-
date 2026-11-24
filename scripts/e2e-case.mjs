@@ -230,6 +230,44 @@ await check("अर्ज़ी: Ombudsman वाले पत्र में �
   }),
 );
 
+await check("अर्ज़ी: 'लिखने में मदद' से नमूना डिब्बे और पत्र में, 'पैसे कैसे गए?' भी; अपना लिखा कभी नहीं मिटता", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    const pick = page.getByLabel("लिखने में मदद: ठगी कैसे हुई?");
+    const what = page.getByLabel("क्या हुआ, अपने शब्दों में");
+    await pick.selectOption({ label: "बैंक वाला बनकर call, OTP ले लिया" });
+    assert((await what.inputValue()).includes("ख़ुद को बैंक का कर्मचारी बताया"), "नमूना डिब्बे में नहीं");
+    assert((await page.locator("#arzi-print").innerText()).includes("ख़ुद को बैंक का कर्मचारी बताया"), "नमूना पत्र में नहीं");
+    assert(await page.getByLabel("ठगों ने धोखे से भिजवाए", { exact: false }).isChecked(), "'पैसे कैसे गए?' नहीं चुना");
+    assert((await pick.inputValue()) === "", "चुनने के बाद picker ख़ाली नहीं हुआ (दोबारा चुनना मुश्किल)");
+    // बिना बदले नमूने की जगह नया नमूना; अपना लिखा हो तो वह बचे और नमूना नीचे
+    await pick.selectOption({ label: "AnyDesk जैसा ऐप डलवाया" });
+    const swapped = await what.inputValue();
+    assert(swapped.includes("AnyDesk") && !swapped.includes("OTP बता दिया"), "बिना बदला नमूना नहीं बदला");
+    await what.fill("कल शाम मुझे एक call आया।");
+    await pick.selectOption({ label: "link पर जानकारी भरवाई" });
+    const mine = await what.inputValue();
+    assert(mine.startsWith("कल शाम मुझे एक call आया।") && mine.includes("link"), `अपना लिखा मिटा: ${mine}`);
+  }),
+);
+
+await check("अर्ज़ी: 'पत्र copy करें' से पूरा पत्र फ़ोन के clipboard में (email/WhatsApp के लिए), कोई request नहीं", () =>
+  withPage({ viewport: PHONE }, async (page, context) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.waitForLoadState("networkidle");
+    const requests = watchRequests(page, ["सीता देवी"]);
+    await page.getByLabel("आपका नाम").fill("सीता देवी");
+    await page.getByRole("button", { name: "पत्र copy करें" }).click();
+    await page.getByText("पत्र copy हो गया", { exact: false }).waitFor();
+    const clip = await page.evaluate(() => navigator.clipboard.readText());
+    assert(clip.startsWith("प्रति,") && clip.includes("सीता देवी") && clip.includes("शाखा प्रबंधक"), `clipboard: ${clip.slice(0, 120)}`);
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+  }),
+);
+
 await check("आपका हक़: फ़ोन में केस हो तो 'मेरा केस से भरें' → तारीख़ें और रकम भरें, हिसाब अपने-आप नहीं, कोई request नहीं", async () => {
   await withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/haq/thagi`);
