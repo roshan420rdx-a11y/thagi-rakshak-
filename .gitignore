@@ -7,3 +7,5 @@ out/
 .superpowers/
 next-env.d.ts
 *.tsbuildinfo
+# photo से जाँच की files (build से पहले node_modules से बनती हैं)
+public/ocr/

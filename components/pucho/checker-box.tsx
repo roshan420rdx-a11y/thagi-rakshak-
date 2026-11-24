@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { checkMessage, MAX_CHECK_CHARS, type CheckResult } from "@/modules/checker";
 import { PASTE_HINT_HI, readPastedText } from "@/modules/checker/paste";
 import { SHARE_MISSED_HI, takeSharedText } from "@/modules/checker/share-inbox";
-import { IconClipboard } from "@/components/ui/icons";
+import { IconClipboard, IconImage } from "@/components/ui/icons";
+import type { OcrProgress } from "@/modules/checker/ocr";
 import { VerdictCard } from "./verdict-card";
 import { VoiceInput } from "./voice-input";
 
@@ -16,6 +17,7 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
   const [result, setResult] = useState<CheckResult | null>(null);
   const [canPaste, setCanPaste] = useState(false);
   const [pasteHint, setPasteHint] = useState<string | null>(null);
+  const [ocr, setOcr] = useState<OcrProgress | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -32,6 +34,28 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
     }
   }, []);
   if (!mounted) return null;
+
+  // photo/screenshot (TR-36): फ़ोन के अंदर ही अक्षर पढ़कर डिब्बे में, फिर तुरंत जाँच। photo कहीं नहीं जाती।
+  async function checkPhoto(file: File | Blob | null | undefined) {
+    if (!file) return;
+    setPasteHint(null);
+    setResult(null);
+    setOcr({ stageHi: "तैयारी हो रही है", pct: 0 });
+    try {
+      const { readImageText } = await import("@/modules/checker/ocr");
+      const read = await readImageText(file, setOcr);
+      if (!read) {
+        setPasteHint("photo में पढ़ने लायक अक्षर नहीं मिले। साफ़ screenshot लें, या जो लिखा है वह ख़ुद लिखें या बोलें।");
+        return;
+      }
+      setText(read);
+      setResult(checkMessage(read));
+    } catch {
+      setPasteHint("photo पढ़ी नहीं जा सकी (शायद internet धीमा है)। फिर कोशिश करें, या जो लिखा है वह ख़ुद लिखें या बोलें।");
+    } finally {
+      setOcr(null);
+    }
+  }
 
   // एक tap: copy किया message डिब्बे में, और तुरंत जाँच। न मिले तो हाथ से Paste करने का तरीका।
   async function pasteAndCheck() {
@@ -68,6 +92,25 @@ export function CheckerBox({ pageUrl }: { pageUrl: string }) {
             copy किया message चिपकाएँ और जाँचें
           </button>
         ) : null}
+        <div className="space-y-1">
+          <label className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-brand bg-paper px-4 font-bold text-brand transition hover:brightness-95 sm:w-auto">
+            <IconImage className="h-5 w-5" />
+            photo या screenshot से जाँचें
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              disabled={ocr !== null}
+              onChange={(e) => {
+                void checkPhoto(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          <p aria-live="polite" className="text-[14px] text-muted">
+            {ocr ? `${ocr.stageHi}… ${ocr.pct}%` : "photo आपके फ़ोन में ही पढ़ी जाती है, कहीं नहीं भेजी जाती।"}
+          </p>
+        </div>
         <VoiceInput
           onText={(said) =>
             setText((prev) => {

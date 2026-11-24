@@ -6,7 +6,8 @@
 export type HeaderKV = { key: string; value: string };
 
 export function buildCsp({ production }: { production: boolean }): string {
-  const script = ["'self'", "'unsafe-inline'", ...(production ? [] : ["'unsafe-eval'"])];
+  // 'wasm-unsafe-eval': सिर्फ़ WebAssembly चलाने की अनुमति (photo से जाँच का OCR फ़ोन के अंदर), आम JS eval नहीं
+  const script = ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", ...(production ? [] : ["'unsafe-eval'"])];
   const connect = ["'self'", ...(production ? [] : ["ws:", "http://localhost:*"])];
 
   const directives: Record<string, string[]> = {

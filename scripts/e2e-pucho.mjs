@@ -1,6 +1,7 @@
 // "पहले पूछो" की असली browser में जाँच। चलाने से पहले: npm run build && npm start
 // सबसे ज़रूरी दावा (निजता पन्ने में लिखा): जाँच के समय message कहीं नहीं जाता (कोई network request नहीं), न URL में, न storage में।
-import { BASE, PHONE, check, assert, withPage, watchRequests, installSpeechStub, finish } from "./e2e-lib.mjs";
+import { execSync } from "node:child_process";
+import { BASE, PHONE, browser, check, assert, withPage, watchRequests, installSpeechStub, finish } from "./e2e-lib.mjs";
 
 const BOX = "संदिग्ध message यहाँ चिपकाएँ";
 const TOKEN = "Zebra7781";
@@ -290,6 +291,61 @@ await check("बोलकर लिखें: browser में यह सुव
     });
     await openBox(page);
     assert((await page.getByRole("button", { name: "बोलकर लिखें" }).count()) === 0, "बिना सुविधा के भी mic बटन");
+  }),
+);
+
+// photo से जाँच (TR-36): असली PNG (browser से बनी), फ़ोन के अंदर OCR। photo कहीं नहीं जानी चाहिए।
+async function photoOf(html) {
+  const maker = await (await browser.newContext({ viewport: { width: 720, height: 260 } })).newPage();
+  await maker.setContent(`<body style="margin:24px;font-family:'Noto Sans Devanagari',sans-serif;font-size:28px;background:#fff;color:#111">${html}</body>`);
+  const png = await maker.screenshot();
+  await maker.context().close();
+  return png;
+}
+
+async function checkPhotoFlow(page, html, mustRead) {
+  const png = await photoOf(html);
+  await openBox(page);
+  const outside = [];
+  page.on("request", (r) => {
+    if (new URL(r.url()).origin !== new URL(BASE).origin || r.method() !== "GET") outside.push(`${r.method()} ${r.url()}`);
+  });
+  await page.locator('input[type="file"][accept="image/*"]').setInputFiles({ name: "scam.png", mimeType: "image/png", buffer: png });
+  await page.getByRole("heading", { name: "ठगी के पक्के निशान" }).waitFor({ timeout: 120000 });
+  const read = await page.getByLabel(BOX).inputValue();
+  for (const w of mustRead) assert(read.includes(w), `पढ़ा text में "${w}" नहीं: ${read}`);
+  assert(outside.length === 0, `बाहर/POST request: ${outside.slice(0, 3).join(", ")}`);
+}
+
+await check("photo से जाँच (English screenshot): फ़ोन में ही पढ़ा, डिब्बे में, पक्के निशान; सिर्फ़ अपनी साइट से files, कोई POST नहीं", () =>
+  withPage({ viewport: PHONE }, (page) =>
+    checkPhotoFlow(page, "Dear Customer, your KYC is pending.<br>Your account will be blocked today.<br>Share the OTP sent to your mobile.", ["OTP", "blocked"]),
+  ),
+);
+
+// हिंदी photo के लिए machine पर हिंदी font चाहिए (वरना photo में डिब्बे बनते हैं, गलती OCR की नहीं)
+const hindiFont = (() => {
+  try {
+    return execSync('fc-list "Noto Sans Devanagari" family', { encoding: "utf8" }).trim().length > 0;
+  } catch {
+    return false;
+  }
+})();
+if (hindiFont) {
+  await check("photo से जाँच (हिंदी screenshot): अक्षर ठीक पढ़े और पक्के निशान", () =>
+    withPage({ viewport: PHONE }, (page) =>
+      checkPhotoFlow(page, "प्रिय ग्राहक, आपका KYC अधूरा है।<br>आज रात आपका खाता बंद हो जाएगा।<br>अपने मोबाइल पर आया OTP बताइए।", ["OTP", "खाता"]),
+    ),
+  );
+} else console.log("- हिंदी photo वाली जाँच छोड़ी: इस machine पर हिंदी font नहीं");
+
+await check("photo से जाँच: बिना अक्षर वाली photo पर साफ़ बात (ख़ुद लिखें या बोलें), कोई नतीजा नहीं", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    const png = await photoOf("&nbsp;");
+    await openBox(page);
+    await page.locator('input[type="file"][accept="image/*"]').setInputFiles({ name: "blank.png", mimeType: "image/png", buffer: png });
+    await page.getByText("photo में पढ़ने लायक अक्षर नहीं मिले", { exact: false }).waitFor({ timeout: 120000 });
+    assert((await page.getByRole("region", { name: "जाँच का नतीजा" }).count()) === 0, "ख़ाली photo पर नतीजा");
   }),
 );
 

@@ -7,7 +7,7 @@ test("CSP बाहर की script, frame और plugin रोकता है
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("object-src 'none'");
   expect(csp).toContain("worker-src 'self'");
-  expect(csp).not.toContain("unsafe-eval");
+  expect(csp).not.toMatch(/'unsafe-eval'/); // आम eval नहीं ('wasm-unsafe-eval' सिर्फ़ WebAssembly के लिए, नीचे वाला test)
 });
 
 test("development में hot-reload के लिए eval की छूट", () => {
@@ -25,4 +25,13 @@ test("camera, location, payment बंद; mic सिर्फ़ अपनी �
   for (const f of ["camera=()", "microphone=(self)", "geolocation=()", "payment=()"]) expect(pp).toContain(f);
   expect(pp).not.toContain("microphone=()");
   expect(pp).not.toContain("microphone=*");
+});
+
+test("photo से जाँच (फ़ोन के अंदर OCR) के लिए WebAssembly: 'wasm-unsafe-eval' हाँ, 'unsafe-eval' production में नहीं", () => {
+  const csp = buildCsp({ production: true });
+  const script = csp.split("; ").find((d) => d.startsWith("script-src "))!;
+  expect(script).toContain("'wasm-unsafe-eval'");
+  expect(script).not.toMatch(/'unsafe-eval'/);
+  expect(csp).toContain("worker-src 'self'");
+  expect(csp).not.toMatch(/worker-src[^;]*blob:/);
 });

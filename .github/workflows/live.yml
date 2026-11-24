@@ -32,6 +32,9 @@ jobs:
       - name: Browser (Chromium) install
         run: npx playwright install --with-deps chromium
 
+      - name: हिंदी font (photo से जाँच वाली e2e के लिए हिंदी screenshot बनाना)
+        run: sudo apt-get install -y --no-install-recommends fonts-noto-core
+
       - name: साइट जगाना (Free plan पर सोई हो सकती है)
         run: |
           for i in $(seq 1 20); do
