@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ActionLink } from "@/components/ui/action-link";
 import { CopyBlock } from "@/components/ui/copy-block";
+import { DateField, TimeField } from "@/components/ui/date-time-fields";
 import { Notice } from "@/components/ui/notice";
 import {
   CASE_KEY,
@@ -20,42 +21,13 @@ import {
   type LocalCase,
 } from "@/modules/case";
 import { parseRupees } from "@/modules/haq/money";
-import { formatHindiDate, todayInKolkata } from "@/modules/rules-engine";
+import { formatHindiDate, nowTimeInKolkata, todayInKolkata } from "@/modules/rules-engine";
 import { SHIKAYAT_STAGES, type ShikayatStageId } from "@/modules/shikayat";
 
 // "मेरा केस" फ़ोन के अंदर (plan B0)। सब कुछ सिर्फ़ इसी browser के localStorage में: कोई network, कोई server नहीं।
 // mount से पहले कुछ नहीं (server पर कोई data नहीं होता)।
 const INPUT = "min-h-12 w-full rounded-[10px] border border-line bg-paper px-3 text-[18px] text-ink";
-const DATE_INPUT = "min-h-12 min-w-0 flex-1 rounded-[10px] border border-line bg-paper px-3 text-[18px] text-ink";
 
-// तारीख़ + "आज" बटन (plan A2d): ज़्यादातर लोग उसी दिन भरते हैं, calendar खोले बिना एक tap
-function DateField(props: { id: string; label: string; todayLabel: string; value: string | null; today: string; onChange: (v: string | null) => void }) {
-  return (
-    <div className="space-y-1">
-      <label htmlFor={props.id} className="block font-semibold">
-        {props.label}
-      </label>
-      <div className="flex gap-2">
-        <input
-          id={props.id}
-          type="date"
-          max={props.today}
-          value={props.value ?? ""}
-          onChange={(e) => props.onChange(e.target.value || null)}
-          className={DATE_INPUT}
-        />
-        <button
-          type="button"
-          aria-label={props.todayLabel}
-          onClick={() => props.onChange(props.today)}
-          className="min-h-12 shrink-0 rounded-[10px] border border-line bg-paper px-4 font-semibold text-brand"
-        >
-          आज
-        </button>
-      </div>
-    </div>
-  );
-}
 const TITLE: Record<ShikayatStageId, string> = Object.fromEntries(SHIKAYAT_STAGES.map((s) => [s.id, s.titleHi])) as Record<ShikayatStageId, string>;
 
 function load(today: string): LocalCase {
@@ -159,10 +131,18 @@ export function MeraCase() {
         <DateField
           id="case-txn"
           label="ठगी किस तारीख़ को हुई?"
-          todayLabel="ठगी की तारीख़: आज"
+          name="ठगी की तारीख़"
           value={c.txnDate}
           today={today}
           onChange={(v) => save({ ...c, txnDate: v })}
+        />
+        <TimeField
+          id="case-txn-time"
+          label="लगभग किस समय? (याद हो तो)"
+          name="ठगी का समय"
+          value={c.txnTime}
+          onChange={(v) => save({ ...c, txnTime: v })}
+          onNow={() => save({ ...c, txnTime: nowTimeInKolkata(), txnDate: c.txnDate ?? today })}
         />
         <label className="block space-y-1">
           <span className="block font-semibold">कुल कितने पैसे गए? (₹)</span>
@@ -210,7 +190,7 @@ export function MeraCase() {
                 <DateField
                   id={`case-on-${id}`}
                   label="कब की?"
-                  todayLabel={`${TITLE[id]} की तारीख़: आज`}
+                  name={`${TITLE[id]} की तारीख़`}
                   value={s.on}
                   today={today}
                   onChange={(v) => setStage(id, { on: v })}

@@ -1,7 +1,7 @@
 // "मेरा केस" फ़ोन के अंदर (plan B0): ढाँचा, जाँच और हिसाब। शुद्ध functions: storage पढ़ना-लिखना UI करता है।
 // सिर्फ़ तारीख़ें, रकम और शिकायत नंबर; नाम, फ़ोन नंबर, खाता नंबर, OTP या PIN के लिए कोई जगह नहीं।
 import { MAX_RUPEES } from "@/modules/haq/money";
-import { daysBetween, evaluateRights, isValidIsoDate, type Deadline, type FraudInput } from "@/modules/rules-engine";
+import { daysBetween, evaluateRights, isValidIsoDate, isValidTime, type Deadline, type FraudInput } from "@/modules/rules-engine";
 import type { ShikayatStageId } from "@/modules/shikayat";
 
 export const CASE_KEY = "thagi-rakshak:mera-case:v1";
@@ -12,6 +12,7 @@ export type CaseStage = { on: string | null; number: string };
 export type LocalCase = {
   v: 1;
   txnDate: string | null;
+  txnTime: string | null; // "HH:MM", लगभग (याद हो तो); पुराने सेव केस में नहीं होता
   amount: number | null;
   recovered: number | null;
   stages: Record<ShikayatStageId, CaseStage>;
@@ -21,6 +22,7 @@ export function emptyCase(): LocalCase {
   return {
     v: 1,
     txnDate: null,
+    txnTime: null,
     amount: null,
     recovered: null,
     stages: Object.fromEntries(STAGE_IDS.map((id) => [id, { on: null, number: "" }])) as Record<ShikayatStageId, CaseStage>,
@@ -54,6 +56,7 @@ export function parseCase(raw: string | null, today: string): LocalCase {
   if (!data || typeof data !== "object" || (data as { v?: unknown }).v !== 1) return c;
   const d = data as Record<string, unknown>;
   c.txnDate = pastDate(d.txnDate, today);
+  c.txnTime = typeof d.txnTime === "string" && isValidTime(d.txnTime) ? d.txnTime : null;
   c.amount = money(d.amount, 0.01);
   c.recovered = money(d.recovered, 0);
   const stages = (d.stages && typeof d.stages === "object" ? d.stages : {}) as Record<string, unknown>;
@@ -70,7 +73,7 @@ export function serializeCase(c: LocalCase): string {
 
 // फ़ोन में कोई केस भरा है या नहीं (होम पर "आपका केस" दिखाने के लिए)
 export function caseHasData(c: LocalCase): boolean {
-  return !!(c.txnDate || c.amount || STAGE_IDS.some((id) => c.stages[id].on || c.stages[id].number));
+  return !!(c.txnDate || c.txnTime || c.amount || STAGE_IDS.some((id) => c.stages[id].on || c.stages[id].number));
 }
 
 // अगला पड़ाव: जिसकी तारीख़ अभी नहीं भरी (क्रम से); सब भरे हों तो null

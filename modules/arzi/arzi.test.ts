@@ -74,3 +74,24 @@ test("पैसे कैसे गए: 'धोखे से' → ठगों �
     expect(t, k.id).not.toContain("एक चुनें");
   }
 });
+
+test("ठगी का समय तीनों पत्रों में: \"लगभग शाम 4:30 बजे (16:30)\"", () => {
+  const i = input();
+  i.case.txnTime = "16:30";
+  for (const k of LETTER_KINDS) {
+    const t = buildLetter(k.id, i, TODAY).join("\n");
+    expect(t, k.id).toContain("20 नवंबर 2026 को लगभग शाम 4:30 बजे");
+    expect(t, k.id).not.toContain("[लगभग समय]");
+  }
+  expect(buildLetter("bank", i, TODAY).join("\n")).toContain("ठगी की तारीख़ और समय: 20 नवंबर 2026, लगभग शाम 4:30 बजे (16:30)");
+});
+
+test("समय न भरा हो: तथ्यों में हाथ से भरने की जगह [लगभग समय], वाक्य में कोई ख़ाली कोष्ठक नहीं", () => {
+  const i = input();
+  for (const k of ["bank", "police"] as const) {
+    const t = buildLetter(k, i, TODAY).join("\n");
+    expect(t, k).toContain("ठगी की तारीख़ और समय: 20 नवंबर 2026, [लगभग समय]");
+    expect(t, k).not.toMatch(/को लगभग \[/);
+  }
+  expect(buildLetter("ombudsman", i, TODAY).join("\n")).toContain("20 नवंबर 2026 को मेरे खाते");
+});

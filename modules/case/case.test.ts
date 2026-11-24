@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { CASE_KEY, caseDeadlines, emptyCase, nextStage, parseCase, serializeCase } from "@/modules/case";
+import { CASE_KEY, caseDeadlines, caseSummaryText, emptyCase, nextStage, parseCase, serializeCase } from "@/modules/case";
 
 const TODAY = "2026-11-22";
 
@@ -102,4 +102,27 @@ test("आपका हक़ का form भरने के लिए: ता�
   c.stages.call_1930.on = "2026-11-20";
   c.stages.bank.on = "2026-11-21";
   expect(haqFieldsFromCase(c)).toEqual({ txn: "2026-11-18", loss: "4999.5", back: "0", r1930: "2026-11-19", rbank: "2026-11-21" });
+});
+
+test("ठगी का समय: सेव होकर वापस; पुराना केस (बिना समय) जस का तस; ख़राब समय छोड़ दिया", () => {
+  const c = emptyCase();
+  expect(c.txnTime).toBeNull();
+  c.txnDate = "2026-11-20";
+  c.txnTime = "16:30";
+  expect(parseCase(serializeCase(c), TODAY)).toEqual(c);
+  const old = parseCase(JSON.stringify({ v: 1, txnDate: "2026-11-20", amount: 500, recovered: null, stages: {} }), TODAY);
+  expect(old.txnDate).toBe("2026-11-20");
+  expect(old.amount).toBe(500);
+  expect(old.txnTime).toBeNull();
+  for (const bad of ["25:00", "4 बजे", 1630, "16:30<script>"]) {
+    expect(parseCase(JSON.stringify({ v: 1, txnDate: "2026-11-20", txnTime: bad }), TODAY).txnTime).toBeNull();
+  }
+});
+
+test("सार में ठगी का समय (हो तो), न हो तो सिर्फ़ तारीख़", () => {
+  const c = emptyCase();
+  c.txnDate = "2026-11-20";
+  expect(caseSummaryText(c, TODAY)).toContain("ठगी की तारीख़: 20 नवंबर 2026\n");
+  c.txnTime = "16:30";
+  expect(caseSummaryText(c, TODAY)).toContain("ठगी की तारीख़: 20 नवंबर 2026, लगभग शाम 4:30 बजे (16:30)");
 });

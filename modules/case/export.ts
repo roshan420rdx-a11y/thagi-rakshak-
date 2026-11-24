@@ -1,7 +1,7 @@
 // "मेरा केस" से बाहर ले जाने लायक चीज़ें, सब फ़ोन में ही बनती हैं:
 // (1) सार का text (copy करके बैंक/थाने में दिखाने या भेजने के लिए), (2) phone के calendar के लिए .ics file।
 import { SHIKAYAT_STAGES } from "@/modules/shikayat";
-import { addDays, formatHindiDate, type Deadline } from "@/modules/rules-engine";
+import { addDays, formatHindiDate, formatHindiTime, type Deadline } from "@/modules/rules-engine";
 import { STAGE_IDS, caseDeadlines, type LocalCase } from "./local";
 
 const TITLE = Object.fromEntries(SHIKAYAT_STAGES.map((s) => [s.id, s.titleHi])) as Record<string, string>;
@@ -9,7 +9,7 @@ const rupees = (n: number) => `₹${n.toLocaleString("en-IN", { maximumFractionD
 
 export function caseSummaryText(c: LocalCase, today: string): string {
   const lines = ["मेरे केस का सार (ठगी रक्षक)"];
-  lines.push(`ठगी की तारीख़: ${c.txnDate ? formatHindiDate(c.txnDate) : "नहीं भरी"}`);
+  lines.push(`ठगी की तारीख़: ${c.txnDate ? formatHindiDate(c.txnDate) : "नहीं भरी"}${c.txnDate && c.txnTime ? `, लगभग ${formatHindiTime(c.txnTime)}` : ""}`);
   lines.push(`रकम: ${c.amount ? rupees(c.amount) : "नहीं भरी"}${c.recovered ? ` · वापस मिले: ${rupees(c.recovered)}` : ""}`);
   lines.push("", "शिकायतें:");
   for (const id of STAGE_IDS) {

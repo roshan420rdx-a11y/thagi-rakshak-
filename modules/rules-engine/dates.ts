@@ -65,3 +65,22 @@ export function formatHindiDate(iso: string): string {
 export function todayInKolkata(now: Date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(now);
 }
+
+// समय "HH:MM" (24 घंटे) में, जैसा फ़ोन का time picker देता है
+export function isValidTime(s: string): boolean {
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(s);
+}
+
+// "16:30" → "शाम 4:30 बजे (16:30)"। पहर: रात 0-3, सुबह 4-11, दोपहर 12-15, शाम 16-19, रात 20-23।
+// 24 घंटे वाला रूप कोष्ठक में, ताकि थाने/बैंक में "रात 12" जैसी बात पर गलतफ़हमी न हो।
+export function formatHindiTime(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  const pahar = h < 4 ? "रात" : h < 12 ? "सुबह" : h < 16 ? "दोपहर" : h < 20 ? "शाम" : "रात";
+  return `${pahar} ${h % 12 || 12}:${String(m).padStart(2, "0")} बजे (${hhmm})`;
+}
+
+export function nowTimeInKolkata(now: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  return `${get("hour")}:${get("minute")}`;
+}

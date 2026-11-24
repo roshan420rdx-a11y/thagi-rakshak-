@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { addDays, daysBetween, formatHindiDate, isValidIsoDate, todayInKolkata, workingDaysBetween } from "./dates";
+import { addDays, daysBetween, formatHindiDate, formatHindiTime, isValidIsoDate, isValidTime, nowTimeInKolkata, todayInKolkata, workingDaysBetween } from "./dates";
 
 test("isValidIsoDate", () => {
   expect(isValidIsoDate("2027-02-28")).toBe(true);
@@ -30,3 +30,26 @@ test("हिंदी तारीख़", () => {
 });
 test("Kolkata की आज की तारीख़ (UTC 20:00 = अगले दिन IST)", () =>
   expect(todayInKolkata(new Date("2027-01-12T20:00:00Z"))).toBe("2027-01-13"));
+
+test("समय: सिर्फ़ HH:MM (24 घंटे) वाला सही समय", () => {
+  for (const ok of ["00:00", "09:05", "16:30", "23:59"]) expect(isValidTime(ok)).toBe(true);
+  for (const bad of ["24:00", "9:05", "16:3", "12:60", "", "4 बजे", "16:30:00"]) expect(isValidTime(bad)).toBe(false);
+});
+
+test("समय हिंदी में: पहर + 12 घंटे वाला, और 24 घंटे वाला कोष्ठक में (कोई गलतफ़हमी नहीं)", () => {
+  expect(formatHindiTime("00:05")).toBe("रात 12:05 बजे (00:05)");
+  expect(formatHindiTime("03:59")).toBe("रात 3:59 बजे (03:59)");
+  expect(formatHindiTime("04:00")).toBe("सुबह 4:00 बजे (04:00)");
+  expect(formatHindiTime("11:59")).toBe("सुबह 11:59 बजे (11:59)");
+  expect(formatHindiTime("12:00")).toBe("दोपहर 12:00 बजे (12:00)");
+  expect(formatHindiTime("15:45")).toBe("दोपहर 3:45 बजे (15:45)");
+  expect(formatHindiTime("16:30")).toBe("शाम 4:30 बजे (16:30)");
+  expect(formatHindiTime("19:59")).toBe("शाम 7:59 बजे (19:59)");
+  expect(formatHindiTime("20:00")).toBe("रात 8:00 बजे (20:00)");
+  expect(formatHindiTime("23:10")).toBe("रात 11:10 बजे (23:10)");
+});
+
+test("अभी का समय भारत (Asia/Kolkata) के हिसाब से", () => {
+  expect(nowTimeInKolkata(new Date("2026-11-24T10:00:00Z"))).toBe("15:30");
+  expect(nowTimeInKolkata(new Date("2026-11-24T18:45:00Z"))).toBe("00:15");
+});

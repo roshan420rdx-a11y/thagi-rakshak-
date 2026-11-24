@@ -153,6 +153,83 @@ await check("'आज' बटन: ठगी और 1930 की तारीख़
   }),
 );
 
+const nowKolkata = () =>
+  new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
+
+await check("समय: 'अभी' से ठगी का समय (और ख़ाली तारीख़ आज की), 'कल' बटन, reload पर बचे, सार में \"लगभग शाम 4:30 बजे (16:30)\"", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await open(page);
+    const time = page.getByLabel("लगभग किस समय? (याद हो तो)");
+    const before = nowKolkata();
+    await page.getByRole("button", { name: "ठगी का समय: अभी" }).click();
+    const after = nowKolkata();
+    const got = await time.inputValue();
+    assert(got === before || got === after, `अभी का समय नहीं: ${got} (${before}-${after})`);
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === today, "'अभी' पर ख़ाली तारीख़ आज की नहीं हुई");
+    await page.getByRole("button", { name: "ठगी की तारीख़: कल" }).click();
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === minusDays(1), "'कल' बटन से कल की तारीख़ नहीं");
+    await time.fill("16:30");
+    await page.getByText("फ़ोन में सेव हो गया").waitFor();
+    await page.reload();
+    await page.getByRole("heading", { name: "मेरी शिकायतें" }).waitFor();
+    assert((await time.inputValue()) === "16:30", "reload पर समय नहीं बचा");
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === minusDays(1), "reload पर तारीख़ नहीं बची");
+    await page.getByText("मेरे केस का सार (copy करें)").click();
+    const summary = await page.locator("details").innerText();
+    assert(summary.includes("लगभग शाम 4:30 बजे (16:30)"), `सार में समय नहीं: ${summary.slice(0, 200)}`);
+  }),
+);
+
+await check("अर्ज़ी अपने-आप में पूरी: वहीं तारीख़ ('कल'), समय, रकम, 1930 की शिकायत → पत्र में; 'मेरा केस' में भी बचे; कोई request नहीं", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.waitForLoadState("networkidle");
+    const requests = watchRequests(page, ["21:15", "31611230012345", "8000", "8,000"]);
+    const letter = page.locator("#arzi-print");
+    assert((await letter.innerText()).includes("[लगभग समय]"), "बिना समय के [लगभग समय] वाली जगह नहीं");
+    await page.getByRole("button", { name: "ठगी की तारीख़: कल" }).click();
+    await page.getByLabel("लगभग किस समय? (याद हो तो)").fill("21:15");
+    await page.getByLabel("कुल कितने पैसे गए? (₹)").fill("8,000");
+    const s1930 = page.locator('[data-stage="call_1930"]');
+    await s1930.getByRole("button", { name: /आज/ }).click();
+    await s1930.getByLabel("शिकायत नंबर (हो तो)").fill("31611230012345");
+    const t = await letter.innerText();
+    for (const must of ["को लगभग रात 9:15 बजे (21:15)", "₹8,000", "31611230012345"]) assert(t.includes(must), `पत्र में "${must}" नहीं`);
+    assert(!t.includes("[लगभग समय]") && !t.includes("[तारीख़]") && !t.includes("[रकम]"), "भरने के बाद भी ख़ाली जगह");
+    await page.getByText("में भी सेव हो गया (सिर्फ़ इसी फ़ोन में)", { exact: false }).waitFor();
+    assert(requests.length === 0, `requests: ${requests.slice(0, 3).join(", ")}`);
+    await open(page);
+    assert((await page.getByLabel("ठगी किस तारीख़ को हुई?").inputValue()) === minusDays(1), "मेरा केस में तारीख़ नहीं");
+    assert((await page.getByLabel("लगभग किस समय? (याद हो तो)").inputValue()) === "21:15", "मेरा केस में समय नहीं");
+    assert((await page.getByLabel("कुल कितने पैसे गए? (₹)").inputValue()) === "8000", "मेरा केस में रकम नहीं");
+    assert((await page.locator('[data-stage="call_1930"]').getByLabel("शिकायत नंबर (हो तो)").inputValue()) === "31611230012345", "मेरा केस में 1930 नंबर नहीं");
+  }),
+);
+
+await check("अर्ज़ी: Ombudsman वाले पत्र में बैंक की शिकायत वहीं भरें; 320px पर तारीख़ और बटन एक-दूसरे पर नहीं चढ़ते", () =>
+  withPage({ viewport: { width: 320, height: 720 } }, async (page) => {
+    await page.goto(`${BASE}/arzi`);
+    await page.getByRole("heading", { name: "पत्र", exact: true }).waitFor();
+    await page.getByText("RBI Ombudsman के लिए शिकायत का text").click();
+    const bank = page.locator('[data-stage="bank"]');
+    await bank.getByRole("button", { name: /आज/ }).click();
+    await bank.getByLabel("शिकायत नंबर (हो तो)").fill("BNK-42");
+    assert((await page.locator("#arzi-print").innerText()).includes("शिकायत नंबर: BNK-42"), "Ombudsman text में बैंक का नंबर नहीं");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    assert(!overflow, "320px पर पन्ना दाएँ खिसकता है");
+    const boxes = await page.locator('[data-stage="bank"] input[type="date"], [data-stage="bank"] button').evaluateAll((els) =>
+      els.map((e) => e.getBoundingClientRect()).map((r) => ({ l: r.left, r: r.right, t: r.top, b: r.bottom })),
+    );
+    for (let i = 0; i < boxes.length; i++)
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i], b = boxes[j];
+        const hit = a.l < b.r - 1 && b.l < a.r - 1 && a.t < b.b - 1 && b.t < a.b - 1;
+        assert(!hit, `तारीख़ और बटन एक-दूसरे पर: ${JSON.stringify([a, b])}`);
+      }
+  }),
+);
+
 await check("आपका हक़: फ़ोन में केस हो तो 'मेरा केस से भरें' → तारीख़ें और रकम भरें, हिसाब अपने-आप नहीं, कोई request नहीं", async () => {
   await withPage({ viewport: PHONE }, async (page) => {
     await page.goto(`${BASE}/haq/thagi`);

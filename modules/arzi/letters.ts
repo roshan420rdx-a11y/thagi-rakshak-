@@ -2,7 +2,7 @@
 // सिर्फ़ तथ्य और माँग, कोई क़ानूनी धारा नहीं (DISHA: वह वकील की जाँच के बाद)। जो जानकारी नहीं, वहाँ "[ ... ]"।
 // शुद्ध functions: सब फ़ोन में बनता है, कहीं भेजा नहीं जाता।
 import type { LocalCase } from "@/modules/case";
-import { formatHindiDate } from "@/modules/rules-engine";
+import { formatHindiDate, formatHindiTime } from "@/modules/rules-engine";
 
 export type LetterKind = "bank" | "police" | "ombudsman";
 
@@ -41,6 +41,8 @@ export type LetterInput = {
 
 const or = (v: string | null | undefined, blank: string) => (v && v.trim() ? v.trim() : `[${blank}]`);
 const date = (d: string | null) => (d ? formatHindiDate(d) : "[तारीख़]");
+// "20 नवंबर 2026 को लगभग शाम 4:30 बजे (16:30)"; समय न हो तो सिर्फ़ "20 नवंबर 2026 को"
+const on = (c: LocalCase) => `${date(c.txnDate)} को${c.txnTime ? ` लगभग ${formatHindiTime(c.txnTime)}` : ""}`;
 const rupees = (n: number | null) => (n ? `₹${n.toLocaleString("en-IN", { maximumFractionDigits: 2 })}` : "[रकम]");
 
 function reportLines(i: LetterInput): string[] {
@@ -60,7 +62,7 @@ function signature(i: LetterInput, today: string): string[] {
 export function buildLetter(kind: LetterKind, i: LetterInput, today: string): string[] {
   const c = i.case;
   const facts = [
-    `ठगी की तारीख़: ${date(c.txnDate)}`,
+    `ठगी की तारीख़ और समय: ${date(c.txnDate)}, ${c.txnTime ? `लगभग ${formatHindiTime(c.txnTime)}` : "[लगभग समय]"}`,
     `रकम: ${rupees(c.amount)}${c.recovered ? ` (अब तक वापस मिले: ${rupees(c.recovered)})` : ""}`,
     `खाता: ${or(i.bankName, "बैंक का नाम")}, आख़िरी 4 अंक ${or(i.accountLast4, "XXXX")}`,
     `लेन-देन नंबर (UTR): ${or(i.utr, "UTR नंबर")}`,
@@ -76,7 +78,7 @@ export function buildLetter(kind: LetterKind, i: LetterInput, today: string): st
       `विषय: अनधिकृत / ठगी वाले लेन-देन की शिकायत (खाता, आख़िरी 4 अंक ${or(i.accountLast4, "XXXX")})`,
       "",
       "महोदय/महोदया,",
-      `मेरे खाते से ${date(c.txnDate)} को ${rupees(c.amount)} का लेन-देन हुआ। ${howLine(i.how)}`,
+      `मेरे खाते से ${on(c)} ${rupees(c.amount)} का लेन-देन हुआ। ${howLine(i.how)}`,
       ...facts,
       `क्या हुआ: ${what}`,
       ...reportLines(i),
@@ -100,7 +102,7 @@ export function buildLetter(kind: LetterKind, i: LetterInput, today: string): st
       "विषय: online ठगी की शिकायत",
       "",
       "महोदय/महोदया,",
-      `मेरे साथ ${date(c.txnDate)} को online ठगी हुई, जिसमें ${rupees(c.amount)} गए। ${howLine(i.how)}`,
+      `मेरे साथ ${on(c)} online ठगी हुई, जिसमें ${rupees(c.amount)} गए। ${howLine(i.how)}`,
       ...facts,
       `क्या हुआ: ${what}`,
       `ठग की जानकारी (नंबर, UPI ID, link): ${or(i.suspect, "ठग का नंबर / UPI ID / link")}`,
@@ -122,7 +124,7 @@ export function buildLetter(kind: LetterKind, i: LetterInput, today: string): st
     "बैंक का जवाब: [अब तक जवाब नहीं आया / जवाब की तारीख़ और क्या कहा]",
     "",
     "क्या हुआ:",
-    `${date(c.txnDate)} को मेरे खाते (आख़िरी 4 अंक ${or(i.accountLast4, "XXXX")}) से ${rupees(c.amount)} कटे। ${howLine(i.how)} लेन-देन नंबर (UTR): ${or(i.utr, "UTR नंबर")}।`,
+    `${on(c)} मेरे खाते (आख़िरी 4 अंक ${or(i.accountLast4, "XXXX")}) से ${rupees(c.amount)} कटे। ${howLine(i.how)} लेन-देन नंबर (UTR): ${or(i.utr, "UTR नंबर")}।`,
     what,
     ...reportLines(i),
     "",
