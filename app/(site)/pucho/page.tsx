@@ -11,7 +11,7 @@ import { absoluteUrl, getSiteConfig, SCAM_SIGNS } from "@/modules/site";
 export const metadata: Metadata = pageMeta({
   title: "यह message ठगी है? पहले पूछो",
   description:
-    "संदिग्ध SMS या WhatsApp message चिपकाएँ, या call की बात लिखें या बोलें, और ठगी के निशान देखें। लिखा message आपके फ़ोन में ही जाँचा जाता है।",
+    "संदिग्ध SMS या WhatsApp message चिपकाएँ, screenshot दें, या call की बात लिखें या बोलें, और ठगी के निशान देखें। सब आपके फ़ोन में ही जाँचा जाता है।",
   path: "/pucho",
 });
 
@@ -22,7 +22,7 @@ export default function PuchoPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-[22px] font-bold md:text-[28px] leading-snug">यह message ठगी है? पहले पूछो</h1>
-      <p>SMS या WhatsApp का message चिपकाएँ, या call पर जो कहा गया वह अपने शब्दों में लिखें या बोलें। हिंदी, Hinglish या English, किसी में भी।</p>
+      <p>SMS या WhatsApp का message चिपकाएँ या उसका screenshot दें, या call पर जो कहा गया वह अपने शब्दों में लिखें या बोलें। हिंदी, Hinglish या English, किसी में भी।</p>
       <CheckerBox pageUrl={pageUrl} />
       {/* plan A2f, TR-36b: ऐप जुड़ा हो तो WhatsApp/SMS से message या photo Share करके सीधे जाँच (browser मौका दे, तभी दिखता है) */}
       <InstallButton label="ऐप जोड़ें: फिर WhatsApp या SMS से message या photo सीधे Share करके जाँचें" />
@@ -38,7 +38,10 @@ export default function PuchoPage() {
           </li>
         ))}
       </ol>
-      <Notice tone="info">अभी सिर्फ़ लिखा हुआ message जाँचा जाता है। screenshot भेजकर पूछने वाली सुविधा बाद में आएगी।</Notice>
+      <Notice tone="info">
+        यह जाँच आम निशान देखती है, पक्का फ़ैसला नहीं करती। photo या screenshot से जाँच में कुछ अक्षर ग़लत पढ़े जाएँ, तो डिब्बे में ठीक
+        करके फिर &quot;जाँचें&quot; दबाएँ।
+      </Notice>
       <BigDoor
         href="/turant"
         title="पैसे जा चुके हैं?"

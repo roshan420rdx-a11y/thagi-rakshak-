@@ -98,7 +98,7 @@ export default function HomePage() {
           <BigDoor
             href="/pucho"
             title="यह call या message ठगी है?"
-            subtitle="message चिपकाएँ, या बोलकर बताएँ · मुफ़्त"
+            subtitle="message चिपकाएँ, screenshot दें, या बोलकर बताएँ · मुफ़्त"
             tone="brand"
             icon={<IconSearch className="h-8 w-8" />}
           />

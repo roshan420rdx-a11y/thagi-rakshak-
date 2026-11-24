@@ -33,7 +33,7 @@ WhatsApp Business ऐप (Play Store से, मुफ़्त) में **Set
 3️⃣ पूरे कदम यहाँ: https://thagi-rakshak.onrender.com/turant
 
 कोई call/message ठगी है या नहीं, पूछना है? उसका screenshot भेजें।
-हम जल्दी जवाब देंगे।
+हम जल्दी जवाब देंगे। तुरंत ख़ुद जाँचना हो, तो message या screenshot यहाँ दें (फ़ोन में ही जँचता है): https://thagi-rakshak.onrender.com/pucho
 ```
 
 ### (ख) Away message: जब आप फ़ोन पर न हों

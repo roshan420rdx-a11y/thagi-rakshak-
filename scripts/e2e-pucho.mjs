@@ -367,6 +367,16 @@ await check("WhatsApp की photo पर Share → 'ठगी रक्षक':
   }),
 );
 
+await check("पहले पूछो: photo वाला बटन है, और पन्ना कहीं नहीं कहता कि screenshot वाली सुविधा 'बाद में आएगी'", () =>
+  withPage({ viewport: PHONE }, async (page) => {
+    await openBox(page);
+    await page.getByText("photo या screenshot से जाँचें").waitFor();
+    const body = await page.locator("main").innerText();
+    assert(!/बाद में आएगी|जल्द आएगी/.test(body), "पुराना वादा अब भी लिखा है");
+    assert(body.includes("screenshot दें"), "ऊपर screenshot वाली बात नहीं");
+  }),
+);
+
 // हिंदी photo के लिए machine पर हिंदी font चाहिए (वरना photo में डिब्बे बनते हैं, गलती OCR की नहीं)
 const hindiFont = (() => {
   try {
