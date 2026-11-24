@@ -69,7 +69,7 @@ export function buildLetterEn(kind: LetterKind, i: LetterInput, today: string): 
     return [
       "To,",
       "The Station House Officer / Officer In-charge, Cyber Cell,",
-      "[name of the police station / cyber cell, and district]",
+      or(i.station, "name of the police station / cyber cell, and district"),
       "",
       "Subject: Complaint of online fraud",
       "",

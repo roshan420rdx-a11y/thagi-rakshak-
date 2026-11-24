@@ -42,6 +42,7 @@ export type LetterInput = {
   accountLast4: string;
   utr: string;
   suspect: string; // ठग का नंबर, UPI ID, link
+  station: string; // थाने या cyber cell का नाम और ज़िला (पुलिस वाला पत्र)
   what: string; // क्या हुआ, अपने शब्दों में
   how: HowMoneyWent;
 };
@@ -105,7 +106,7 @@ export function buildLetter(kind: LetterKind, i: LetterInput, today: string, lan
     return [
       "प्रति,",
       "थाना प्रभारी / प्रभारी, cyber cell,",
-      "[थाने / cyber cell का नाम और ज़िला]",
+      or(i.station, "थाने / cyber cell का नाम और ज़िला"),
       "",
       "विषय: online ठगी की शिकायत",
       "",

@@ -104,6 +104,8 @@ await check("अर्ज़ी: 'मेरा केस' की तारीख
     await page.getByText("थाने या cyber cell को शिकायत पत्र").click();
     await page.getByLabel("ठग का नंबर, UPI ID या link").fill("abc@ybl");
     assert((await letter.innerText()).includes("abc@ybl"), "ठग की जानकारी नहीं");
+    await page.getByLabel("थाने या cyber cell का नाम और ज़िला").fill("थाना कोतवाली, ज़िला बाराबंकी");
+    assert((await letter.innerText()).includes("थाना कोतवाली, ज़िला बाराबंकी"), "थाने का नाम पत्र में नहीं");
     await page.evaluate(() => {
       window.__printed = 0;
       window.print = () => (window.__printed += 1);

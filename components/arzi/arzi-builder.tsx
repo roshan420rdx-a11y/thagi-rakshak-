@@ -27,9 +27,10 @@ import { SHIKAYAT_STAGES, type ShikayatStageId } from "@/modules/shikayat";
 // print में सिर्फ़ पत्र (#arzi-print) छपता है। कोई network नहीं।
 const INPUT = "min-h-12 w-full rounded-[10px] border border-line bg-paper px-3 text-[18px] text-ink";
 type Fields = Omit<LetterInput, "case">;
-const EMPTY: Fields = { name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", what: "", how: "" };
+const EMPTY: Fields = { name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", station: "", what: "", how: "" };
 
 const FIELDS: { key: Exclude<keyof Fields, "how">; label: string; kinds: LetterKind[]; long?: boolean; mode?: "numeric" | "tel" }[] = [
+  { key: "station", label: "थाने या cyber cell का नाम और ज़िला", kinds: ["police"] },
   { key: "name", label: "आपका नाम", kinds: ["bank", "police"] },
   { key: "address", label: "आपका पता", kinds: ["bank", "police"] },
   { key: "mobile", label: "आपका mobile नंबर", kinds: ["bank", "police"], mode: "tel" },

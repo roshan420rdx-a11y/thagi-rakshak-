@@ -20,6 +20,7 @@ function input(): LetterInput {
     accountLast4: "4321",
     utr: "412345678901",
     suspect: "9XXXXXXXX0, abc@ybl",
+    station: "",
     what: "एक व्यक्ति ने बैंक कर्मचारी बनकर call किया और OTP ले लिया।",
     how: "",
   };
@@ -121,7 +122,7 @@ test("English पत्र: तीनों में वही तथ्य, �
 
 test("English पत्र: ख़ाली खानों पर English वाली [ ] जगहें, और 'पैसे कैसे गए' न चुना हो तो चुनने की जगह", () => {
   const c = emptyCase();
-  const blank: LetterInput = { case: c, name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", what: "", how: "" };
+  const blank: LetterInput = { case: c, name: "", address: "", mobile: "", bankName: "", branch: "", accountLast4: "", utr: "", suspect: "", station: "", what: "", how: "" };
   const t = buildLetter("bank", blank, TODAY, "en").join("\n");
   for (const must of ["[date]", "[approximate time]", "[amount]", "[bank name]", "[branch name]", "[UTR number]", "[your name]", "choose one"]) expect(t).toContain(must);
   expect(t).not.toMatch(DEVANAGARI);
@@ -131,4 +132,15 @@ test("English पत्र: ख़ाली खानों पर English व�
 
 test("भाषा न दें तो हिंदी (पहले जैसा)", () => {
   expect(buildLetter("bank", input(), TODAY)).toEqual(buildLetter("bank", input(), TODAY, "hi"));
+});
+
+test("पुलिस वाला पत्र: थाने/cyber cell का नाम भरें तो पत्र में, ख़ाली हो तो [ ] जगह (हिंदी और English)", () => {
+  const i = input();
+  expect(buildLetter("police", i, TODAY).join("\n")).toContain("[थाने / cyber cell का नाम और ज़िला]");
+  expect(buildLetter("police", i, TODAY, "en").join("\n")).toContain("[name of the police station / cyber cell, and district]");
+  i.station = "थाना कोतवाली, ज़िला बाराबंकी";
+  const hi = buildLetter("police", i, TODAY);
+  expect(hi[2]).toBe("थाना कोतवाली, ज़िला बाराबंकी");
+  i.station = "Cyber Cell, Lucknow";
+  expect(buildLetter("police", i, TODAY, "en")[2]).toBe("Cyber Cell, Lucknow");
 });
